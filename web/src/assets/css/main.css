@@ -1,0 +1,189 @@
+@import './base.css';
+@import './base.dark.css';
+@import './sigma.css';
+@import './shorts.css';
+@import './dashboard.css';
+@import './code-highlight.less';
+
+:root {
+  --header-height: 45px;
+  --min-width: 450px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  font-weight: normal;
+}
+
+body {
+  display: flow-root;
+  min-height: 100vh;
+  color: var(--research-ink);
+  background: var(--research-paper);
+  line-height: 1.45;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+code,
+pre,
+kbd,
+samp,
+.technical-label,
+.ant-tag {
+  font-family: var(--font-technical);
+}
+
+/* Flat research-console chrome. Keep hierarchy in type and borders, not shadows. */
+.ant-btn,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-card,
+.ant-modal-content,
+.ant-dropdown-menu,
+.ant-segmented,
+.ant-tabs-tab {
+  border-radius: var(--radius-ui) !important;
+}
+
+.ant-card,
+.ant-modal-content,
+.ant-dropdown-menu {
+  box-shadow: none !important;
+  border-color: var(--research-hairline);
+}
+
+.ant-btn-primary {
+  background: var(--research-ink);
+  border-color: var(--research-ink);
+  color: #fff;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus-visible {
+  background: #26254f !important;
+  border-color: #26254f !important;
+}
+
+.ant-tabs-ink-bar {
+  background: var(--research-periwinkle) !important;
+  height: 3px !important;
+}
+
+.ant-input:focus,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--research-ink) !important;
+  box-shadow: 0 0 0 2px rgba(189, 187, 255, 0.38) !important;
+}
+
+/* layout */
+
+.layout-container {
+  width: 100%;
+
+  h2 {
+    margin: 20px 0 10px 0;
+  }
+}
+
+.lucide-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.lucide-icon-btn svg {
+  flex-shrink: 0;
+}
+
+.lucide-menu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 22px;
+  line-height: 1;
+}
+
+.lucide-menu-item svg {
+  flex-shrink: 0;
+}
+
+.lucide-menu-item > span {
+  line-height: 20px;
+}
+
+.ant-btn.lucide-icon-btn,
+.lucide-icon-btn.ant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-btn .ant-btn-icon,
+.ant-btn .anticon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  background: var(--research-blush);
+  color: var(--research-ink);
+  border: 1px solid color-mix(in srgb, var(--research-blush) 60%, var(--research-hairline));
+  border-radius: var(--radius-ui);
+  font-family: var(--font-technical);
+  letter-spacing: 0.02em;
+}
+
+.card-tag.tag-purple,
+.card-tag.tag-cyan {
+  background: var(--research-mint);
+  color: var(--research-ink);
+}
+
+.card-tag.tag-blue {
+  background: var(--research-sky);
+  color: var(--research-ink);
+}
+
+.card-tag.tag-red,
+.card-tag.tag-orange {
+  background: var(--research-peach);
+  color: var(--research-ink);
+}
+
+.card-tag.tag-green {
+  background: var(--color-success-50);
+  color: var(--color-success-700);
+}
+
+.card-tag.tag-gold {
+  background: var(--color-warning-50);
+  color: var(--color-warning-900);
+}

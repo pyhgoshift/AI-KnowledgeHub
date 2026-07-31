@@ -1,0 +1,27 @@
+# 单位信息配置文件
+# 用于配置网站的基本信息、品牌信息等
+
+# 组织信息
+organization:
+  name: "AI KnowledgeHub"    # 조직 이름
+  logo: "/favicon.svg"       # Logo文件路径（放在 web/public 目录下）
+  avatar: "/avatar.jpg"      # 头像文件路径（放在 web/public 目录下）
+  login_bg: "/login-bg.jpg"  # 登录背景图片路径（放在 web/public 目录下）
+
+# 项目信息
+branding:
+  name: "AI KnowledgeHub"
+  title: "내 지식으로 만드는 AI 업무 공간"     # 시스템 제목
+  subtitle: "RAG와 지식 그래프를 결합한 개인 AI 지식 허브"     # 부제목
+  subtitles:
+    - "RAG와 지식 그래프를 결합한 개인 AI 지식 허브"
+    - "에이전트, 지식베이스, 도구를 한곳에서 관리하세요"
+    - "자료를 쌓고, 연결하고, 신뢰할 수 있는 답을 얻으세요"
+    - "AI 에이전트로 반복 업무를 자동화하세요"
+    - "내 데이터로 성장하는 나만의 AI 작업 환경"
+
+# 页脚信息
+footer:
+  copyright: "© AI KnowledgeHub 2026 v{{YUXI_VERSION}}"
+  user_agreement_url: "/protocols/user-agreement.template.html"
+  privacy_policy_url: "/protocols/privacy-policy.template.html"
