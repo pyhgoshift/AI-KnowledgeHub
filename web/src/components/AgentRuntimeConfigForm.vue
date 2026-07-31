@@ -16,12 +16,12 @@
             <a-alert
               v-if="isEmptyConfig"
               type="warning"
-              message="该智能体没有配置项"
+              message="이 에이전트에는 설정 항목이 없습니다"
               show-icon
               class="config-alert"
             />
             <!-- 统一显示所有配置项 -->
-            <a-empty v-if="isCurrentSegmentEmpty" description="暂无配置项" class="config-empty" />
+            <a-empty v-if="isCurrentSegmentEmpty" description="설정 항목이 없습니다" class="config-empty" />
             <template v-for="(value, key) in filteredConfigurableItems" :key="key">
               <a-form-item :label="getConfigLabel(key, value)" :name="key" class="config-item">
                 <p v-if="value.description" class="config-description">{{ value.description }}</p>
@@ -51,7 +51,7 @@
                       {{ agentConfig[key] || getPlaceholder(key, value) }}
                     </div>
                     <div class="edit-hint">
-                      {{ isReadOnlyConfig ? '查看' : '点击查看并编辑' }}
+                      {{ isReadOnlyConfig ? '보기' : '클릭하여 확인·편집' }}
                     </div>
                   </div>
                 </div>
@@ -90,8 +90,8 @@
                   <div v-if="getConfigOptions(value).length <= 5" class="multi-select-cards">
                     <div class="multi-select-label">
                       <span
-                        >已选择 {{ getSelectedCount(key) }} 项 | 共
-                        {{ getConfigOptions(value).length }} 项</span
+                        >선택됨 {{ getSelectedCount(key) }}개 | 전체
+                        {{ getConfigOptions(value).length }}개</span
                       >
                       <div v-if="!isReadOnlyConfig" class="label-actions">
                         <a-button
@@ -101,7 +101,7 @@
                           @click="clearSelection(key)"
                           v-if="getSelectedCount(key) > 0"
                         >
-                          清空
+                          지우기
                         </a-button>
                         <template v-if="isToolsKind(value.kind)">
                           <a-divider type="vertical" />
@@ -112,7 +112,7 @@
                             class="inline-action-btn lucide-icon-btn"
                           >
                             <RotateCw :size="12" />
-                            刷新
+                            새로고침
                           </a-button>
                           <a-button
                             type="link"
@@ -121,7 +121,7 @@
                             class="inline-action-btn lucide-icon-btn"
                           >
                             <Settings :size="12" />
-                            配置
+                            설정
                           </a-button>
                         </template>
                       </div>
@@ -185,7 +185,7 @@
                         class="selection-trigger-btn"
                         @click="openSelectionModal(key)"
                       >
-                        选择...
+                        선택...
                       </a-button>
                     </div>
 
@@ -246,8 +246,7 @@
                 >
                   <AlertTriangle :size="14" />
                   <span>
-                    已启用知识库，但未选择 knowledge-base Skill。Agent
-                    可能无法调用知识库检索、打开文档等工具。
+                    지식베이스를 켰지만 knowledge-base Skill을 선택하지 않았습니다. 에이전트가 지식베이스 검색 또는 문서 열기 도구를 사용하지 못할 수 있습니다.
                   </span>
                 </div>
               </a-form-item>
@@ -259,7 +258,7 @@
 
     <a-modal
       v-model:open="selectionModalOpen"
-      :title="`选择${configurableItems[currentConfigKey]?.name || '项目'}`"
+      :title="`${configurableItems[currentConfigKey]?.name || '항목'} 선택`"
       :width="800"
       :footer="null"
       :maskClosable="false"
@@ -269,7 +268,7 @@
         <div class="selection-search">
           <a-input
             v-model:value="selectionSearchText"
-            placeholder="搜索..."
+            placeholder="검색..."
             allow-clear
             class="search-input"
           >
@@ -283,20 +282,20 @@
               size="small"
               @click="refreshConfigOptions(currentConfigKey, currentConfigKind)"
               class="inline-action-btn lucide-icon-btn"
-              title="刷新列表"
+              title="목록 새로고침"
             >
               <RotateCw :size="14" />
-              刷新
+              새로고침
             </a-button>
             <a-button
               type="text"
               size="small"
               @click="navigateToConfigPage(currentConfigKind)"
               class="inline-action-btn lucide-icon-btn"
-              title="跳转配置"
+              title="설정으로 이동"
             >
               <Settings :size="14" />
-              配置
+              설정
             </a-button>
           </template>
         </div>
@@ -328,13 +327,13 @@
         </div>
 
         <div class="selection-modal-footer">
-          <div class="selected-count">已选择 {{ tempSelectedValues.length }} 项</div>
+          <div class="selected-count">{{ tempSelectedValues.length }}개 선택됨</div>
 
           <div class="modal-actions">
-            <a-button @click="closeSelectionModal">取消</a-button>
+            <a-button @click="closeSelectionModal">취소</a-button>
 
             <a-button v-if="!isReadOnlyConfig" type="primary" @click="confirmSelection">
-              确认
+              확인
             </a-button>
           </div>
         </div>
@@ -370,14 +369,14 @@
             <template #icon>
               <RotateCcw :size="14" />
             </template>
-            恢复默认
+            기본값 복원
           </a-button>
           <div class="system-prompt-modal-actions">
             <a-button @click="closeSystemPromptModal">{{
-              isReadOnlyConfig ? '关闭' : '取消'
+              isReadOnlyConfig ? '닫기' : '취소'
             }}</a-button>
             <a-button v-if="!isReadOnlyConfig" type="primary" @click="saveSystemPrompt">
-              保存
+              저장
             </a-button>
           </div>
         </div>
@@ -430,9 +429,9 @@ const currentSystemPromptKey = ref(null)
 const systemPromptDraft = ref('')
 const currentSegment = ref('model')
 const segmentOptions = [
-  { label: '模型', value: 'model' },
-  { label: '工具', value: 'tools' },
-  { label: '其他', value: 'other' }
+  { label: '모델', value: 'model' },
+  { label: '도구', value: 'tools' },
+  { label: '기타', value: 'other' }
 ]
 const activeSegment = computed(() => (props.showSegmented ? currentSegment.value : props.segment))
 const isToolResourceKind = (kind) => isDefaultAllAgentResourceKind(kind)
@@ -487,10 +486,10 @@ const refreshConfigOptions = async () => {
   if (isReadOnlyConfig.value || !selectedAgentId.value) return
   try {
     await agentStore.fetchAgentDetail(selectedAgentId.value, true)
-    message.success('配置选项已刷新')
+    message.success('설정 옵션을 새로고침했습니다')
   } catch (error) {
     console.error('刷新配置选项失败:', error)
-    message.error('刷新失败')
+    message.error('새로고침에 실패했습니다')
   }
 }
 
@@ -556,9 +555,9 @@ const systemPromptModalTitle = computed(() => {
 })
 
 const systemPromptModalPlaceholder = computed(() => {
-  if (!currentSystemPromptKey.value) return '请输入系统提示词'
+  if (!currentSystemPromptKey.value) return '시스템 프롬프트를 입력하세요'
   const currentItem = configurableItems.value[currentSystemPromptKey.value]
-  if (!currentItem) return '请输入系统提示词'
+  if (!currentItem) return '시스템 프롬프트를 입력하세요'
   return getPlaceholder(currentSystemPromptKey.value, currentItem)
 })
 
@@ -616,7 +615,7 @@ const getConfigLabel = (key, value) => {
 }
 
 const getPlaceholder = (_key, value) => {
-  return `（默认: ${value.default}）`
+  return `(기본값: ${value.default})`
 }
 
 const handleModelChange = (key, spec) => {

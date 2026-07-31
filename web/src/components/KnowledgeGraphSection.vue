@@ -3,9 +3,9 @@
     <div class="graph-container-compact">
       <div v-if="!isGraphSupported" class="graph-disabled">
         <div class="disabled-content">
-          <h4>知识图谱不可用</h4>
-          <p>当前知识库类型 "{{ kbTypeLabel }}" 不支持知识图谱功能。</p>
-          <p>只有 Milvus 类型的知识库支持知识图谱。</p>
+          <h4>지식 그래프를 사용할 수 없습니다</h4>
+          <p>현재 지식베이스 유형 "{{ kbTypeLabel }}"은(는) 지식 그래프를 지원하지 않습니다.</p>
+          <p>Milvus 유형의 지식베이스만 지식 그래프를 지원합니다.</p>
         </div>
       </div>
       <div v-else class="graph-wrapper">
@@ -21,7 +21,7 @@
               <div class="actions-left">
                 <a-input
                   v-model:value="searchInput"
-                  placeholder="搜索实体"
+                  placeholder="엔터티 검색"
                   style="width: 240px"
                   @keydown.enter="onSearch"
                   allow-clear
@@ -35,7 +35,7 @@
                     />
                   </template>
                 </a-input>
-                <a-button class="action-btn" @click="loadGraph" title="刷新">
+                <a-button class="action-btn" @click="loadGraph" title="새로고침">
                   <RefreshCw :size="16" :class="{ spin: graph.fetching }" />
                 </a-button>
               </div>
@@ -50,7 +50,7 @@
                 >
                   <Database :size="16" />
                   <span v-if="hasPendingGraphChunks" class="index-status-label"
-                    >{{ pendingGraphChunks }} 待索引</span
+                    >색인 대기 {{ pendingGraphChunks }}개</span
                   >
                   <span
                     v-if="graphIndexDotStatus"
@@ -58,7 +58,7 @@
                     :class="`status-dot--${graphIndexDotStatus}`"
                   ></span>
                 </a-button>
-                <a-button class="action-btn" @click="toggleSettingsPanel" title="设置">
+                <a-button class="action-btn" @click="toggleSettingsPanel" title="설정">
                   <Settings :size="16" />
                 </a-button>
               </div>
@@ -68,15 +68,15 @@
         <ResourceEmptyState
           v-if="showGraphConfigEmpty"
           class="graph-empty-state"
-          title="暂无知识图谱"
-          description="配置抽取器后，才能从当前知识库构建实体与关系。"
+          title="지식 그래프가 없습니다"
+          description="추출기를 설정하면 현재 지식베이스에서 엔터티와 관계를 구성할 수 있습니다."
           :icon="Network"
           full-height
         >
           <template #actions>
             <a-button type="primary" class="lucide-icon-btn" @click="openGraphConfig">
               <Settings :size="16" />
-              配置抽取器
+              추출기 설정
             </a-button>
           </template>
         </ResourceEmptyState>
@@ -91,7 +91,7 @@
           <template #actions>
             <a-button v-if="searchInput.trim()" class="lucide-icon-btn" @click="clearGraphSearch">
               <Search :size="16" />
-              清空搜索
+              검색 지우기
             </a-button>
             <a-button
               v-else-if="hasPendingGraphChunks && !isBuildActive"
@@ -100,11 +100,11 @@
               @click="startGraphBuild"
             >
               <Database :size="16" />
-              开始索引
+              색인 시작
             </a-button>
             <a-button v-else class="lucide-icon-btn" @click="loadGraph">
               <RefreshCw :size="16" :class="{ spin: graph.fetching }" />
-              刷新图谱
+              그래프 새로고침
             </a-button>
           </template>
         </ResourceEmptyState>
@@ -121,11 +121,11 @@
         <transition name="slide-fade">
           <div v-if="showSettings" class="floating-panel settings-panel">
             <div class="panel-header">
-              <span class="panel-title">图谱设置</span>
+              <span class="panel-title">그래프 설정</span>
             </div>
             <div class="panel-body">
               <a-form layout="vertical">
-                <a-form-item label="最大节点数 (limit)">
+                <a-form-item label="최대 노드 수 (limit)">
                   <a-input-number
                     v-model:value="subgraphParams.maxNodes"
                     :min="10"
@@ -134,7 +134,7 @@
                     style="width: 100%"
                   />
                 </a-form-item>
-                <a-form-item label="搜索深度 (depth)">
+                <a-form-item label="검색 깊이 (depth)">
                   <a-input-number
                     v-model:value="subgraphParams.maxDepth"
                     :min="1"
@@ -143,12 +143,12 @@
                     style="width: 100%"
                   />
                 </a-form-item>
-                <a-form-item label="排除 Chunk 节点">
+                <a-form-item label="청크 노드 제외">
                   <a-switch v-model:checked="subgraphParams.excludeChunk" />
                 </a-form-item>
                 <a-form-item>
                   <a-button type="primary" @click="applySettings" style="width: 100%">
-                    应用
+                    적용
                   </a-button>
                 </a-form-item>
               </a-form>
@@ -160,7 +160,7 @@
         <transition name="slide-fade">
           <div v-if="isMilvus && showBuildPanel" class="floating-panel build-panel">
             <div class="panel-header">
-              <span class="panel-title">索引管理</span>
+              <span class="panel-title">색인 관리</span>
               <a-button
                 size="small"
                 type="text"
@@ -173,13 +173,13 @@
             </div>
             <div class="panel-body">
               <div class="status-row">
-                <span class="status-label">状态</span>
-                <a-tag v-if="isBuildActive" color="blue" size="small">构建中</a-tag>
-                <a-tag v-else-if="isBuildFailed" color="red" size="small">构建失败</a-tag>
+                <span class="status-label">상태</span>
+                <a-tag v-if="isBuildActive" color="blue" size="small">구성 중</a-tag>
+                <a-tag v-else-if="isBuildFailed" color="red" size="small">구성 실패</a-tag>
                 <a-tag v-else-if="graphBuildStatus?.locked" color="green" size="small"
-                  >已配置</a-tag
+                  >설정됨</a-tag
                 >
-                <a-tag v-else color="orange" size="small">未配置</a-tag>
+                <a-tag v-else color="orange" size="small">미설정</a-tag>
               </div>
               <a-progress
                 v-if="isBuildActive"
@@ -191,23 +191,23 @@
               <div class="stats-grid">
                 <div class="stat-item">
                   <span class="stat-value">{{ graphBuildStatus?.total_chunks ?? '-' }}</span>
-                  <span class="stat-label">总 Chunk</span>
+                  <span class="stat-label">전체 청크</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-value">{{ graphBuildStatus?.pending_chunks ?? '-' }}</span>
-                  <span class="stat-label">待构建</span>
+                  <span class="stat-label">구성 대기</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-value">{{ graphBuildStatus?.indexed_chunks ?? '-' }}</span>
-                  <span class="stat-label">已构建</span>
+                  <span class="stat-label">구성 완료</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-value">{{ graphBuildStatus?.entity_count ?? '-' }}</span>
-                  <span class="stat-label">实体</span>
+                  <span class="stat-label">엔터티</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-value">{{ graphBuildStatus?.relationship_count ?? '-' }}</span>
-                  <span class="stat-label">关系</span>
+                  <span class="stat-label">관계</span>
                 </div>
               </div>
               <div class="build-actions">
@@ -217,10 +217,10 @@
                   block
                   @click="openGraphConfig"
                 >
-                  配置抽取器
+                  추출기 설정
                 </a-button>
                 <a-button v-else-if="isBuildActive" type="primary" block disabled>
-                  构建中 {{ graphBuildStatus?.build_task_progress ?? 0 }}%
+                  구성 중 {{ graphBuildStatus?.build_task_progress ?? 0 }}%
                 </a-button>
                 <a-button
                   v-else-if="isBuildFailed"
@@ -229,7 +229,7 @@
                   :disabled="!graphBuildStatus?.pending_chunks"
                   @click="startGraphBuild"
                 >
-                  重试索引
+                  색인 재시도
                 </a-button>
                 <a-button
                   v-else
@@ -238,7 +238,7 @@
                   :disabled="!graphBuildStatus?.pending_chunks"
                   @click="startGraphBuild"
                 >
-                  开始索引
+                  색인 시작
                 </a-button>
                 <div class="actions-secondary">
                   <a-button
@@ -247,7 +247,7 @@
                     type="text"
                     @click="openGraphConfig"
                   >
-                    修改配置
+                    설정 변경
                   </a-button>
                   <a-button
                     size="small"
@@ -255,7 +255,7 @@
                     danger
                     v-if="graphBuildStatus?.locked && !isBuildActive"
                     @click="confirmResetGraph"
-                    >重置</a-button
+                    >초기화</a-button
                   >
                 </div>
               </div>
@@ -277,10 +277,10 @@
           class="config-warning"
           type="warning"
           show-icon
-          message="修改配置仅影响后续构建；已构建的图谱不会自动重算，如需一致请重置后重新抽取。抽取器类型创建后不可修改。"
+          message="설정 변경은 이후 구성에만 적용됩니다. 이미 만든 그래프는 자동으로 다시 계산되지 않으므로, 일관된 결과가 필요하면 초기화 후 다시 추출하세요. 추출기 유형은 만든 뒤 변경할 수 없습니다."
         />
-        <a-form-item label="抽取器类型">
-          <div class="extractor-type-cards" role="radiogroup" aria-label="抽取器类型">
+        <a-form-item label="추출기 유형">
+          <div class="extractor-type-cards" role="radiogroup" aria-label="추출기 유형">
             <div
               v-for="option in extractorTypeOptions"
               :key="option.value"
@@ -308,10 +308,10 @@
             </div>
           </div>
         </a-form-item>
-        <a-form-item label="模型">
+        <a-form-item label="모델">
           <ModelSelectorComponent
             :model_spec="graphConfigForm.model_spec"
-            placeholder="选择抽取模型"
+            placeholder="추출 모델 선택"
             @select-model="(spec) => (graphConfigForm.model_spec = spec)"
           />
         </a-form-item>
@@ -319,11 +319,11 @@
           <a-textarea
             v-model:value="graphConfigForm.schema"
             :rows="6"
-            placeholder="描述实体类型、关系类型和属性约束。后端会把 Schema 拼接到固定抽取 Prompt 中。"
+            placeholder="엔터티·관계 유형과 속성 제약을 설명하세요. 서버가 스키마를 기본 추출 프롬프트에 추가합니다."
           />
         </a-form-item>
         <div class="form-grid two-columns">
-          <a-form-item label="并发队列数">
+          <a-form-item label="동시 처리 큐 수">
             <a-input-number
               v-model:value="graphConfigForm.concurrency_count"
               :min="1"
@@ -332,7 +332,7 @@
               style="width: 100%"
             />
           </a-form-item>
-          <a-form-item label="模型参数 JSON">
+          <a-form-item label="모델 매개변수 JSON">
             <a-input
               v-model:value="graphConfigForm.model_params_text"
               placeholder='例如 {"temperature":0.1}'
@@ -407,16 +407,16 @@ const extractorTypeOptions = [
   {
     value: 'llm',
     label: 'LLM',
-    description: '使用大模型按 Schema 抽取实体和关系',
-    helper: '当前唯一支持的图谱抽取方式',
+    description: '대규모 언어 모델로 스키마에 따라 엔터티와 관계를 추출합니다',
+    helper: '현재 지원되는 유일한 그래프 추출 방식입니다',
     icon: BrainCircuit,
     disabled: false
   },
   {
     value: 'more',
-    label: '更多',
-    description: '更多抽取方式正在拓展中',
-    helper: '拓展中',
+    label: '추가 방식',
+    description: '추가 추출 방식을 확장하고 있습니다',
+    helper: '준비 중',
     icon: ScanText,
     disabled: true
   }
@@ -454,9 +454,9 @@ const graphIndexDotStatus = computed(() => {
 
 const graphIndexButtonTitle = computed(() => {
   if (hasPendingGraphChunks.value) return `索引管理，${pendingGraphChunks.value} 待索引`
-  if (isGraphIndexComplete.value) return '索引管理，已全部索引'
-  if (isBuildActive.value) return '索引管理，索引中'
-  return '索引管理'
+  if (isGraphIndexComplete.value) return '색인 관리, 전체 색인 완료'
+  if (isBuildActive.value) return '색인 관리, 색인 중'
+  return '색인 관리'
 })
 
 const toggleBuildPanel = () => {
@@ -472,7 +472,7 @@ const toggleSettingsPanel = () => {
 const isEditingGraphConfig = computed(() => Boolean(graphBuildStatus.value?.locked))
 
 const graphConfigTitle = computed(() =>
-  isEditingGraphConfig.value ? '修改图谱抽取配置' : '配置图谱抽取器'
+  isEditingGraphConfig.value ? '그래프 추출 설정 변경' : '그래프 추출기 설정'
 )
 
 const stopBuildStatusPoll = () => {
@@ -526,13 +526,13 @@ const showGraphDataEmpty = computed(
     !hasGraphNodes.value
 )
 const graphDataEmptyTitle = computed(() =>
-  searchInput.value.trim() ? '未找到匹配实体' : '暂无知识图谱'
+  searchInput.value.trim() ? '일치하는 엔터티가 없습니다' : '지식 그래프가 없습니다'
 )
 const graphDataEmptyDescription = computed(() => {
-  if (searchInput.value.trim()) return '换个关键词或调整图谱设置后再搜索。'
-  if (isBuildActive.value) return '图谱索引正在运行，完成后会展示实体与关系。'
-  if (hasPendingGraphChunks.value) return '当前还有待索引 Chunk，完成索引后会展示实体与关系。'
-  return '当前知识库还没有可展示的实体与关系。'
+  if (searchInput.value.trim()) return '다른 검색어를 사용하거나 그래프 설정을 조정한 뒤 다시 검색하세요.'
+  if (isBuildActive.value) return '그래프 색인이 진행 중입니다. 완료되면 엔터티와 관계가 표시됩니다.'
+  if (hasPendingGraphChunks.value) return '아직 색인 대기 청크가 있습니다. 색인 완료 후 엔터티와 관계가 표시됩니다.'
+  return '현재 지식베이스에 표시할 엔터티와 관계가 없습니다.'
 })
 
 let pendingLoadTimer = null
@@ -555,7 +555,7 @@ const loadGraphBuildStatus = async () => {
     }
   } catch (e) {
     console.error('Failed to load graph build status:', e)
-    message.error('加载图谱构建状态失败')
+    message.error('그래프 구성 상태를 불러오지 못했습니다')
   } finally {
     if (requestSeq === graphStatusRequestSeq) {
       graphBuildLoading.value = false
@@ -570,10 +570,10 @@ const parseModelParams = () => {
   try {
     params = JSON.parse(text)
   } catch {
-    throw new Error('模型参数必须是合法 JSON 对象')
+    throw new Error('모델 매개변수는 올바른 JSON 객체여야 합니다')
   }
   if (!params || Array.isArray(params) || typeof params !== 'object') {
-    throw new Error('模型参数必须是 JSON 对象')
+    throw new Error('모델 매개변수는 JSON 객체여야 합니다')
   }
   return params
 }
@@ -617,19 +617,19 @@ const configureGraphBuild = async () => {
       extractor_type: 'llm',
       extractor_options: buildExtractorOptions()
     })
-    message.success(isEditingGraphConfig.value ? '图谱抽取配置已更新' : '图谱抽取配置已保存')
+    message.success(isEditingGraphConfig.value ? '그래프 추출 설정을 업데이트했습니다' : '그래프 추출 설정을 저장했습니다')
     showGraphConfig.value = false
     await loadGraphBuildStatus()
   } catch (e) {
     console.error('Failed to configure graph build:', e)
-    message.error(getErrorDetail(e, '配置图谱抽取失败'))
+    message.error(getErrorDetail(e, '그래프 추출 설정에 실패했습니다'))
   }
 }
 
 const startGraphBuild = async () => {
   try {
     const data = await graphBuildApi.startIndex(kbId.value, 20)
-    message.success(data.message || '图谱构建任务已提交')
+    message.success(data.message || '그래프 구성 작업을 등록했습니다')
     if (data.task_id) {
       taskerStore.registerQueuedTask({
         task_id: data.task_id,
@@ -642,16 +642,16 @@ const startGraphBuild = async () => {
     await loadGraphBuildStatus()
   } catch (e) {
     console.error('Failed to start graph build:', e)
-    message.error(getErrorDetail(e, '提交图谱构建任务失败'))
+    message.error(getErrorDetail(e, '그래프 구성 작업 등록에 실패했습니다'))
   }
 }
 
 const confirmResetGraph = () => {
   Modal.confirm({
-    title: '清空并重建图谱',
-    content: '将删除该知识库在 Neo4j 中的图谱，重置 Chunk 图谱状态，并清空抽取结果与配置。',
-    okText: '确认重置',
-    cancelText: '取消',
+    title: '그래프 초기화 및 재구성',
+    content: '이 지식베이스의 Neo4j 그래프, 청크 그래프 상태, 추출 결과와 설정을 모두 초기화합니다.',
+    okText: '초기화 확인',
+    cancelText: '취소',
     onOk: resetGraphBuild
   })
 }
@@ -662,13 +662,13 @@ const resetGraphBuild = async () => {
       clear_extraction_result: true,
       clear_config: true
     })
-    message.success('图谱构建状态已重置')
+    message.success('그래프 구성 상태를 초기화했습니다')
     graphLoaded.value = false
     graph.clearGraph()
     await loadGraphBuildStatus()
   } catch (e) {
     console.error('Failed to reset graph build:', e)
-    message.error(getErrorDetail(e, '重置图谱构建状态失败'))
+    message.error(getErrorDetail(e, '그래프 구성 상태 초기화에 실패했습니다'))
   }
 }
 
@@ -700,7 +700,7 @@ const loadGraph = async () => {
     }
   } catch (e) {
     console.error('Failed to load graph:', e)
-    message.error('加载图谱失败')
+    message.error('그래프를 불러오지 못했습니다')
   } finally {
     if (requestSeq === graphLoadRequestSeq) {
       graph.fetching = false

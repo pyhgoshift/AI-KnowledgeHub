@@ -17,21 +17,21 @@
     />
 
     <div v-if="detailLoading" class="database-detail-loading">
-      <a-spin tip="加载知识库信息..." />
+      <a-spin tip="지식베이스 정보를 불러오는 중..." />
     </div>
 
     <template v-else>
       <div class="detail-top-bar">
         <button class="detail-back-btn" type="button" @click="backToDatabase">
           <ArrowLeft :size="16" />
-          <span>返回</span>
+          <span>뒤로</span>
         </button>
         <div class="detail-title-area">
           <div class="detail-icon">
             <component :is="kbTypeIcon" :size="18" />
           </div>
           <div class="detail-title-text">
-            <h2>{{ database.name || '知识库加载中' }}</h2>
+            <h2>{{ database.name || '지식베이스를 불러오는 중' }}</h2>
             <span class="detail-subtitle">{{ databaseSubtitle }}</span>
           </div>
         </div>
@@ -43,7 +43,7 @@
               @click="copyDatabaseId"
             >
               <Copy :size="14" />
-              <span>复制 ID</span>
+              <span>ID 복사</span>
             </button>
             <button
               type="button"
@@ -51,15 +51,15 @@
               @click="showEditModal"
             >
               <Pencil :size="14" />
-              <span>编辑</span>
+              <span>편집</span>
             </button>
           </a-space>
         </div>
       </div>
 
       <div class="database-detail-body">
-        <div class="database-tab-bar" aria-label="知识库功能导航">
-          <nav class="database-tab-list" aria-label="知识库功能标签" role="tablist">
+        <div class="database-tab-bar" aria-label="지식베이스 기능 탐색">
+          <nav class="database-tab-list" aria-label="지식베이스 기능 탭" role="tablist">
             <button
               v-for="tab in visibleTabs"
               :key="tab.key"
@@ -87,7 +87,7 @@
                     @click="showAddFilesModal()"
                   >
                     <FileUp :size="14" />
-                    <span>上传</span>
+                    <span>업로드</span>
                   </button>
                   <button
                     type="button"
@@ -95,7 +95,7 @@
                     @click="showCreateFolderModal"
                   >
                     <FolderPlus :size="14" />
-                    <span>新建文件夹</span>
+                    <span>새 폴더</span>
                   </button>
                 </div>
               </div>
@@ -110,7 +110,7 @@
                   <FileText :size="16" />
                   <div class="file-stat-inline">
                     <strong>{{ pendingParseCount }}</strong>
-                    <span>待解析</span>
+                    <span>분석 대기</span>
                   </div>
                 </button>
                 <button
@@ -123,21 +123,21 @@
                   <DatabaseIcon :size="16" />
                   <div class="file-stat-inline">
                     <strong>{{ pendingIndexCount }}</strong>
-                    <span>待入库</span>
+                    <span>등록 대기</span>
                   </div>
                 </button>
                 <div class="file-stat-card file-stat-summary">
                   <FileText :size="16" />
                   <div class="file-stat-inline">
                     <strong>{{ fileStats.count }}</strong>
-                    <span>文件</span>
+                    <span>파일</span>
                   </div>
                 </div>
                 <div v-if="fileStats.sizeText" class="file-stat-card file-stat-summary">
                   <DatabaseIcon :size="16" />
                   <div class="file-stat-inline">
                     <strong>{{ fileStats.sizeText }}</strong>
-                    <span>总大小</span>
+                    <span>전체 크기</span>
                   </div>
                 </div>
                 <button
@@ -145,8 +145,8 @@
                   class="file-stat-card file-stat-summary file-stat-repair"
                   :disabled="statsRepairing"
                   :aria-busy="statsRepairing"
-                  aria-label="修复缺失的 Chunk/Token 统计"
-                  title="修复缺失的 Chunk/Token 统计"
+                  aria-label="누락된 청크/토큰 통계 복구"
+                  title="누락된 청크/토큰 통계 복구"
                   @click="repairDatabaseStats"
                 >
                   <LoaderCircle v-if="statsRepairing" :size="16" class="file-stat-spinner" />
@@ -182,12 +182,12 @@
               <div class="query-test-pane">
                 <QuerySection ref="querySectionRef" :visible="true" @toggle-visible="() => {}" />
               </div>
-              <aside class="query-config-pane" aria-label="检索配置">
+              <aside class="query-config-pane" aria-label="검색 설정">
                 <div class="search-config-wrapper">
                   <div class="search-config-header">
                     <div>
-                      <h3>检索配置</h3>
-                      <p>调整当前知识库的检索参数。</p>
+                      <h3>검색 설정</h3>
+                      <p>현재 지식베이스의 검색 매개변수를 조정합니다.</p>
                     </div>
                     <button
                       type="button"
@@ -196,7 +196,7 @@
                       @click="handleInlineSearchConfigSave"
                     >
                       <Save :size="14" />
-                      <span>保存</span>
+                      <span>저장</span>
                     </button>
                   </div>
                   <div class="search-config-body">
@@ -246,40 +246,40 @@
       </div>
     </template>
 
-    <a-modal v-model:open="editModalVisible" title="编辑知识库信息" width="700px">
+    <a-modal v-model:open="editModalVisible" title="지식베이스 정보 편집" width="700px">
       <template #footer>
         <a-button danger @click="deleteDatabase" style="margin-right: auto; margin-left: 0">
           <template #icon>
             <Trash2 :size="16" style="vertical-align: -3px; margin-right: 4px" />
           </template>
-          删除数据库
+          지식베이스 삭제
         </a-button>
-        <a-button key="back" @click="editModalVisible = false">取消</a-button>
-        <a-button key="submit" type="primary" @click="handleEditSubmit">确定</a-button>
+        <a-button key="back" @click="editModalVisible = false">취소</a-button>
+        <a-button key="submit" type="primary" @click="handleEditSubmit">확인</a-button>
       </template>
       <a-form :model="editForm" :rules="rules" ref="editFormRef" layout="vertical">
-        <a-form-item label="知识库名称" name="name" required>
-          <a-input v-model:value="editForm.name" placeholder="请输入知识库名称" />
+        <a-form-item label="지식베이스 이름" name="name" required>
+          <a-input v-model:value="editForm.name" placeholder="지식베이스 이름을 입력하세요" />
         </a-form-item>
-        <a-form-item label="知识库描述" name="description">
+        <a-form-item label="지식베이스 설명" name="description">
           <AiTextarea
             v-model="editForm.description"
             :name="editForm.name"
             :files="fileList"
-            placeholder="请输入知识库描述"
+            placeholder="지식베이스 설명을 입력하세요"
             action-placement="header"
             :rows="4"
           />
         </a-form-item>
 
-        <a-form-item v-if="!isConnector" label="自动生成问题" name="auto_generate_questions">
+        <a-form-item v-if="!isConnector" label="질문 자동 생성" name="auto_generate_questions">
           <a-switch
             v-model:checked="editForm.auto_generate_questions"
-            checked-children="开启"
-            un-checked-children="关闭"
+            checked-children="켜기"
+            un-checked-children="끄기"
           />
           <span style="margin-left: 8px; font-size: 12px; color: var(--gray-500)">
-            上传文件后自动生成测试问题
+            파일 업로드 후 테스트 질문을 자동으로 생성합니다
           </span>
         </a-form-item>
 
@@ -438,28 +438,28 @@ const kbTypeIcon = computed(() => getKbTypeIcon(kbType.value || 'milvus'))
 
 const databaseSubtitle = computed(() => {
   const typeLabel = getKbTypeLabel(kbType.value || 'milvus')
-  if (!isCurrentDatabaseLoaded.value) return '正在加载知识库信息'
+  if (!isCurrentDatabaseLoaded.value) return '지식베이스 정보를 불러오는 중'
 
   const description = database.value.description?.trim()
   if (description) return description
 
-  if (isConnector.value) return `${typeLabel} 连接器`
-  return `${typeLabel} 知识库 · ${database.value.row_count || 0} 文件`
+  if (isConnector.value) return `${typeLabel} 커넥터`
+  return `${typeLabel} 지식베이스 · 파일 ${database.value.row_count || 0}개`
 })
 
 const tabs = computed(() => {
   if (isMilvus.value) {
     return [
-      { key: 'filetable', label: '文件管理', icon: FileText },
-      { key: 'query', label: '检索测试', icon: Search },
-      { key: 'graph', label: '知识图谱', icon: Network },
-      { key: 'mindmap', label: '知识导图', icon: MapIcon },
-      { key: 'evaluation', label: 'RAG 评估', icon: BarChart3 },
-      { key: 'benchmarks', label: '评估基准', icon: ClipboardList }
+      { key: 'filetable', label: '파일 관리', icon: FileText },
+      { key: 'query', label: '검색 테스트', icon: Search },
+      { key: 'graph', label: '지식 그래프', icon: Network },
+      { key: 'mindmap', label: '지식 마인드맵', icon: MapIcon },
+      { key: 'evaluation', label: 'RAG 평가', icon: BarChart3 },
+      { key: 'benchmarks', label: '평가 기준', icon: ClipboardList }
     ]
   }
 
-  return [{ key: 'query', label: '检索测试', icon: Search }]
+  return [{ key: 'query', label: '검색 테스트', icon: Search }]
 })
 
 const visibleTabs = computed(() => tabs.value)
@@ -528,11 +528,11 @@ const repairDatabaseStats = async () => {
         `已修复 ${updatedTokenFiles} 个 Token 统计，${updatedChunkFiles} 个 Chunk 统计`
       )
     } else {
-      message.info('统计已是最新')
+      message.info('통계가 최신 상태입니다')
     }
   } catch (error) {
     console.error(error)
-    message.error(error.message || '统计修复失败')
+    message.error(error.message || '통계 복구에 실패했습니다')
   } finally {
     statsRepairing.value = false
   }
@@ -545,15 +545,15 @@ const pendingIndexCount = computed(() => {
 const confirmBatchParse = () => {
   const count = pendingParseCount.value
   if (count <= 0) {
-    message.info('没有待解析文档')
+    message.info('분석 대기 문서가 없습니다')
     return
   }
 
   Modal.confirm({
-    title: '解析待解析文件',
-    content: `将提交 ${formatStatNumber(count)} 个待解析文件，任务会在后台按批处理，可在任务中心查看进度。`,
-    okText: '提交解析',
-    cancelText: '取消',
+    title: '분석 대기 파일 처리',
+    content: `분석 대기 파일 ${formatStatNumber(count)}개를 백그라운드 작업으로 등록합니다. 작업 센터에서 진행 상황을 확인할 수 있습니다.`,
+    okText: '분석 시작',
+    cancelText: '취소',
     onOk: () => store.parsePendingFiles(count)
   })
 }
@@ -561,13 +561,13 @@ const confirmBatchParse = () => {
 const confirmBatchIndex = () => {
   const count = pendingIndexCount.value
   if (count <= 0) {
-    message.info('没有待入库文档')
+    message.info('등록 대기 문서가 없습니다')
     return
   }
 
   const opened = fileTableRef.value?.startPendingIndex?.(count)
   if (!opened) {
-    message.error('文件列表尚未加载完成，请稍后再试')
+    message.error('파일 목록을 아직 불러오는 중입니다. 잠시 후 다시 시도하세요')
   }
 }
 
@@ -707,13 +707,13 @@ const backToDatabase = () => {
 
 const copyDatabaseId = async () => {
   if (!database.value.kb_id) {
-    message.warning('知识库ID为空')
+    message.warning('지식베이스 ID가 없습니다')
     return
   }
 
   try {
     await navigator.clipboard.writeText(database.value.kb_id)
-    message.success('知识库ID已复制到剪贴板')
+    message.success('지식베이스 ID를 클립보드에 복사했습니다')
   } catch {
     const textArea = document.createElement('textarea')
     textArea.value = database.value.kb_id
@@ -744,7 +744,7 @@ const editForm = reactive({
 })
 
 const rules = {
-  name: [{ required: true, message: '请输入知识库名称' }]
+  name: [{ required: true, message: '지식베이스 이름을 입력하세요' }]
 }
 
 const editPresetDescription = computed(() => getChunkPresetDescription(editForm.chunk_preset_id))

@@ -1,12 +1,12 @@
 <template>
-  <a-modal v-model:open="visible" title="添加文件" width="800px" @cancel="handleCancel">
+  <a-modal v-model:open="visible" title="파일 추가" width="800px" @cancel="handleCancel">
     <template #footer>
       <div class="footer-container">
         <a-button type="link" class="help-link-btn" @click="openDocLink">
-          <CircleHelp :size="14" /> 文档处理说明
+          <CircleHelp :size="14" /> 문서 처리 안내
         </a-button>
         <div class="footer-buttons">
-          <a-button key="back" @click="handleCancel">取消</a-button>
+          <a-button key="back" @click="handleCancel">취소</a-button>
           <a-button
             key="submit"
             type="primary"
@@ -14,7 +14,7 @@
             :loading="chunkLoading"
             :disabled="!canSubmit"
           >
-            添加到知识库
+            지식베이스에 추가
           </a-button>
         </div>
       </div>
@@ -31,7 +31,7 @@
           />
         </div>
         <div class="auto-index-toggle">
-          <a-checkbox v-model:checked="autoIndex">上传后自动入库</a-checkbox>
+          <a-checkbox v-model:checked="autoIndex">업로드 후 자동 등록</a-checkbox>
         </div>
       </div>
 
@@ -47,14 +47,14 @@
           :class="{ 'two-cols': uploadMode !== 'url' && folderTreeData.length > 0 }"
         >
           <div class="col-item" v-if="folderTreeData.length > 0">
-            <div class="setting-label">存储位置</div>
+            <div class="setting-label">저장 위치</div>
             <div class="setting-content flex-row">
               <a-tree-select
                 v-model:value="selectedFolderId"
                 show-search
                 class="folder-select"
                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                placeholder="选择目标文件夹（默认为根目录）"
+                placeholder="대상 폴더 선택 (기본값: 최상위 폴더)"
                 allow-clear
                 tree-default-expand-all
                 :tree-data="folderTreeData"
@@ -62,12 +62,12 @@
               >
               </a-tree-select>
             </div>
-            <p class="param-description">选择文件保存的目标文件夹</p>
+            <p class="param-description">파일을 저장할 대상 폴더를 선택하세요</p>
           </div>
           <div class="col-item" v-if="uploadMode !== 'url'">
             <div class="setting-label">
-              OCR 引擎（仅应用于 PDF/图片文件）
-              <a-tooltip title="检查服务状态">
+              OCR 엔진 (PDF/이미지 파일에만 적용)
+              <a-tooltip title="서비스 상태 확인">
                 <ReloadOutlined
                   class="action-icon refresh-icon"
                   :class="{ spinning: ocrHealthChecking }"
@@ -112,7 +112,7 @@
                         class="unavailable-toggle"
                         @click="toggleUnavailableOcrOptions"
                       >
-                        <span>不可用选项（{{ unavailableOcrOptions.length }}）</span>
+                        <span>사용할 수 없는 옵션 ({{ unavailableOcrOptions.length }})</span>
                         <ChevronUp v-if="unavailableOcrExpanded" :size="14" />
                         <ChevronDown v-else :size="14" />
                       </button>
@@ -156,7 +156,7 @@
         <!-- 第二行：自动入库配置 (仅在开启时显示) -->
         <div class="setting-row" v-if="autoIndex">
           <div class="col-item">
-            <div class="setting-label">入库参数配置</div>
+            <div class="setting-label">등록 매개변수 설정</div>
             <div class="setting-content">
               <ChunkParamsConfig
                 :temp-chunk-params="indexParams"
@@ -176,7 +176,7 @@
       <!-- PDF/图片OCR提醒 (Alert样式优化) -->
       <div v-if="hasPdfOrImageFiles && !isOcrEnabled" class="inline-alert warning">
         <Info :size="16" />
-        <span>检测到PDF或图片文件，建议启用 OCR 以提取文本内容</span>
+        <span>PDF 또는 이미지 파일을 찾았습니다. 텍스트 추출을 위해 OCR 사용을 권장합니다.</span>
       </div>
 
       <!-- 文件上传区域 -->
@@ -197,25 +197,25 @@
           @change="handleFileUpload"
           @drop="handleDrop"
         >
-          <p class="ant-upload-text">点击或将文件拖拽到此处</p>
-          <p class="ant-upload-hint">支持类型: {{ uploadHint }}</p>
-          <div class="zip-tip" v-if="hasZipFiles">📦 ZIP包将自动解压提取 Markdown 与图片</div>
+          <p class="ant-upload-text">클릭하거나 파일을 이곳으로 끌어오세요</p>
+          <p class="ant-upload-hint">지원 형식: {{ uploadHint }}</p>
+          <div class="zip-tip" v-if="hasZipFiles">📦 ZIP 파일은 자동으로 압축을 풀어 Markdown과 이미지를 추출합니다</div>
         </a-upload-dragger>
 
         <div v-if="showAggregateProgress" class="upload-progress-card">
           <div class="progress-header">
             <div class="progress-header-left">
-              <div class="progress-title">上传进度</div>
+              <div class="progress-title">업로드 진행 상황</div>
               <div class="progress-stats inline-in-header">
-                <div class="stat-pill">总计 {{ totalUploadCount }}</div>
+                <div class="stat-pill">전체 {{ totalUploadCount }}</div>
                 <div class="stat-pill uploading" v-if="uploadingUploadCount > 0">
-                  上传中 {{ uploadingUploadCount }}
+                  업로드 중 {{ uploadingUploadCount }}
                 </div>
                 <div class="stat-pill queued" v-if="queuedUploadCount > 0">
-                  排队 {{ queuedUploadCount }}
+                  대기 중 {{ queuedUploadCount }}
                 </div>
                 <div class="stat-pill error" v-if="failedUploadCount > 0">
-                  失败 {{ failedUploadCount }}
+                  실패 {{ failedUploadCount }}
                 </div>
               </div>
             </div>
@@ -227,7 +227,7 @@
                 class="toggle-progress-btn"
                 @click="progressExpanded = !progressExpanded"
               >
-                <span>{{ progressExpanded ? '收起' : '展开' }}</span>
+                <span>{{ progressExpanded ? '접기' : '펼치기' }}</span>
                 <ChevronUp v-if="progressExpanded" :size="14" />
                 <ChevronDown v-else :size="14" />
               </a-button>
@@ -242,12 +242,12 @@
               </div>
             </div>
 
-            <div class="progress-tip" v-else>当前无失败文件。</div>
+            <div class="progress-tip" v-else>실패한 파일이 없습니다.</div>
 
             <div class="progress-tip" v-if="hasPendingUploads">
-              文件夹上传采用队列模式，最多同时上传 {{ MAX_UPLOAD_CONCURRENCY }} 个文件。
+              폴더 업로드는 큐 방식으로 처리하며 동시에 최대 {{ MAX_UPLOAD_CONCURRENCY }}개 파일을 업로드합니다.
             </div>
-            <div class="progress-tip" v-else>上传队列已完成，可点击“添加到知识库”继续下一步。</div>
+            <div class="progress-tip" v-else>업로드 큐가 완료되었습니다. “지식베이스에 추가”를 눌러 다음 단계로 진행하세요.</div>
           </div>
         </div>
       </div>
@@ -261,9 +261,9 @@
               {{ workspaceCurrentPath }}
             </span>
             <span
-              >已选择
+              >선택됨
               {{ selectedWorkspacePaths.length }}
-              个文件，注意上传会扁平化上传，不保留文件层级结构</span
+              개 파일. 업로드 시 폴더 구조는 유지되지 않습니다.</span
             >
           </div>
           <div class="workspace-actions">
@@ -319,7 +319,7 @@
 
         <div class="url-empty-tip" v-else>
           <Info :size="16" />
-          <span>{{ workspaceLoading ? '正在加载工作区文件' : '当前目录暂无文件' }}</span>
+          <span>{{ workspaceLoading ? '작업 공간 파일을 불러오는 중' : '현재 폴더에 파일이 없습니다' }}</span>
         </div>
       </div>
 
