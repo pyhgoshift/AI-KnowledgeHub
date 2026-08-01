@@ -1,21 +1,21 @@
 <template>
   <div class="tools-cards-page extension-page-root">
-    <PageShoulder search-placeholder="搜索工具..." v-model:search="searchQuery">
+    <PageShoulder search-placeholder="도구 검색..." v-model:search="searchQuery">
       <template #filters>
         <a-select
           v-model:value="selectedCategory"
           style="width: 120px"
-          placeholder="全部分类"
+          placeholder="모든 분류"
           allow-clear
         >
-          <a-select-option value="">全部分类</a-select-option>
+          <a-select-option value="">모든 분류</a-select-option>
           <a-select-option v-for="cat in categories" :key="cat" :value="cat">
             {{ categoryLabels[cat] || cat }}
           </a-select-option>
         </a-select>
       </template>
       <template #actions>
-        <a-tooltip title="刷新工具" placement="bottom">
+        <a-tooltip title="도구 새로고침" placement="bottom">
           <a-button class="lucide-icon-btn" :disabled="loading" @click="fetchTools">
             <RefreshCw :size="14" />
           </a-button>
@@ -24,7 +24,7 @@
     </PageShoulder>
 
     <div v-if="filteredTools.length === 0" class="extension-card-grid-empty-state">
-      <a-empty :image="false" :description="searchQuery ? '无匹配工具' : '暂无工具'" />
+      <a-empty :image="false" :description="searchQuery ? '일치하는 도구가 없습니다' : '도구가 없습니다'" />
     </div>
 
     <ExtensionCardGrid v-else>
@@ -33,7 +33,7 @@
         :key="getToolSlug(tool)"
         :title="formatExtensionCardTitle(tool.name)"
         :subtitle="getToolSlug(tool)"
-        :description="tool.description || '无描述'"
+        :description="tool.description || '설명이 없습니다'"
         :default-icon="getToolIcon(getToolSlug(tool)) || WrenchIcon"
         :tags="toolTags(tool)"
         @click="selectTool(tool)"
@@ -43,7 +43,7 @@
 
     <a-modal
       v-model:open="detailVisible"
-      :title="currentTool?.name || '工具详情'"
+      :title="currentTool?.name || '도구 상세'"
       :footer="null"
       width="640px"
     >
@@ -51,14 +51,14 @@
         <div class="tool-detail-content detail-section-container">
           <div class="detail-section">
             <div class="section-content description">
-              {{ currentTool.description || '无描述' }}
+              {{ currentTool.description || '설명이 없습니다' }}
             </div>
           </div>
 
           <div class="detail-section" v-if="currentTool.config_guide">
             <div class="section-header">
               <FileText :size="14" />
-              <span>配置说明</span>
+              <span>설정 안내</span>
             </div>
             <div class="section-content description config-guide">
               {{ currentTool.config_guide }}
@@ -68,7 +68,7 @@
           <div class="detail-section">
             <div class="section-header">
               <Tag :size="14" />
-              <span>分类</span>
+              <span>분류</span>
             </div>
             <div class="section-content">
               <a-tag :color="categoryColors[currentTool.category] || 'default'">
@@ -80,18 +80,18 @@
           <div class="detail-section">
             <div class="section-header">
               <Tags :size="14" />
-              <span>标签</span>
+              <span>태그</span>
             </div>
             <div class="section-content">
               <a-tag v-for="tag in currentTool.tags" :key="tag">{{ tag }}</a-tag>
-              <span v-if="!currentTool.tags?.length" class="text-muted">无</span>
+              <span v-if="!currentTool.tags?.length" class="text-muted">없음</span>
             </div>
           </div>
 
           <div class="detail-section" v-if="currentTool.args?.length">
             <div class="section-header">
               <List :size="14" />
-              <span>参数</span>
+              <span>매개변수</span>
             </div>
             <div class="section-content">
               <a-table
@@ -131,7 +131,7 @@ const currentTool = ref(null)
 const detailVisible = ref(false)
 
 const categories = ['buildin', 'knowledge', 'mysql', 'debug']
-const categoryLabels = { buildin: '内置工具', knowledge: '知识库', mysql: 'MySQL', debug: '调试' }
+const categoryLabels = { buildin: '내장 도구', knowledge: '지식베이스', mysql: 'MySQL', debug: '디버그' }
 const categoryColors = { buildin: 'blue', knowledge: 'purple', mysql: 'green', debug: 'orange' }
 
 const getToolSlug = (tool) => tool?.slug || tool?.id || ''
@@ -149,9 +149,9 @@ const toolTags = (tool) => {
 }
 
 const argColumns = [
-  { title: '参数名', dataIndex: 'name', key: 'name' },
-  { title: '类型', dataIndex: 'type', key: 'type', width: 80 },
-  { title: '描述', dataIndex: 'description', key: 'description' }
+  { title: '매개변수명', dataIndex: 'name', key: 'name' },
+  { title: '유형', dataIndex: 'type', key: 'type', width: 80 },
+  { title: '설명', dataIndex: 'description', key: 'description' }
 ]
 
 const filteredTools = computed(() => {
@@ -183,7 +183,7 @@ const fetchTools = async () => {
     const result = await toolApi.getTools()
     tools.value = result?.data || []
   } catch {
-    message.error('加载工具失败')
+    message.error('도구를 불러오지 못했습니다')
   } finally {
     loading.value = false
   }

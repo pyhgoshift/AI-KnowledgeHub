@@ -2,15 +2,15 @@
   <div class="agent-env-settings">
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">沙盒环境变量</div>
+        <div class="section-title">샌드박스 환경 변수</div>
         <p class="section-description">
-          配置当前用户的 Agent 沙盒环境变量。新建沙盒时会注入这些变量，并覆盖同名全局 sandbox.env。
+          현재 사용자의 에이전트 샌드박스 환경 변수를 설정합니다. 새 샌드박스 생성 시 이 값이 적용되며 같은 이름의 전역 sandbox.env를 덮어씁니다.
         </p>
       </div>
       <div class="header-actions">
         <a-button class="lucide-icon-btn" :loading="loading" @click="loadAgentEnv">
           <template #icon><RefreshCw :size="16" :class="{ spin: loading }" /></template>
-          刷新
+          새로고침
         </a-button>
         <a-button type="primary" :loading="saving" @click="saveAgentEnv">
           {{ saveButtonText }}
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="env-tip">保存后仅对新建沙盒生效，已运行沙盒不会热更新。</div>
+    <div class="env-tip">저장 후 새로 만드는 샌드박스에만 적용됩니다. 실행 중인 샌드박스는 즉시 변경되지 않습니다.</div>
 
     <a-spin :spinning="loading">
       <McpEnvEditor
@@ -72,7 +72,7 @@ const savedEnvKeys = computed(() => Object.keys(lastSavedEnv.value || {}))
 const hasUnsavedChanges = computed(
   () => !isSameEnv(normalizeEnv(draftEnv.value), lastSavedEnv.value)
 )
-const saveButtonText = computed(() => (hasUnsavedChanges.value ? '保存（有修改）' : '保存'))
+const saveButtonText = computed(() => (hasUnsavedChanges.value ? '저장(변경됨)' : '저장'))
 
 const updateDraftEnv = (value) => {
   const nextEnv = normalizeEnv(value)
@@ -84,21 +84,21 @@ const updateDraftEnv = (value) => {
 const validateEnv = (env) => {
   const entries = Object.entries(env)
   if (entries.length > MAX_ENV_COUNT) {
-    message.error(`环境变量数量不能超过 ${MAX_ENV_COUNT} 个`)
+    message.error(`환경 변수는 최대 ${MAX_ENV_COUNT}개까지 설정할 수 있습니다`)
     return false
   }
 
   for (const [key, value] of entries) {
     if (key.length > MAX_ENV_KEY_LENGTH) {
-      message.error(`环境变量名长度不能超过 ${MAX_ENV_KEY_LENGTH}`)
+      message.error(`환경 변수 이름은 ${MAX_ENV_KEY_LENGTH}자를 초과할 수 없습니다`)
       return false
     }
     if (!ENV_KEY_PATTERN.test(key)) {
-      message.error(`环境变量名 ${key} 格式不正确`)
+      message.error(`환경 변수 이름 ${key} 형식이 올바르지 않습니다`)
       return false
     }
     if (value.length > MAX_ENV_VALUE_LENGTH) {
-      message.error(`环境变量 ${key} 的值过长`)
+      message.error(`환경 변수 ${key}의 값이 너무 깁니다`)
       return false
     }
   }
@@ -114,7 +114,7 @@ const loadAgentEnv = async () => {
     lastSavedEnv.value = env
     editorRevision.value += 1
   } catch (error) {
-    message.error(error.message || '加载环境变量失败')
+    message.error(error.message || '환경 변수를 불러오지 못했습니다')
   } finally {
     loading.value = false
   }
@@ -124,7 +124,7 @@ const saveAgentEnv = async () => {
   const env = normalizeEnv(draftEnv.value)
   if (!validateEnv(env)) return
   if (isSameEnv(env, lastSavedEnv.value)) {
-    message.info('环境变量未变化')
+    message.info('환경 변수가 변경되지 않았습니다')
     return
   }
 
@@ -134,9 +134,9 @@ const saveAgentEnv = async () => {
     draftEnv.value = env
     lastSavedEnv.value = env
     editorRevision.value += 1
-    message.success('环境变量已保存')
+    message.success('환경 변수를 저장했습니다')
   } catch (error) {
-    message.error(error.message || '保存环境变量失败')
+    message.error(error.message || '환경 변수 저장에 실패했습니다')
   } finally {
     saving.value = false
   }

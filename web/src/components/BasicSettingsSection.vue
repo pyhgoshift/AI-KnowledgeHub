@@ -1,17 +1,17 @@
 <template>
   <div class="basic-settings-section">
     <template v-if="userStore.isAdmin">
-      <div class="section-title">默认项配置</div>
+      <div class="section-title">기본 항목 설정</div>
       <div class="settings-panel">
         <template v-if="userStore.isSuperAdmin">
           <div class="setting-row two-cols">
             <div class="col-item">
-              <div class="setting-label">{{ items?.default_model?.des || '默认对话模型' }}</div>
+              <div class="setting-label">{{ items?.default_model?.des || '기본 대화 모델' }}</div>
               <div class="setting-content">
                 <ModelSelectorComponent
                   @select-model="handleChatModelSelect"
                   :model_spec="configStore.config?.default_model"
-                  placeholder="请选择默认模型"
+                  placeholder="기본 모델을 선택하세요"
                 />
               </div>
             </div>
@@ -21,7 +21,7 @@
                 <ModelSelectorComponent
                   @select-model="handleFastModelSelect"
                   :model_spec="configStore.config?.fast_model"
-                  placeholder="请选择模型"
+                  placeholder="모델을 선택하세요"
                 />
               </div>
             </div>
@@ -51,7 +51,7 @@
           <div class="setting-row two-cols">
             <div class="col-item">
               <div class="setting-label">
-                {{ items?.default_ocr_engine?.des || '默认 OCR 解析引擎' }}
+                {{ items?.default_ocr_engine?.des || '기본 OCR 분석 엔진' }}
               </div>
               <div class="setting-content">
                 <a-select
@@ -74,7 +74,7 @@
       </div>
 
       <template v-if="userStore.isSuperAdmin">
-        <div class="section-title">内容审查配置</div>
+        <div class="section-title">콘텐츠 검토 설정</div>
         <div class="section">
           <div class="card">
             <span class="label">{{ items?.enable_content_guard?.des }}</span>
@@ -101,7 +101,7 @@
             <ModelSelectorComponent
               @select-model="handleContentGuardModelSelect"
               :model_spec="configStore.config?.content_guard_llm_model"
-              placeholder="请选择模型"
+              placeholder="모델을 선택하세요"
             />
           </div>
         </div>
@@ -109,16 +109,16 @@
     </template>
 
     <!-- 服务链接部分 -->
-    <div v-if="userStore.isAdmin" class="section-title">服务链接</div>
+    <div v-if="userStore.isAdmin" class="section-title">서비스 링크</div>
     <div v-if="userStore.isAdmin">
       <p class="section-description">
-        快速访问系统相关的外部服务，需要将 localhost 替换为实际的 IP 地址。
+        시스템 관련 외부 서비스로 빠르게 이동합니다. localhost는 실제 IP 주소로 바꾸어야 합니다.
       </p>
       <div class="services-grid">
         <div class="service-link-card">
           <div class="service-info">
-            <h4>Neo4j 浏览器</h4>
-            <p>图数据库管理界面</p>
+            <h4>Neo4j 브라우저</h4>
+            <p>그래프 데이터베이스 관리 화면</p>
           </div>
           <a-button
             type="default"
@@ -126,14 +126,14 @@
             @click="openLink('http://localhost:7474/')"
             :icon="h(Globe, { size: 18 })"
           >
-            访问
+            열기
           </a-button>
         </div>
 
         <div class="service-link-card">
           <div class="service-info">
-            <h4>API 接口文档</h4>
-            <p>系统接口文档和调试工具</p>
+            <h4>API 문서</h4>
+            <p>시스템 API 문서와 디버그 도구</p>
           </div>
           <a-button
             type="default"
@@ -141,14 +141,14 @@
             @click="openLink('http://localhost:5050/docs')"
             :icon="h(Globe, { size: 18 })"
           >
-            访问
+            열기
           </a-button>
         </div>
 
         <div class="service-link-card">
           <div class="service-info">
-            <h4>MinIO 对象存储</h4>
-            <p>文件存储管理控制台</p>
+            <h4>MinIO 객체 스토리지</h4>
+            <p>파일 저장소 관리 콘솔</p>
           </div>
           <a-button
             type="default"
@@ -156,14 +156,14 @@
             @click="openLink('http://localhost:9001')"
             :icon="h(Globe, { size: 18 })"
           >
-            访问
+            열기
           </a-button>
         </div>
 
         <div class="service-link-card">
           <div class="service-info">
             <h4>Milvus WebUI</h4>
-            <p>向量数据库管理界面</p>
+            <p>벡터 데이터베이스 관리 화면</p>
           </div>
           <a-button
             type="default"
@@ -171,7 +171,7 @@
             @click="openLink('http://localhost:9091/webui/')"
             :icon="h(Globe, { size: 18 })"
           >
-            访问
+            열기
           </a-button>
         </div>
       </div>
@@ -192,7 +192,7 @@ const configStore = useConfigStore()
 const userStore = useUserStore()
 const items = computed(() => configStore.config?._config_items || {})
 const ocrEngineOptions = [
-  { value: 'disable', label: '不启用' },
+  { value: 'disable', label: '사용 안 함' },
   { value: 'rapid_ocr', label: 'RapidOCR (ONNX)' },
   { value: 'mineru_ocr', label: 'MinerU OCR' },
   { value: 'mineru_official', label: 'MinerU Official API' },

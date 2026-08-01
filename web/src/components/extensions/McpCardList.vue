@@ -43,7 +43,7 @@
               type="button"
               class="mcp-card-action mcp-card-action-danger"
               :disabled="isActionLoading(server)"
-              :aria-label="server.created_by === 'system' ? '移除 MCP' : '删除 MCP'"
+              :aria-label="server.created_by === 'system' ? 'MCP 제거' : 'MCP 삭제'"
               @click.stop="handleRemoveServer(server)"
             >
               <Check :size="15" class="action-icon action-icon-check" />
@@ -60,7 +60,7 @@
           :key="server.slug"
           variant="mini"
           :title="formatExtensionCardTitle(server.name)"
-          :description="server.description || '暂无描述'"
+          :description="server.description || '설명이 없습니다'"
           @click="openBasicInfo(server)"
         >
           <template #icon>
@@ -235,14 +235,14 @@ const handleSetServerEnabled = async (server, enabled) => {
     actionLoadingSlug.value = server.slug
     const result = await mcpApi.updateMcpServerStatus(server.slug, enabled)
     if (result.success) {
-      message.success(result.message || `MCP 已${enabled ? '添加' : '移除'}`)
+      message.success(result.message || `MCP를 ${enabled ? '추가' : '제거'}했습니다`)
       if (enabled) closeBasicInfo()
       await fetchServers()
     } else {
-      message.error(result.message || '操作失败')
+      message.error(result.message || '작업에 실패했습니다')
     }
   } catch (err) {
-    message.error(err.message || '操作失败')
+    message.error(err.message || '작업에 실패했습니다')
   } finally {
     actionLoadingSlug.value = ''
   }
@@ -268,13 +268,13 @@ const confirmDeleteServer = (server) => {
         actionLoadingSlug.value = server.slug
         const result = await mcpApi.deleteMcpServer(server.slug)
         if (result.success) {
-          message.success('MCP 删除成功')
+          message.success('MCP를 삭제했습니다')
           await fetchServers()
         } else {
-          message.error(result.message || '删除失败')
+          message.error(result.message || '삭제에 실패했습니다')
         }
       } catch (err) {
-        message.error(err.message || '删除失败')
+        message.error(err.message || '삭제에 실패했습니다')
       } finally {
         actionLoadingSlug.value = ''
       }
@@ -290,7 +290,7 @@ const fetchServers = async () => {
       servers.value = result.data || []
     }
   } catch (err) {
-    message.error(err.message || '获取 MCP 列表失败')
+    message.error(err.message || 'MCP 목록을 불러오지 못했습니다')
   } finally {
     loading.value = false
   }

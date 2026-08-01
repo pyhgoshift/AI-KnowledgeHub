@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:open="visible"
-    :title="editMode ? '编辑 MCP' : '添加 MCP'"
+    :title="editMode ? 'MCP 편집' : 'MCP 추가'"
     @ok="handleFormSubmit"
     :confirmLoading="formLoading"
     @cancel="visible = false"
@@ -10,22 +10,22 @@
     class="server-modal"
   >
     <a-form layout="vertical" class="extension-form">
-      <a-form-item label="MCP 标识" required class="form-item">
+      <a-form-item label="MCP 식별자" required class="form-item">
         <a-input
           v-model:value="form.slug"
-          placeholder="请输入 MCP 稳定标识，如 my-mcp"
+          placeholder="MCP 고정 식별자를 입력하세요. 예: my-mcp"
           :disabled="editMode"
         />
       </a-form-item>
-      <a-form-item label="MCP 名称" required class="form-item">
-        <a-input v-model:value="form.name" placeholder="请输入 MCP 展示名称" />
+      <a-form-item label="MCP 이름" required class="form-item">
+        <a-input v-model:value="form.name" placeholder="화면에 표시할 MCP 이름을 입력하세요" />
       </a-form-item>
-      <a-form-item label="描述" class="form-item">
-        <a-input v-model:value="form.description" placeholder="请输入 MCP 描述" />
+      <a-form-item label="설명" class="form-item">
+        <a-input v-model:value="form.description" placeholder="MCP 설명을 입력하세요" />
       </a-form-item>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="传输类型" required class="form-item">
+          <a-form-item label="전송 유형" required class="form-item">
             <a-select v-model:value="form.transport">
               <a-select-option value="streamable_http">streamable_http</a-select-option>
               <a-select-option value="sse">sse</a-select-option>
@@ -34,8 +34,8 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="图标" class="form-item">
-            <a-input v-model:value="form.icon" placeholder="输入 emoji，如 🧠" :maxlength="2" />
+          <a-form-item label="아이콘" class="form-item">
+            <a-input v-model:value="form.icon" placeholder="이모지를 입력하세요. 예: 🧠" :maxlength="2" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -43,16 +43,16 @@
         <a-form-item label="MCP URL" required class="form-item">
           <a-input v-model:value="form.url" placeholder="https://example.com/mcp" />
         </a-form-item>
-        <a-form-item label="HTTP 请求头" class="form-item">
+        <a-form-item label="HTTP 요청 헤더" class="form-item">
           <a-textarea
             v-model:value="form.headersText"
-            placeholder='JSON 格式，如：{"Authorization": "Bearer xxx"}'
+            placeholder='JSON 형식. 예: {"Authorization": "Bearer xxx"}'
             :rows="3"
           />
         </a-form-item>
         <a-row :gutter="16">
           <a-col :span="12">
-            <a-form-item label="HTTP 超时（秒）" class="form-item">
+            <a-form-item label="HTTP 시간 제한(초)" class="form-item">
               <a-input-number
                 v-model:value="form.timeout"
                 :min="1"
@@ -62,7 +62,7 @@
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item label="SSE 读取超时（秒）" class="form-item">
+            <a-form-item label="SSE 읽기 시간 제한(초)" class="form-item">
               <a-input-number
                 v-model:value="form.sse_read_timeout"
                 :min="1"
@@ -74,26 +74,26 @@
         </a-row>
       </template>
       <template v-if="isStdioTransport">
-        <a-form-item label="命令" required class="form-item">
-          <a-input v-model:value="form.command" placeholder="例如：npx 或 /path/to/server" />
+        <a-form-item label="명령" required class="form-item">
+          <a-input v-model:value="form.command" placeholder="예: npx 또는 /path/to/server" />
         </a-form-item>
-        <a-form-item label="参数" class="form-item">
+        <a-form-item label="인수" class="form-item">
           <a-select
             v-model:value="form.args"
             mode="tags"
-            placeholder="输入参数后回车添加，如：-m"
+            placeholder="인수를 입력한 뒤 Enter를 누르세요. 예: -m"
             style="width: 100%"
           />
         </a-form-item>
-        <a-form-item label="环境变量" class="form-item">
+        <a-form-item label="환경 변수" class="form-item">
           <McpEnvEditor v-model="form.env" />
         </a-form-item>
       </template>
-      <a-form-item label="标签" class="form-item">
+      <a-form-item label="태그" class="form-item">
         <a-select
           v-model:value="form.tags"
           mode="tags"
-          placeholder="输入标签后回车添加"
+          placeholder="태그를 입력한 뒤 Enter를 누르세요"
           style="width: 100%"
         />
       </a-form-item>
@@ -193,7 +193,7 @@ const handleFormSubmit = async () => {
       try {
         headers = JSON.parse(form.headersText)
       } catch {
-        message.error('请求头 JSON 格式错误')
+        message.error('요청 헤더 JSON 형식이 잘못되었습니다')
         return
       }
     }
@@ -213,26 +213,26 @@ const handleFormSubmit = async () => {
       icon: form.icon || null
     }
     if (!data.slug?.trim()) {
-      message.error('MCP 标识不能为空')
+      message.error('MCP 식별자를 입력하세요')
       return
     }
     if (!data.name?.trim()) {
-      message.error('MCP 名称不能为空')
+      message.error('MCP 이름을 입력하세요')
       return
     }
     if (!data.transport) {
-      message.error('请选择传输类型')
+      message.error('전송 유형을 선택하세요')
       return
     }
     if (['sse', 'streamable_http'].includes(data.transport)) {
       if (!data.url?.trim()) {
-        message.error('HTTP 类型必须填写 MCP URL')
+        message.error('HTTP 유형은 MCP URL을 입력해야 합니다')
         return
       }
     }
     if (data.transport === 'stdio') {
       if (!data.command?.trim()) {
-        message.error('StdIO 类型必须填写命令')
+        message.error('StdIO 유형은 명령을 입력해야 합니다')
         return
       }
     }
@@ -241,24 +241,24 @@ const handleFormSubmit = async () => {
       const { slug, ...updateData } = data
       const result = await mcpApi.updateMcpServer(props.editData?.slug || slug, updateData)
       if (result.success) {
-        message.success('MCP 更新成功')
+        message.success('MCP를 수정했습니다')
       } else {
-        message.error(result.message || '更新失败')
+        message.error(result.message || '수정에 실패했습니다')
         return
       }
     } else {
       const result = await mcpApi.createMcpServer(data)
       if (result.success) {
-        message.success('MCP 创建成功')
+        message.success('MCP를 만들었습니다')
       } else {
-        message.error(result.message || '创建失败')
+        message.error(result.message || '만들기에 실패했습니다')
         return
       }
     }
     visible.value = false
     emit('submitted')
   } catch (err) {
-    message.error(err.message || '操作失败')
+    message.error(err.message || '작업에 실패했습니다')
   } finally {
     formLoading.value = false
   }

@@ -13,7 +13,7 @@
 <script setup>
 defineProps({
   items: { type: Array, default: () => [] },
-  emptyText: { type: String, default: '暂无数据' },
+  emptyText: { type: String, default: '데이터가 없습니다' },
   minWidth: { type: Number, default: 280 }
 })
 </script>
