@@ -14,7 +14,7 @@
         <div class="window-title">
           <span>{{ windowTitle(window, windowIndex) }}</span>
           <span v-if="window.matched_lines?.length" class="matched-count">
-            命中 {{ window.matched_lines.length }} 行
+            일치 {{ window.matched_lines.length }}줄
           </span>
         </div>
         <pre class="content-preview"><span
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div v-else class="empty-text">暂无可预览内容</div>
+    <div v-else class="empty-text">미리볼 내용이 없습니다</div>
   </div>
 </template>
 
@@ -52,15 +52,15 @@ const documentWindows = computed(() => {
 
 const summaryText = computed(() => {
   if (props.mode === 'find') {
-    const modeText = props.result.match_mode === 'regex' ? '正则' : '关键词'
-    return `${modeText}查找: ${props.result.total_matches || 0} 处匹配，${documentWindows.value.length} 个上下文窗口`
+    const modeText = props.result.match_mode === 'regex' ? '정규식' : '키워드'
+    return `${modeText} 찾기: ${props.result.total_matches || 0}개 일치, ${documentWindows.value.length}개 컨텍스트 창`
   }
 
   const startLine = props.result.start_line || 0
   const endLine = props.result.end_line || 0
   const totalLines = props.result.total_lines || 0
-  const moreText = props.result.has_more_after ? `，下一段 offset ${props.result.next_offset}` : ''
-  return `打开文档: 第 ${startLine}-${endLine} 行 / 共 ${totalLines} 行${moreText}`
+  const moreText = props.result.has_more_after ? `, 다음 구간 offset ${props.result.next_offset}` : ''
+  return `문서 열기: ${startLine}-${endLine}줄 / 전체 ${totalLines}줄${moreText}`
 })
 
 const splitContent = (content = '') => String(content).split('\n')
@@ -80,8 +80,8 @@ const windowKey = (window, index) => `${window.start_line || 0}-${window.end_lin
 const windowTitle = (window, index) => {
   const startLine = window.start_line || 0
   const endLine = window.end_line || 0
-  if (startLine || endLine) return `窗口 ${index + 1}: 第 ${startLine}-${endLine} 行`
-  return `窗口 ${index + 1}`
+  if (startLine || endLine) return `창 ${index + 1}: ${startLine}-${endLine}줄`
+  return `창 ${index + 1}`
 }
 </script>
 
