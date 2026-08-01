@@ -4,7 +4,7 @@
       class="share-mode-cards"
       :class="`active-${config.access_level}`"
       role="radiogroup"
-      aria-label="共享设置"
+      aria-label="공유 설정"
     >
       <div
         v-for="option in shareModeOptions"
@@ -37,7 +37,7 @@
                 <a-button
                   size="small"
                   class="select-action lucide-icon-btn"
-                  :aria-label="option.value === 'department' ? '选择部门' : '选择用户'"
+                  :aria-label="option.value === 'department' ? '부서 선택' : '사용자 선택'"
                   :disabled="disabled"
                 >
                   <UserPlus class="select-action-icon" :size="14" />
@@ -47,7 +47,7 @@
                   <div class="selection-dropdown" @mousedown.stop @click.stop>
                     <div class="selection-dropdown-header">
                       <div class="selection-dropdown-title">
-                        {{ option.value === 'department' ? '可访问部门' : '可访问用户' }}
+                        {{ option.value === 'department' ? '접근 가능한 부서' : '접근 가능한 사용자' }}
                       </div>
                       <div class="selection-dropdown-subtitle">
                         {{ getAccessSummary(option.value) }}
@@ -58,7 +58,7 @@
                       size="small"
                       allow-clear
                       class="selection-search"
-                      :placeholder="option.value === 'department' ? '搜索部门' : '搜索用户'"
+                      :placeholder="option.value === 'department' ? '부서 검색' : '사용자 검색'"
                       @mousedown.stop
                       @click.stop
                     />
@@ -111,10 +111,10 @@
                           />
                           <span class="selection-label">{{ item.label }}</span>
                         </span>
-                        <span v-if="item.disabled" class="selection-required">必选</span>
+                        <span v-if="item.disabled" class="selection-required">필수</span>
                       </div>
                     </div>
-                    <div v-else class="selection-empty">暂无可选项</div>
+                    <div v-else class="selection-empty">선택할 항목이 없습니다</div>
                   </div>
                 </template>
               </a-dropdown>
@@ -149,20 +149,20 @@ const syncingFromProps = ref(false)
 const baseShareModeOptions = [
   {
     value: 'global',
-    title: '全局共享',
-    description: '所有用户都可以访问',
+    title: '전체 공유',
+    description: '모든 사용자가 접근할 수 있습니다',
     icon: Globe
   },
   {
     value: 'department',
-    title: '部门共享',
-    description: '选中的部门成员可以访问',
+    title: '부서 공유',
+    description: '선택한 부서의 구성원이 접근할 수 있습니다',
     icon: Building2
   },
   {
     value: 'user',
-    title: '指定人',
-    description: '选中的用户可以访问',
+    title: '지정 사용자',
+    description: '선택한 사용자가 접근할 수 있습니다',
     icon: Users
   }
 ]
@@ -319,10 +319,10 @@ const setAccessLevel = (accessLevel) => {
 }
 
 const getAccessSummary = (accessLevel) => {
-  if (accessLevel === 'global') return '所有用户可访问'
-  if (accessLevel === 'department') return `${config.department_ids.length} 个部门可访问`
-  if (accessLevel === 'user' && config.user_uids.length === 1) return '仅自己可访问'
-  return `${config.user_uids.length} 个用户可访问`
+  if (accessLevel === 'global') return '모든 사용자가 접근할 수 있습니다'
+  if (accessLevel === 'department') return `${config.department_ids.length}개 부서가 접근할 수 있습니다`
+  if (accessLevel === 'user' && config.user_uids.length === 1) return '본인만 접근할 수 있습니다'
+  return `${config.user_uids.length}명의 사용자가 접근할 수 있습니다`
 }
 
 const getAccessCount = (accessLevel) => {
@@ -418,19 +418,19 @@ const validate = () => {
 
   if (config.access_level === 'department') {
     if (!currentDepartmentId.value) {
-      return { valid: false, message: '您不属于任何部门，无法使用部门共享模式' }
+      return { valid: false, message: '소속 부서가 없어 부서 공유를 사용할 수 없습니다' }
     }
     if (!config.department_ids.includes(currentDepartmentId.value)) {
-      return { valid: false, message: '您所在的部门必须在可访问部门范围内' }
+      return { valid: false, message: '본인의 부서가 접근 가능한 부서에 포함되어야 합니다' }
     }
     return { valid: true, message: '' }
   }
 
   if (!currentUserUid.value) {
-    return { valid: false, message: '无法获取当前用户，无法使用指定人可访问模式' }
+    return { valid: false, message: '현재 사용자를 확인할 수 없어 지정 사용자 공유를 사용할 수 없습니다' }
   }
   if (!config.user_uids.includes(currentUserUid.value)) {
-    return { valid: false, message: '当前用户必须在可访问用户范围内' }
+    return { valid: false, message: '현재 사용자가 접근 가능한 사용자에 포함되어야 합니다' }
   }
   return { valid: true, message: '' }
 }

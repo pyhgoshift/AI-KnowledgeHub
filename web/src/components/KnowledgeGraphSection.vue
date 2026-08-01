@@ -335,7 +335,7 @@
           <a-form-item label="모델 매개변수 JSON">
             <a-input
               v-model:value="graphConfigForm.model_params_text"
-              placeholder='例如 {"temperature":0.1}'
+              placeholder='예: {"temperature":0.1}'
             />
           </a-form-item>
         </div>
@@ -453,7 +453,7 @@ const graphIndexDotStatus = computed(() => {
 })
 
 const graphIndexButtonTitle = computed(() => {
-  if (hasPendingGraphChunks.value) return `索引管理，${pendingGraphChunks.value} 待索引`
+  if (hasPendingGraphChunks.value) return `인덱스 관리, ${pendingGraphChunks.value}개 대기 중`
   if (isGraphIndexComplete.value) return '색인 관리, 전체 색인 완료'
   if (isBuildActive.value) return '색인 관리, 색인 중'
   return '색인 관리'
@@ -633,7 +633,7 @@ const startGraphBuild = async () => {
     if (data.task_id) {
       taskerStore.registerQueuedTask({
         task_id: data.task_id,
-        name: `图谱构建 (${kbId.value})`,
+        name: `그래프 생성 (${kbId.value})`,
         task_type: GRAPH_BUILD_TASK_TYPE,
         message: data.message,
         payload: { kb_id: kbId.value }

@@ -161,8 +161,8 @@
                   class="file-stat-card file-stat-summary file-stat-repair"
                   :disabled="statsRepairing"
                   :aria-busy="statsRepairing"
-                  aria-label="修复缺失的 Chunk/Token 统计"
-                  title="修复缺失的 Chunk/Token 统计"
+                  aria-label="누락된 청크/토큰 통계 복구"
+                  title="누락된 청크/토큰 통계 복구"
                   @click="repairDatabaseStats"
                 >
                   <LoaderCircle v-if="statsRepairing" :size="16" class="file-stat-spinner" />
@@ -286,7 +286,7 @@
         <a-form-item v-if="!isConnector" name="chunk_preset_id">
           <template #label>
             <span class="chunk-preset-label">
-              分块策略
+              청크 분할 전략
               <a-tooltip :title="editPresetDescription">
                 <QuestionCircleOutlined class="chunk-preset-help-icon" />
               </a-tooltip>
@@ -303,19 +303,19 @@
           <a-form-item label="Dify API URL" name="dify_api_url">
             <a-input
               v-model:value="editForm.dify_api_url"
-              placeholder="例如: https://api.dify.ai/v1"
+              placeholder="예: https://api.dify.ai/v1"
             />
           </a-form-item>
           <a-form-item label="Dify Token" name="dify_token">
             <a-input-password
               v-model:value="editForm.dify_token"
-              placeholder="请输入 Dify API Token"
+              placeholder="Dify API 토큰을 입력하세요"
             />
           </a-form-item>
           <a-form-item label="Dataset ID" name="dify_dataset_id">
             <a-input
               v-model:value="editForm.dify_dataset_id"
-              placeholder="请输入 Dify dataset_id"
+              placeholder="Dify dataset_id를 입력하세요"
             />
           </a-form-item>
         </template>
@@ -324,13 +324,13 @@
           <a-form-item label="Notion Token" name="notion_token">
             <a-input-password
               v-model:value="editForm.notion_token"
-              placeholder="留空则保持现有 Token 或使用环境变量"
+              placeholder="비워 두면 기존 토큰 또는 환경 변수를 사용합니다"
             />
           </a-form-item>
           <a-form-item label="Data Source ID" name="notion_data_source_id">
             <a-input
               v-model:value="editForm.notion_data_source_id"
-              placeholder="请输入 Notion data_source_id"
+              placeholder="Notion data_source_id를 입력하세요"
             />
           </a-form-item>
           <a-form-item label="Notion API Version" name="notion_version">
@@ -338,7 +338,7 @@
           </a-form-item>
         </template>
 
-        <a-form-item v-if="canEditShareConfig" label="共享设置" name="share_config">
+        <a-form-item v-if="canEditShareConfig" label="공유 설정" name="share_config">
           <a-form-item-rest>
             <ShareConfigForm
               ref="shareConfigFormRef"
@@ -349,7 +349,7 @@
         </a-form-item>
         <a-form-item
           v-else-if="database.share_config"
-          label="共享设置"
+          label="공유 설정"
           name="share_config_readonly"
         >
           <div class="share-config-readonly">
@@ -525,7 +525,7 @@ const repairDatabaseStats = async () => {
     const updatedChunkFiles = Number(result?.updated_chunk_files || 0)
     if (updatedTokenFiles || updatedChunkFiles) {
       message.success(
-        `已修复 ${updatedTokenFiles} 个 Token 统计，${updatedChunkFiles} 个 Chunk 统计`
+        `${updatedTokenFiles}개 파일의 토큰 통계와 ${updatedChunkFiles}개 파일의 청크 통계를 복구했습니다`
       )
     } else {
       message.info('통계가 최신 상태입니다')
@@ -721,7 +721,7 @@ const copyDatabaseId = async () => {
     textArea.select()
     document.execCommand('copy')
     document.body.removeChild(textArea)
-    message.success('知识库ID已复制到剪贴板')
+    message.success('지식베이스 ID를 클립보드에 복사했습니다')
   }
 }
 
@@ -758,34 +758,34 @@ const shareConfigDisplay = computed(() => {
   const shareConfig = database.value?.share_config || { access_level: 'global' }
   if (shareConfig.access_level === 'department') {
     const departmentIds = shareConfig.department_ids || []
-    const names = departmentIds.map((id) => getDepartmentName(id)).join('、') || '无'
+    const names = departmentIds.map((id) => getDepartmentName(id)).join(', ') || '없음'
     return {
       color: 'blue',
-      label: '部门共享',
-      detail: `${departmentIds.length} 个部门可访问：${names}`
+      label: '부서 공유',
+      detail: `${departmentIds.length}개 부서가 접근할 수 있습니다: ${names}`
     }
   }
 
   if (shareConfig.access_level === 'user') {
     const userUids = shareConfig.user_uids || []
-    const names = userUids.map((uid) => getUserName(uid)).join('、') || '无'
+    const names = userUids.map((uid) => getUserName(uid)).join(', ') || '없음'
     return {
       color: 'purple',
-      label: '指定人',
-      detail: `${userUids.length} 个用户可访问：${names}`
+      label: '지정 사용자',
+      detail: `${userUids.length}명의 사용자가 접근할 수 있습니다: ${names}`
     }
   }
 
   return {
     color: 'green',
-    label: '全局共享',
-    detail: '所有用户可访问'
+    label: '전체 공유',
+    detail: '모든 사용자가 접근할 수 있습니다'
   }
 })
 
 const getDepartmentName = (id) => {
   const dept = departments.value.find((item) => Number(item.id) === Number(id))
-  return dept?.name || `部门${id}`
+  return dept?.name || `부서 ${id}`
 }
 
 const getUserName = (uid) => {
@@ -867,11 +867,11 @@ const handleEditSubmit = () => {
           !editForm.dify_token?.trim() ||
           !editForm.dify_dataset_id?.trim()
         ) {
-          message.error('请完整填写 Dify API URL、Token 和 Dataset ID')
+          message.error('Dify API URL, 토큰, Dataset ID를 모두 입력하세요')
           return
         }
         if (!editForm.dify_api_url.trim().endsWith('/v1')) {
-          message.error('Dify API URL 必须以 /v1 结尾')
+          message.error('Dify API URL은 /v1로 끝나야 합니다')
           return
         }
         updateData.additional_params = {
@@ -881,7 +881,7 @@ const handleEditSubmit = () => {
         }
       } else if (isNotionKb.value) {
         if (!editForm.notion_data_source_id?.trim()) {
-          message.error('请填写 Notion Data Source ID')
+          message.error('Notion Data Source ID를 입력하세요')
           return
         }
         updateData.additional_params = {
