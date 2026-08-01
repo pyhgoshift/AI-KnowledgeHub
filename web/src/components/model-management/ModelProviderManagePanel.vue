@@ -190,7 +190,7 @@ const isDefaultModel = (providerId, modelId) =>
   defaultModelSpec.value === buildModelSpec(providerId, modelId)
 
 const warnDefaultModelProtected = () => {
-  message.warning('当前默认模型正在使用该供应商或模型，请先切换默认模型')
+  message.warning('현재 기본 모델이 이 제공업체 또는 모델을 사용 중입니다. 먼저 기본 모델을 변경하세요')
 }
 
 const isModelTesting = (providerId, modelId) =>
@@ -199,16 +199,16 @@ const isModelTesting = (providerId, modelId) =>
 const getModelTestTitle = (providerId, model) => {
   const spec = buildModelSpec(providerId, model.id)
   const result = modelTestResultBySpec.value[spec]
-  if (!result) return '测试连接'
+  if (!result) return '연결 테스트'
 
   const statusText =
     {
-      available: '可用',
-      unavailable: '不可用',
-      unsupported: '暂不支持',
-      error: '错误'
-    }[result.status] || '未知'
-  return `${statusText}: ${result.message || '无详细信息'}`
+      available: '사용 가능',
+      unavailable: '사용 불가',
+      unsupported: '지원 안 함',
+      error: '오류'
+    }[result.status] || '알 수 없음'
+  return `${statusText}: ${result.message || '상세 정보 없음'}`
 }
 
 const getInputModalities = (model) => {
@@ -249,7 +249,7 @@ const filteredRemoteModels = computed(() => {
 })
 
 const remoteModelTypeOptions = computed(() => {
-  if (!currentProviderForModels.value) return [{ label: '全部', value: 'all' }]
+  if (!currentProviderForModels.value) return [{ label: '전체', value: 'all' }]
   const providerId = currentProviderForModels.value.provider_id
   const models = remoteModelsMap.value[providerId] || []
   const counts = models.reduce((acc, model) => {
@@ -258,7 +258,7 @@ const remoteModelTypeOptions = computed(() => {
     return acc
   }, {})
   return [
-    { label: `全部 ${models.length}`, value: 'all' },
+    { label: `전체 ${models.length}`, value: 'all' },
     { label: `Chat ${counts.chat || 0}`, value: 'chat' },
     { label: `Embedding ${counts.embedding || 0}`, value: 'embedding' },
     { label: `Rerank ${counts.rerank || 0}`, value: 'rerank' }
@@ -277,11 +277,11 @@ const parseJsonObject = (text, label) => {
   try {
     const parsed = JSON.parse(text || '{}')
     if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') {
-      throw new Error(`${label} 必须是 JSON 对象`)
+      throw new Error(`${label}은(는) JSON 객체여야 합니다`)
     }
     return parsed
   } catch {
-    throw new Error(`${label} 格式不正确`)
+    throw new Error(`${label} 형식이 올바르지 않습니다`)
   }
 }
 
@@ -295,7 +295,7 @@ const loadProviders = async () => {
     const result = await modelProviderApi.getProviders()
     providers.value = result.data || []
   } catch (error) {
-    message.error(error.message || '加载模型供应商失败')
+    message.error(error.message || '모델 제공업체를 불러오지 못했습니다')
   } finally {
     loading.value = false
   }
@@ -305,13 +305,13 @@ function getProviderInfo(provider) {
   return [
     { label: 'Provider Type', value: getProviderTypeLabel(provider.provider_type) },
     { label: 'Base URL', value: provider.base_url || '-' },
-    { label: '能力', value: provider.capabilities?.join(', ') || 'chat' }
+    { label: '기능', value: provider.capabilities?.join(', ') || 'chat' }
   ]
 }
 
 function getProviderStatus(provider) {
-  if (!provider.is_enabled) return { label: '未启用', level: 'info' }
-  if (provider.credential_status === 'warning') return { label: '凭证缺失', level: 'warning' }
+  if (!provider.is_enabled) return { label: '사용 안 함', level: 'info' }
+  if (provider.credential_status === 'warning') return { label: '자격 증명 없음', level: 'warning' }
   if (provider.is_enabled) return { label: '', level: 'success' }
   return null
 }
@@ -377,19 +377,19 @@ const buildProviderPayload = () => ({
   api_key: providerForm.api_key || null,
   capabilities: providerForm.capabilities,
   is_enabled: providerForm.is_enabled,
-  headers_json: parseJsonObject(providerForm.headers_text, '请求头'),
-  extra_json: parseJsonObject(providerForm.extra_text, '扩展配置')
+  headers_json: parseJsonObject(providerForm.headers_text, '요청 헤더'),
+  extra_json: parseJsonObject(providerForm.extra_text, '추가 설정')
 })
 
 const createProvider = async () => {
   saving.value = true
   try {
     await modelProviderApi.createProvider(buildProviderPayload())
-    message.success('供应商已创建')
+    message.success('제공업체를 만들었습니다')
     showProviderModal.value = false
     await loadProviders()
   } catch (error) {
-    message.error(error.message || '创建失败')
+    message.error(error.message || '만들기에 실패했습니다')
   } finally {
     saving.value = false
   }
@@ -408,11 +408,11 @@ const saveProvider = async () => {
   saving.value = true
   try {
     await modelProviderApi.updateProvider(providerForm.provider_id, buildProviderPayload())
-    message.success('供应商已保存')
+    message.success('제공업체를 저장했습니다')
     showProviderModal.value = false
     await loadProviders()
   } catch (error) {
-    message.error(error.message || '保存失败')
+    message.error(error.message || '저장에 실패했습니다')
   } finally {
     saving.value = false
   }
@@ -425,15 +425,15 @@ const deleteProvider = async (provider) => {
   }
 
   Modal.confirm({
-    title: `删除 ${provider.display_name}`,
-    content: '删除后不会影响当前系统正在使用的旧模型配置。',
-    okText: '删除',
+    title: `${provider.display_name} 삭제`,
+    content: '삭제해도 현재 시스템에서 사용 중인 기존 모델 설정에는 영향을 주지 않습니다.',
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         await modelProviderApi.deleteProvider(provider.provider_id)
-        message.success('已删除')
+        message.success('삭제했습니다')
         if (currentProviderForModels.value?.provider_id === provider.provider_id) {
           showModelsModal.value = false
           currentProviderForModels.value = null
@@ -444,7 +444,7 @@ const deleteProvider = async (provider) => {
         }
         await loadProviders()
       } catch (error) {
-        message.error(error.message || '删除失败')
+        message.error(error.message || '삭제에 실패했습니다')
       }
     }
   })
@@ -466,10 +466,10 @@ const toggleProviderEnabled = async (provider, checked) => {
   togglingProviderId.value = provider.provider_id
   try {
     await modelProviderApi.updateProvider(provider.provider_id, { is_enabled: checked })
-    message.success(checked ? '已启用' : '已停用')
+    message.success(checked ? '사용으로 변경했습니다' : '중지로 변경했습니다')
     await loadProviders()
   } catch (error) {
-    message.error(error.message || '操作失败')
+    message.error(error.message || '작업에 실패했습니다')
     await loadProviders()
   } finally {
     togglingProviderId.value = null
@@ -498,9 +498,9 @@ const fetchRemoteModels = async (providerId) => {
       [providerId]: result.data || []
     }
     remoteModelsLoaded.value[providerId] = true
-    message.success(`已获取 ${result.data?.length || 0} 个远端模型`)
+    message.success(`원격 모델 ${result.data?.length || 0}개를 불러왔습니다`)
   } catch (error) {
-    message.error(error.message || '获取远端模型失败')
+    message.error(error.message || '원격 모델을 불러오지 못했습니다')
   } finally {
     remoteLoading.value = false
   }
@@ -528,24 +528,24 @@ const testModelConnection = async (providerId, model) => {
   modelTestLoadingBySpec.value = { ...modelTestLoadingBySpec.value, [spec]: true }
   try {
     const result = await modelProviderApi.getModelStatusBySpec(spec)
-    const status = result.data || { spec, status: 'error', message: '检查失败' }
+    const status = result.data || { spec, status: 'error', message: '확인에 실패했습니다' }
     modelTestResultBySpec.value = { ...modelTestResultBySpec.value, [spec]: status }
 
     if (status.status === 'available') {
-      message.success(`${getModelDisplayName(model)} 连接正常`)
+      message.success(`${getModelDisplayName(model)} 연결이 정상입니다`)
     } else if (status.status === 'unsupported') {
-      message.warning(status.message || '暂不支持测试该类型模型')
+      message.warning(status.message || '이 유형의 모델은 테스트를 지원하지 않습니다')
     } else if (status.status === 'unavailable') {
-      message.warning(status.message || '模型连接不可用')
+      message.warning(status.message || '모델 연결을 사용할 수 없습니다')
     } else {
-      message.error(status.message || '模型连接测试失败')
+      message.error(status.message || '모델 연결 테스트에 실패했습니다')
     }
   } catch (error) {
     modelTestResultBySpec.value = {
       ...modelTestResultBySpec.value,
-      [spec]: { spec, status: 'error', message: error.message || '检查失败' }
+      [spec]: { spec, status: 'error', message: error.message || '확인에 실패했습니다' }
     }
-    message.error(error.message || '模型连接测试失败')
+    message.error(error.message || '모델 연결 테스트에 실패했습니다')
   } finally {
     modelTestLoadingBySpec.value = { ...modelTestLoadingBySpec.value, [spec]: false }
   }
@@ -557,7 +557,7 @@ const addModelFromRemote = async (providerId, remoteModel) => {
 
   const enabledModels = provider.enabled_models || []
   if (enabledModels.some((m) => m.id === remoteModel.id)) {
-    message.info('模型已存在')
+    message.info('모델이 이미 존재합니다')
     return
   }
 
@@ -568,14 +568,14 @@ const addModelFromRemote = async (providerId, remoteModel) => {
 
   try {
     await modelProviderApi.updateProvider(providerId, { enabled_models: newEnabledModels })
-    message.success(`已添加模型 ${remoteModel.id}`)
+    message.success(`모델 ${remoteModel.id}을(를) 추가했습니다`)
     await loadProviders()
     // Refresh current provider reference if modal is open
     if (currentProviderForModels.value?.provider_id === providerId) {
       currentProviderForModels.value = providers.value.find((p) => p.provider_id === providerId)
     }
   } catch (error) {
-    message.error(error.message || '添加模型失败')
+    message.error(error.message || '모델 추가에 실패했습니다')
   }
 }
 
@@ -620,11 +620,11 @@ const saveModelConfig = async () => {
     if (isCreating.value) {
       const newId = (editingModel.value.id || '').trim()
       if (!newId) {
-        message.error('请填写模型 ID')
+        message.error('모델 ID를 입력하세요')
         return
       }
       if ((provider.enabled_models || []).some((m) => m.id === newId)) {
-        message.error('模型 ID 已存在')
+        message.error('모델 ID가 이미 존재합니다')
         return
       }
       const newModel = { ...editingModel.value, id: newId, source: 'manual', enabled: true }
@@ -638,7 +638,7 @@ const saveModelConfig = async () => {
     await modelProviderApi.updateProvider(currentProviderForModels.value.provider_id, {
       enabled_models: enabledModels
     })
-    message.success(isCreating.value ? '模型已添加' : '模型配置已保存')
+    message.success(isCreating.value ? '모델을 추가했습니다' : '모델 설정을 저장했습니다')
     showModelModal.value = false
     isCreating.value = false
     await loadProviders()
@@ -647,7 +647,7 @@ const saveModelConfig = async () => {
       (p) => p.provider_id === currentProviderForModels.value.provider_id
     )
   } catch (error) {
-    message.error(error.message || '保存失败')
+    message.error(error.message || '저장에 실패했습니다')
   } finally {
     saving.value = false
   }
@@ -662,23 +662,23 @@ const removeModel = async (providerId, modelId) => {
   }
 
   Modal.confirm({
-    title: '移除模型',
-    content: `确定要移除模型 ${modelId} 吗？`,
-    okText: '移除',
+    title: '모델 제거',
+    content: `모델 ${modelId}을(를) 제거할까요?`,
+    okText: '제거',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         const enabledModels = (provider.enabled_models || []).filter((m) => m.id !== modelId)
         await modelProviderApi.updateProvider(providerId, { enabled_models: enabledModels })
-        message.success('模型已移除')
+        message.success('모델을 제거했습니다')
         await loadProviders()
         // Refresh current provider reference if modal is open
         if (currentProviderForModels.value?.provider_id === providerId) {
           currentProviderForModels.value = providers.value.find((p) => p.provider_id === providerId)
         }
       } catch (error) {
-        message.error(error.message || '移除失败')
+        message.error(error.message || '제거에 실패했습니다')
       }
     }
   })
@@ -695,11 +695,11 @@ defineExpose({
 
 <template>
   <div class="model-provider-manage-panel">
-    <PageShoulder v-model:search="searchQuery" search-placeholder="搜索供应商...">
+    <PageShoulder v-model:search="searchQuery" search-placeholder="제공업체 검색...">
       <template #actions>
         <a-button type="primary" class="lucide-icon-btn" @click="openCreateProviderModal">
           <Plus :size="14" />
-          新增供应商
+          제공업체 추가
         </a-button>
         <a-button class="lucide-icon-btn" @click="loadProviders" :loading="loading">
           <RefreshCw :size="14" :class="{ spinning: loading }" />
@@ -728,9 +728,9 @@ defineExpose({
         <template #footer>
           <button class="view-models-btn" type="button" @click.stop="openModelsModal(provider)">
             <Settings2 :size="14" />
-            管理模型
+            모델 관리
             <span v-if="provider.enabled_models?.length" class="enabled-count"
-              >（已启用 {{ provider.enabled_models.length }} 个）</span
+              >(사용 중 {{ provider.enabled_models.length }}개)</span
             >
           </button>
           <span class="provider-enable-switch" @click.stop>
@@ -748,7 +748,7 @@ defineExpose({
     <!-- Provider Edit Modal -->
     <a-modal
       v-model:open="showProviderModal"
-      :title="editingProviderId ? '编辑供应商' : '新增供应商'"
+      :title="editingProviderId ? '제공업체 편집' : '제공업체 추가'"
       :width="560"
       :confirm-loading="saving"
     >
@@ -761,17 +761,17 @@ defineExpose({
             @click="deleteProviderFromEdit"
           >
             <Trash2 :size="14" />
-            删除供应商
+            제공업체 삭제
           </a-button>
           <span v-else></span>
           <div class="provider-modal-footer-actions">
-            <a-button @click="showProviderModal = false">取消</a-button>
+            <a-button @click="showProviderModal = false">취소</a-button>
             <a-button
               type="primary"
               :loading="saving"
               @click="editingProviderId ? saveProvider() : createProvider()"
             >
-              确认
+              확인
             </a-button>
           </div>
         </div>
@@ -787,7 +787,7 @@ defineExpose({
             />
           </label>
           <label class="form-label">
-            <span>展示名称</span>
+            <span>표시 이름</span>
             <a-input v-model:value="providerForm.display_name" placeholder="My Provider" />
           </label>
         </div>
@@ -817,7 +817,7 @@ defineExpose({
         <div class="form-row">
           <label class="form-label">
             <span>API Key Env</span>
-            <a-input v-model:value="providerForm.api_key_env" placeholder="环境变量名" />
+            <a-input v-model:value="providerForm.api_key_env" placeholder="환경 변수 이름" />
           </label>
           <label class="form-label">
             <span>API Key</span>
@@ -864,14 +864,14 @@ defineExpose({
               <span>Rerank Endpoint</span>
               <a-input
                 v-model:value="providerForm.rerank_models_endpoint"
-                placeholder="按供应商文档填写，留空则不自动加载"
+                placeholder="제공업체 문서에 따라 입력하세요. 비워 두면 자동으로 불러오지 않습니다"
               />
             </label>
           </div>
         </template>
 
         <label class="form-label full-width">
-          <span>能力</span>
+          <span>기능</span>
           <a-select v-model:value="providerForm.capabilities" mode="multiple">
             <a-select-option value="chat">chat</a-select-option>
             <a-select-option value="embedding">embedding</a-select-option>
@@ -880,23 +880,23 @@ defineExpose({
         </label>
 
         <div class="form-switch">
-          <span>状态</span>
+          <span>상태</span>
           <a-switch
             v-model:checked="providerForm.is_enabled"
-            checked-children="启用"
-            un-checked-children="停用"
+            checked-children="사용"
+            un-checked-children="중지"
           />
         </div>
 
         <a-collapse expand-icon-position="end" :ghost="true" class="advanced-collapse">
-          <a-collapse-panel key="advanced" header="高级配置">
+          <a-collapse-panel key="advanced" header="고급 설정">
             <label class="form-label full-width">
-              <span>请求头 JSON</span>
+              <span>요청 헤더 JSON</span>
               <a-textarea v-model:value="providerForm.headers_text" :rows="4" placeholder="{}" />
             </label>
 
             <label class="form-label full-width">
-              <span>扩展配置 JSON</span>
+              <span>추가 설정 JSON</span>
               <a-textarea v-model:value="providerForm.extra_text" :rows="4" placeholder="{}" />
             </label>
           </a-collapse-panel>
@@ -908,8 +908,8 @@ defineExpose({
       v-model:open="showModelsModal"
       :title="
         currentProviderForModels
-          ? `${currentProviderForModels.display_name} - 模型配置`
-          : '模型配置'
+          ? `${currentProviderForModels.display_name} - 모델 설정`
+          : '모델 설정'
       "
       :width="800"
       :footer="null"
@@ -919,7 +919,7 @@ defineExpose({
         <div class="models-section">
           <div class="enabled-header">
             <h4 class="models-section-title">
-              已启用模型 ({{ currentProviderForModels.enabled_models?.length || 0 }})
+              사용 중인 모델 ({{ currentProviderForModels.enabled_models?.length || 0 }})
             </h4>
             <div class="actions">
               <a-button
@@ -929,7 +929,7 @@ defineExpose({
                 :loading="remoteLoading"
                 @click="fetchRemoteModels(currentProviderForModels.provider_id)"
               >
-                获取远程模型
+                원격 모델 불러오기
               </a-button>
               <a-button
                 size="small"
@@ -937,17 +937,17 @@ defineExpose({
                 @click="openCreateModal(currentProviderForModels)"
               >
                 <Plus :size="14" />
-                <span>手动添加</span>
+                <span>직접 추가</span>
               </a-button>
             </div>
           </div>
           <div class="models-table" v-if="currentProviderForModels.enabled_models?.length">
             <div class="table-head">
-              <span class="col-name">模型</span>
-              <span class="col-type">类型</span>
-              <span class="col-context">上下文</span>
-              <span class="col-dim">维度</span>
-              <span class="col-ops">操作</span>
+              <span class="col-name">모델</span>
+              <span class="col-type">유형</span>
+              <span class="col-context">컨텍스트</span>
+              <span class="col-dim">차원</span>
+              <span class="col-ops">작업</span>
             </div>
             <div
               v-for="model in currentProviderForModels.enabled_models"
@@ -964,8 +964,8 @@ defineExpose({
                 <span
                   v-if="model.source === 'manual'"
                   class="type-tag manual"
-                  title="管理员手动添加"
-                  aria-label="管理员手动添加"
+                  title="관리자가 직접 추가"
+                  aria-label="관리자가 직접 추가"
                 >
                   <LayersPlus :size="12" />
                 </span>
@@ -975,7 +975,7 @@ defineExpose({
                 <span
                   v-if="model.type === 'embedding' && !model.dimension"
                   class="dim-warning"
-                  title="缺少维度配置"
+                  title="차원 설정이 없습니다"
                   >⚠</span
                 >
                 <span v-else>{{ model.dimension || '-' }}</span>
@@ -987,7 +987,7 @@ defineExpose({
                   :class="{
                     'is-testing': isModelTesting(currentProviderForModels.provider_id, model.id)
                   }"
-                  aria-label="测试模型连接"
+                  aria-label="모델 연결 테스트"
                   :aria-busy="isModelTesting(currentProviderForModels.provider_id, model.id)"
                   :title="getModelTestTitle(currentProviderForModels.provider_id, model)"
                   @click="testModelConnection(currentProviderForModels.provider_id, model)"
@@ -1013,18 +1013,18 @@ defineExpose({
               </span>
             </div>
           </div>
-          <a-empty v-else description="暂无已启用模型" />
+          <a-empty v-else description="사용 중인 모델이 없습니다" />
         </div>
 
         <!-- Remote Models Section -->
         <div class="models-section">
           <div class="remote-header">
-            <h4 class="models-section-title">远端候选模型 ({{ filteredRemoteModels.length }})</h4>
+            <h4 class="models-section-title">원격 후보 모델 ({{ filteredRemoteModels.length }})</h4>
             <a-input
               v-if="remoteModelsMap[currentProviderForModels.provider_id]?.length"
               v-model:value="remoteModelSearch[currentProviderForModels.provider_id]"
               class="remote-search-input"
-              placeholder="搜索模型..."
+              placeholder="모델 검색..."
               allow-clear
             >
               <template #prefix><Search :size="12" /></template>
@@ -1091,7 +1091,7 @@ defineExpose({
     <!-- Model Config Modal -->
     <a-modal
       v-model:open="showModelModal"
-      :title="isCreating ? '手动添加模型' : '模型配置'"
+      :title="isCreating ? '모델 직접 추가' : '모델 설정'"
       :width="520"
       :confirm-loading="saving"
       @ok="saveModelConfig"
@@ -1099,22 +1099,22 @@ defineExpose({
       <div class="modal-form">
         <div v-if="isCreating" class="form-row">
           <label class="form-label">
-            <span>模型 ID <span class="required-mark">*</span></span>
-            <a-input v-model:value="editingModel.id" placeholder="例如 BAAI/bge-m3" allow-clear />
+            <span>모델 ID <span class="required-mark">*</span></span>
+            <a-input v-model:value="editingModel.id" placeholder="예: BAAI/bge-m3" allow-clear />
           </label>
         </div>
         <div v-else class="model-id-display">
-          <span class="info-label">模型 ID</span>
+          <span class="info-label">모델 ID</span>
           <code>{{ editingModel.id }}</code>
         </div>
 
         <div class="form-row">
           <label class="form-label">
-            <span>展示名称</span>
+            <span>표시 이름</span>
             <a-input v-model:value="editingModel.display_name" />
           </label>
           <label class="form-label">
-            <span>模型类型</span>
+            <span>모델 유형</span>
             <a-select
               v-model:value="editingModel.type"
               :options="editingModelTypeOptions"
@@ -1125,18 +1125,18 @@ defineExpose({
 
         <div class="form-row">
           <label class="form-label">
-            <span>协议覆盖</span>
-            <a-input v-model:value="editingModel.protocol_override" placeholder="可选" />
+            <span>프로토콜 재정의</span>
+            <a-input v-model:value="editingModel.protocol_override" placeholder="선택 사항" />
           </label>
           <label class="form-label">
-            <span>Base URL 覆盖</span>
-            <a-input v-model:value="editingModel.base_url_override" placeholder="可选" />
+            <span>Base URL 재정의</span>
+            <a-input v-model:value="editingModel.base_url_override" placeholder="선택 사항" />
           </label>
         </div>
 
         <div class="form-row">
           <label class="form-label" v-if="editingModel.type === 'embedding'">
-            <span>维度</span>
+            <span>차원</span>
             <a-input-number v-model:value="editingModel.dimension" :min="1" />
           </label>
           <label
