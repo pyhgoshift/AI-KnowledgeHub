@@ -1,26 +1,26 @@
 <template>
-  <a-card title="工具调用监控" :loading="loading" class="dashboard-card">
+  <a-card title="도구 호출 모니터링" :loading="loading" class="dashboard-card">
     <!-- 工具调用概览 -->
     <div class="stats-overview">
       <a-row :gutter="16">
         <a-col :span="8">
           <a-statistic
-            title="总调用次数"
+            title="전체 호출 수"
             :value="toolStats?.total_calls || 0"
             :value-style="{ color: 'var(--color-info-500)' }"
           />
         </a-col>
         <a-col :span="8">
           <a-statistic
-            title="失败调用"
+            title="실패 호출"
             :value="toolStats?.failed_calls || 0"
             :value-style="{ color: 'var(--color-error-500)' }"
-            suffix="次"
+            suffix="회"
           />
         </a-col>
         <a-col :span="8">
           <a-statistic
-            title="成功率"
+            title="성공률"
             :value="toolStats?.success_rate || 0"
             suffix="%"
             :value-style="{
@@ -39,14 +39,14 @@
     <!-- 最常用工具 -->
     <a-divider />
     <div class="chart-container">
-      <h4>最常用工具 TOP 10</h4>
+      <h4>가장 많이 사용한 도구 TOP 10</h4>
       <div ref="toolsChartRef" class="chart"></div>
     </div>
 
     <!-- 错误分析 -->
     <a-divider />
     <div class="error-analysis" v-if="hasErrorData">
-      <h4>工具错误分析</h4>
+      <h4>도구 오류 분석</h4>
       <a-row :gutter="16">
         <a-col :span="12">
           <a-table
@@ -70,7 +70,7 @@
         </a-col>
         <a-col :span="12">
           <div class="chart-container">
-            <h4>错误分布图</h4>
+            <h4>오류 분포</h4>
             <div ref="errorChartRef" class="chart-small"></div>
           </div>
         </a-col>
@@ -114,13 +114,13 @@ let errorChart = null
 // 错误分析相关
 const errorColumns = [
   {
-    title: '工具名称',
+    title: '도구 이름',
     dataIndex: 'tool_name',
     key: 'tool_name',
     width: '50%'
   },
   {
-    title: '错误次数',
+    title: '오류 횟수',
     dataIndex: 'error_count',
     key: 'error_count',
     width: '50%',
@@ -208,7 +208,7 @@ const initToolsChart = () => {
     },
     series: [
       {
-        name: '调用次数',
+        name: '호출 횟수',
         type: 'bar',
         data: data.map((item) => item.count),
         itemStyle: {
@@ -256,7 +256,7 @@ const initErrorChart = () => {
     },
     series: [
       {
-        name: '错误分布',
+        name: '오류 분포',
         type: 'pie',
         radius: ['30%', '70%'],
         center: ['50%', '60%'],

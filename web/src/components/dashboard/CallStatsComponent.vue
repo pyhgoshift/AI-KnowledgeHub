@@ -1,6 +1,6 @@
 <template>
   <div class="grid-item call-stats">
-    <a-card class="dashboard-card call-stats-section" title="调用统计" :loading="loading">
+    <a-card class="dashboard-card call-stats-section" title="호출 통계" :loading="loading">
       <template #extra>
         <div class="simple-controls">
           <div class="simple-toggle-group">
@@ -64,15 +64,15 @@ const callStatsLoading = ref(false)
 const callTimeRange = ref('14days')
 const callDataType = ref('agents')
 const timeRangeOptions = [
-  { value: '14hours', label: '近14小时' },
-  { value: '14days', label: '近14天' },
-  { value: '14weeks', label: '近14周' }
+  { value: '14hours', label: '최근 14시간' },
+  { value: '14days', label: '최근 14일' },
+  { value: '14weeks', label: '최근 14주' }
 ]
 const dataTypeOptions = [
-  { value: 'models', label: '模型调用' },
-  { value: 'agents', label: '智能体调用' },
-  { value: 'tokens', label: 'Token消耗' },
-  { value: 'tools', label: '工具调用' }
+  { value: 'models', label: '모델 호출' },
+  { value: 'agents', label: '에이전트 호출' },
+  { value: 'tokens', label: '토큰 사용량' },
+  { value: 'tools', label: '도구 호출' }
 ]
 const isTokenView = computed(() => callDataType.value === 'tokens')
 
@@ -165,7 +165,7 @@ const renderCallStatsChart = () => {
     if (callTimeRange.value === '14hours') {
       return date.split(' ')[1]
     } else if (callTimeRange.value === '14weeks') {
-      return `第${date.split('-')[1]}周`
+      return `${date.split('-')[1]}주차`
     } else {
       return date.split('-').slice(1).join('-')
     }
@@ -174,7 +174,7 @@ const renderCallStatsChart = () => {
   const agentNames = callStatsData.value.agent_names || {}
 
   const resolveCategoryLabel = (cat) => {
-    if (cat === 'None') return '未知模型'
+    if (cat === 'None') return '알 수 없는 모델'
     return agentNames[cat] || cat
   }
 
@@ -237,13 +237,13 @@ const renderCallStatsChart = () => {
           result += `<span style="${itemStyle}">${truncatedName}: ${formatValueForDisplay(param.value)}</span><br/>`
         })
         const labelMap = {
-          models: '模型调用',
-          agents: '智能体调用',
-          tokens: 'Token消耗',
-          tools: '工具调用'
+          models: '모델 호출',
+          agents: '에이전트 호출',
+          tokens: '토큰 사용량',
+          tools: '도구 호출'
         }
         const formattedTotal = formatValueForDisplay(total)
-        return `<div style="font-weight:bold;margin-bottom:5px">${labelMap[callDataType.value]}</div>${result}<strong>总计: ${formattedTotal}</strong>`
+        return `<div style="font-weight:bold;margin-bottom:5px">${labelMap[callDataType.value]}</div>${result}<strong>합계: ${formattedTotal}</strong>`
       }
     },
     legend: {

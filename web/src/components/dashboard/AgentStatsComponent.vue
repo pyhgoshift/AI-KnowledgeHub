@@ -1,30 +1,30 @@
 <template>
-  <a-card title="AI智能体分析" :loading="loading" class="dashboard-card">
+  <a-card title="AI 에이전트 분석" :loading="loading" class="dashboard-card">
     <!-- 智能体概览 -->
     <div class="stats-overview">
       <a-row :gutter="16">
         <a-col :span="8">
           <a-statistic
-            title="智能体总数"
+            title="전체 에이전트"
             :value="agentStats?.total_agents || 0"
             :value-style="{ color: 'var(--color-info-500)' }"
-            suffix="个"
+            suffix="개"
           />
         </a-col>
         <a-col :span="8">
           <a-statistic
-            title="总对话数"
+            title="전체 대화 수"
             :value="totalConversations"
             :value-style="{ color: 'var(--color-accent-500)' }"
-            suffix="次"
+            suffix="회"
           />
         </a-col>
         <a-col :span="8">
           <a-statistic
-            title="工具调用总数"
+            title="전체 도구 호출"
             :value="totalToolUsage"
             :value-style="{ color: 'var(--color-warning-500)' }"
-            suffix="次"
+            suffix="회"
           />
         </a-col>
       </a-row>
@@ -37,7 +37,7 @@
       <!-- 对话数和工具调用数分布 -->
       <a-col :span="24">
         <div class="chart-container">
-          <h4>对话/工具调用分布 (TOP 3)</h4>
+          <h4>대화/도구 호출 분포 (TOP 3)</h4>
           <div ref="conversationToolChartRef" class="chart"></div>
         </div>
       </a-col>
@@ -46,7 +46,7 @@
     <!-- 表现排行榜 -->
     <a-divider />
     <div class="top-performers">
-      <h4>表现最佳智能体 TOP 5</h4>
+      <h4>성능 상위 에이전트 TOP 5</h4>
       <a-table
         :columns="performerColumns"
         :data-source="topPerformers"
@@ -121,24 +121,24 @@ let conversationToolChart = null
 // 表格列定义
 const performerColumns = [
   {
-    title: '排名',
+    title: '순위',
     key: 'rank',
     width: '80px',
     align: 'center'
   },
   {
-    title: '智能体',
+    title: '에이전트',
     key: 'agent_id',
     width: '30%'
   },
   {
-    title: '满意度',
+    title: '만족도',
     key: 'satisfaction_rate',
     width: '25%',
     align: 'center'
   },
   {
-    title: '对话数',
+    title: '대화 수',
     key: 'conversation_count',
     width: '20%',
     align: 'center'
@@ -221,7 +221,7 @@ const initConversationToolChart = () => {
       }
     },
     legend: {
-      data: ['对话数', '工具调用数'],
+      data: ['대화 수', '도구 호출 수'],
       right: '0%',
       top: '0%',
       orient: 'horizontal',
@@ -268,7 +268,7 @@ const initConversationToolChart = () => {
     },
     series: [
       {
-        name: '对话数',
+        name: '대화 수',
         type: 'bar',
         data: topAgentIds.map((agentId) => {
           const item = conversationData.find((d) => d.agent_id === agentId)
@@ -287,7 +287,7 @@ const initConversationToolChart = () => {
         }
       },
       {
-        name: '工具调用数',
+        name: '도구 호출 수',
         type: 'bar',
         data: topAgentIds.map((agentId) => {
           const item = toolData.find((d) => d.agent_id === agentId)
