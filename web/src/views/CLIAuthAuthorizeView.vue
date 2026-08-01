@@ -3,7 +3,7 @@
     <section class="cli-auth-panel">
       <div class="cli-auth-header">
         <p class="eyebrow">Yuxi CLI</p>
-        <h1>确认命令行登录</h1>
+        <h1>명령줄 로그인 확인</h1>
       </div>
 
       <a-alert v-if="errorMessage" type="error" :message="errorMessage" show-icon />
@@ -14,8 +14,8 @@
         <a-result
           v-if="approved"
           status="success"
-          title="已授权"
-          sub-title="可以关闭此页面并回到终端。"
+          title="승인 완료"
+          sub-title="이 페이지를 닫고 터미널로 돌아가세요."
         />
 
         <div v-else class="session-summary">
@@ -23,25 +23,25 @@
           <a-alert
             type="warning"
             show-icon
-            message="请确认这是你本人发起的命令行登录"
-            description="确认后将以你当前的身份创建一个 API Key 并返回给终端。若不是你本人发起，请勿确认并关闭此页面。"
+            message="본인이 시작한 명령줄 로그인인지 확인하세요"
+            description="승인하면 현재 계정으로 API 키가 만들어져 터미널에 전달됩니다. 본인이 시작한 요청이 아니라면 승인하지 말고 이 페이지를 닫으세요."
           />
           <dl>
             <div>
-              <dt>凭据名称</dt>
+              <dt>자격 증명 이름</dt>
               <dd>{{ session?.key_name || 'Yuxi CLI' }}</dd>
             </div>
             <div>
-              <dt>状态</dt>
+              <dt>상태</dt>
               <dd>{{ session?.status || '-' }}</dd>
             </div>
             <div>
-              <dt>过期时间</dt>
+              <dt>만료 시간</dt>
               <dd>{{ session?.expires_at || '-' }}</dd>
             </div>
           </dl>
           <a-button type="primary" size="large" :loading="approving" @click="approveSession">
-            确认授权
+            승인 확인
           </a-button>
         </div>
       </template>
@@ -69,7 +69,7 @@ const userCode = computed(() =>
 
 async function loadSession() {
   if (!userCode.value) {
-    errorMessage.value = '缺少 CLI 授权码'
+    errorMessage.value = 'CLI 승인 코드가 없습니다'
     loading.value = false
     return
   }
@@ -77,7 +77,7 @@ async function loadSession() {
     loading.value = true
     session.value = await authApi.getCLIAuthSession(userCode.value)
   } catch (error) {
-    errorMessage.value = error.message || '获取 CLI 授权会话失败'
+    errorMessage.value = error.message || 'CLI 승인 세션을 불러오지 못했습니다'
   } finally {
     loading.value = false
   }
@@ -89,7 +89,7 @@ async function approveSession() {
     await authApi.approveCLIAuthSession(userCode.value)
     approved.value = true
   } catch (error) {
-    errorMessage.value = error.message || '确认 CLI 授权失败'
+    errorMessage.value = error.message || 'CLI 승인을 완료하지 못했습니다'
   } finally {
     approving.value = false
   }

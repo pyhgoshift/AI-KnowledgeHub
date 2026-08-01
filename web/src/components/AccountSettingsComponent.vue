@@ -2,12 +2,12 @@
   <div class="account-settings">
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">账户设置</div>
-        <p class="section-description">管理当前账户资料、身份信息。</p>
+        <div class="section-title">계정 설정</div>
+        <p class="section-description">현재 계정 정보와 권한을 관리합니다.</p>
       </div>
       <a-button class="lucide-icon-btn" :loading="refreshing" @click="refreshProfile">
         <template #icon><RefreshCw :size="16" :class="{ spin: refreshing }" /></template>
-        刷新
+        새로고침
       </a-button>
     </div>
 
@@ -34,14 +34,14 @@
             <div class="avatar-mask">
               <Upload v-if="!avatarUploading" :size="16" />
               <RefreshCw v-else :size="16" class="spin" />
-              <span>{{ userStore.avatar ? '更换' : '上传' }}</span>
+              <span>{{ userStore.avatar ? '변경' : '업로드' }}</span>
             </div>
           </div>
         </a-upload>
 
         <div class="profile-fields">
           <div class="profile-row editable-row">
-            <span class="profile-label">用户名</span>
+            <span class="profile-label">사용자명</span>
             <a-input
               v-if="editingField === 'username'"
               ref="usernameInput"
@@ -55,11 +55,11 @@
               @blur="cancelField"
             />
             <button v-else type="button" class="editable-value" @click="startFieldEdit('username')">
-              {{ userStore.username || '未设置' }}
+              {{ userStore.username || '설정 안 됨' }}
             </button>
           </div>
           <div class="profile-row editable-row">
-            <span class="profile-label">手机号</span>
+            <span class="profile-label">휴대폰 번호</span>
             <a-input
               v-if="editingField === 'phone_number'"
               ref="phoneInput"
@@ -78,12 +78,12 @@
               class="editable-value"
               @click="startFieldEdit('phone_number')"
             >
-              {{ userStore.phoneNumber || '未设置' }}
+              {{ userStore.phoneNumber || '설정 안 됨' }}
             </button>
           </div>
           <div class="profile-row">
             <span class="profile-label">UID</span>
-            <span class="profile-value mono">{{ userStore.uid || '未设置' }}</span>
+            <span class="profile-value mono">{{ userStore.uid || '설정 안 됨' }}</span>
           </div>
         </div>
       </div>
@@ -91,15 +91,15 @@
       <div class="identity-panel">
         <div class="identity-item">
           <span class="identity-icon"><ShieldCheck :size="15" /></span>
-          <span class="profile-label">权限</span>
+          <span class="profile-label">권한</span>
           <span class="profile-value" :style="{ color: getRoleColor(userStore.userRole) }">
             {{ userRoleText }}
           </span>
         </div>
         <div class="identity-item">
           <span class="identity-icon"><Building2 :size="15" /></span>
-          <span class="profile-label">部门</span>
-          <span class="profile-value">{{ userStore.departmentName || '默认部门' }}</span>
+          <span class="profile-label">부서</span>
+          <span class="profile-value">{{ userStore.departmentName || '기본 부서' }}</span>
         </div>
       </div>
     </div>
@@ -136,13 +136,13 @@ const avatarDefaultSrc = computed(() => (userStore.uid ? generatePixelAvatar(use
 const userRoleText = computed(() => {
   switch (userStore.userRole) {
     case 'superadmin':
-      return '超级管理员'
+      return '최고 관리자'
     case 'admin':
-      return '管理员'
+      return '관리자'
     case 'user':
-      return '普通用户'
+      return '일반 사용자'
     default:
-      return '未知角色'
+      return '알 수 없는 권한'
   }
 })
 
@@ -156,10 +156,10 @@ const refreshProfile = async () => {
   try {
     await userStore.getCurrentUser()
     syncProfileDraft()
-    message.success('账户信息已刷新')
+    message.success('계정 정보를 새로고침했습니다')
   } catch (error) {
     console.error('刷新用户信息失败:', error)
-    message.error('刷新失败：' + (error.message || '请稍后重试'))
+    message.error('새로고침에 실패했습니다: ' + (error.message || '잠시 후 다시 시도하세요'))
   } finally {
     refreshing.value = false
   }
@@ -184,7 +184,7 @@ const saveField = async (field) => {
   if (field === 'username') {
     const username = profileDraft.username.trim()
     if (username.length < 2 || username.length > 20) {
-      message.error('用户名长度必须在 2-20 个字符之间')
+      message.error('사용자명은 2~20자여야 합니다')
       return
     }
     if (username === userStore.username) {
@@ -197,7 +197,7 @@ const saveField = async (field) => {
   if (field === 'phone_number') {
     const phoneNumber = profileDraft.phone_number.trim()
     if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
-      message.error('请输入正确的手机号格式')
+      message.error('올바른 휴대폰 번호 형식을 입력하세요')
       return
     }
     if (phoneNumber === (userStore.phoneNumber || '')) {
@@ -212,10 +212,10 @@ const saveField = async (field) => {
     await userStore.updateProfile(payload)
     syncProfileDraft()
     editingField.value = ''
-    message.success('个人资料更新成功')
+    message.success('프로필을 업데이트했습니다')
   } catch (error) {
     console.error('更新个人资料失败:', error)
-    message.error('更新失败：' + (error.message || '请稍后重试'))
+    message.error('업데이트에 실패했습니다: ' + (error.message || '잠시 후 다시 시도하세요'))
   } finally {
     savingField.value = ''
   }
@@ -243,13 +243,13 @@ const validatePhoneNumber = (phone) => {
 const beforeUpload = (file) => {
   const isImage = file.type.startsWith('image/')
   if (!isImage) {
-    message.error('只能上传图片文件！')
+    message.error('이미지 파일만 업로드할 수 있습니다')
     return false
   }
 
   const isLt5M = file.size / 1024 / 1024 < 5
   if (!isLt5M) {
-    message.error('图片大小不能超过 5MB！')
+    message.error('이미지 크기는 5MB를 초과할 수 없습니다')
     return false
   }
 
@@ -270,10 +270,10 @@ const handleAvatarChange = async (info) => {
   try {
     avatarUploading.value = true
     await userStore.uploadAvatar(info.file.originFileObj || info.file)
-    message.success('头像上传成功！')
+    message.success('프로필 이미지를 업로드했습니다')
   } catch (error) {
     console.error('头像上传失败:', error)
-    message.error('头像上传失败：' + (error.message || '请稍后重试'))
+    message.error('프로필 이미지 업로드에 실패했습니다: ' + (error.message || '잠시 후 다시 시도하세요'))
   } finally {
     avatarUploading.value = false
   }

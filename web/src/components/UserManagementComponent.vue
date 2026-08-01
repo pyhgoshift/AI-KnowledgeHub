@@ -3,16 +3,16 @@
     <!-- 头部区域 -->
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">用户管理</div>
+        <div class="section-title">사용자 관리</div>
         <p class="section-description">
-          管理系统用户，请谨慎操作。删除用户后该用户将无法登录系统。
+          시스템 사용자를 관리합니다. 사용자를 삭제하면 해당 사용자는 더 이상 로그인할 수 없습니다.
         </p>
       </div>
       <div class="header-actions">
         <a-button
           @click="handleRefresh"
           :loading="userManagement.refreshing"
-          title="刷新"
+          title="새로고침"
           class="refresh-btn lucide-icon-btn"
         >
           <template #icon>
@@ -21,7 +21,7 @@
         </a-button>
         <a-button type="primary" @click="showAddUserModal" class="add-btn lucide-icon-btn">
           <template #icon><Plus :size="16" /></template>
-          添加用户
+          사용자 추가
         </a-button>
       </div>
     </div>
@@ -30,14 +30,14 @@
       <a-input
         v-model:value="userManagement.searchKeyword"
         class="search-input"
-        placeholder="搜索用户名 / ID / 手机号"
+        placeholder="사용자명 / ID / 휴대폰 번호 검색"
         allow-clear
       >
         <template #prefix><Search :size="16" /></template>
       </a-input>
       <div class="filter-actions">
         <a-select v-model:value="userManagement.departmentFilter" class="filter-select">
-          <a-select-option value="">全部部门</a-select-option>
+          <a-select-option value="">모든 부서</a-select-option>
           <a-select-option
             v-for="dept in departmentFilterOptions"
             :key="dept.value"
@@ -47,10 +47,10 @@
           </a-select-option>
         </a-select>
         <a-select v-model:value="userManagement.roleFilter" class="filter-select">
-          <a-select-option value="">全部权限</a-select-option>
-          <a-select-option value="superadmin">超级管理员</a-select-option>
-          <a-select-option value="admin">管理员</a-select-option>
-          <a-select-option value="user">普通用户</a-select-option>
+          <a-select-option value="">모든 권한</a-select-option>
+          <a-select-option value="superadmin">최고 관리자</a-select-option>
+          <a-select-option value="admin">관리자</a-select-option>
+          <a-select-option value="user">일반 사용자</a-select-option>
         </a-select>
       </div>
     </div>
@@ -65,7 +65,7 @@
         <div class="cards-container">
           <div v-if="filteredUsers.length === 0" class="empty-state">
             <a-empty
-              :description="userManagement.users.length === 0 ? '暂无用户数据' : '没有匹配的用户'"
+              :description="userManagement.users.length === 0 ? '사용자 데이터가 없습니다' : '일치하는 사용자가 없습니다'"
             />
           </div>
           <div v-else class="user-cards-grid">
@@ -111,7 +111,7 @@
                   <a-menu-item key="edit" @click.stop="showEditUserModal(user)">
                     <span class="lucide-menu-item">
                       <SquarePen :size="14" />
-                      <span>编辑用户</span>
+                      <span>사용자 수정</span>
                     </span>
                   </a-menu-item>
                   <a-menu-item
@@ -122,7 +122,7 @@
                   >
                     <span class="lucide-menu-item">
                       <Trash2 :size="14" />
-                      <span>删除用户</span>
+                      <span>사용자 삭제</span>
                     </span>
                   </a-menu-item>
                 </a-menu>
@@ -131,15 +131,15 @@
               <template #info>
                 <div class="card-content">
                   <div class="info-item">
-                    <span class="info-label">手机号:</span>
+                    <span class="info-label">휴대폰 번호:</span>
                     <span class="info-value phone-text">{{ user.phone_number || '-' }}</span>
                   </div>
                   <div class="info-item">
-                    <span class="info-label">创建时间:</span>
+                    <span class="info-label">생성 시간:</span>
                     <span class="info-value time-text">{{ formatTime(user.created_at) }}</span>
                   </div>
                   <div class="info-item">
-                    <span class="info-label">最后登录:</span>
+                    <span class="info-label">최근 로그인:</span>
                     <span class="info-value time-text">{{ formatTime(user.last_login) }}</span>
                   </div>
                 </div>
@@ -172,10 +172,10 @@
       class="user-modal"
     >
       <a-form layout="vertical" class="user-form">
-        <a-form-item label="用户名" required class="form-item">
+        <a-form-item label="사용자명" required class="form-item">
           <a-input
             v-model:value="userManagement.form.username"
-            placeholder="请输入用户名（2-20个字符）"
+            placeholder="사용자명을 입력하세요(2~20자)"
             @blur="validateAndGenerateUid"
             :maxlength="20"
           />
@@ -186,15 +186,15 @@
             v-if="userManagement.form.generatedUid && !userManagement.editMode"
             class="help-text"
           >
-            登录ID：{{ userManagement.form.generatedUid }}，此ID将用于登录，根据用户名自动生成
+            로그인 ID: {{ userManagement.form.generatedUid }} (사용자명을 기반으로 자동 생성됩니다)
           </div>
         </a-form-item>
 
         <!-- 手机号字段 -->
-        <a-form-item label="手机号" class="form-item">
+        <a-form-item label="휴대폰 번호" class="form-item">
           <a-input
             v-model:value="userManagement.form.phoneNumber"
-            placeholder="请输入手机号（可选，可用于登录）"
+            placeholder="휴대폰 번호 입력(선택 사항, 로그인에 사용 가능)"
             :maxlength="11"
           />
           <div v-if="userManagement.form.phoneError" class="error-text">
@@ -205,46 +205,46 @@
         <template v-if="userManagement.editMode">
           <div class="password-toggle">
             <a-checkbox v-model:checked="userManagement.displayPasswordFields">
-              修改密码
+              비밀번호 변경
             </a-checkbox>
           </div>
         </template>
 
         <template v-if="!userManagement.editMode || userManagement.displayPasswordFields">
-          <a-form-item label="密码" required class="form-item">
+          <a-form-item label="비밀번호" required class="form-item">
             <a-input-password
               v-model:value="userManagement.form.password"
-              :placeholder="`请输入密码（至少 ${MIN_PASSWORD_LENGTH} 位）`"
+              :placeholder="`비밀번호를 입력하세요(최소 ${MIN_PASSWORD_LENGTH}자)`"
               :minlength="MIN_PASSWORD_LENGTH"
             />
           </a-form-item>
 
-          <a-form-item label="确认密码" required class="form-item">
+          <a-form-item label="비밀번호 확인" required class="form-item">
             <a-input-password
               v-model:value="userManagement.form.confirmPassword"
-              placeholder="请再次输入密码"
+              placeholder="비밀번호를 다시 입력하세요"
             />
           </a-form-item>
         </template>
 
         <a-form-item
           v-if="userManagement.editMode && userManagement.form.role === 'superadmin'"
-          label="角色"
+          label="권한"
           class="form-item"
         >
-          <a-input value="超级管理员" disabled />
-          <div class="help-text">超级管理员账户无法修改角色</div>
+          <a-input value="최고 관리자" disabled />
+          <div class="help-text">최고 관리자 계정의 권한은 변경할 수 없습니다</div>
         </a-form-item>
-        <a-form-item v-else label="角色" class="form-item">
+        <a-form-item v-else label="권한" class="form-item">
           <a-select v-model:value="userManagement.form.role">
-            <a-select-option value="user">普通用户</a-select-option>
-            <a-select-option value="admin" v-if="userStore.isSuperAdmin">管理员</a-select-option>
+            <a-select-option value="user">일반 사용자</a-select-option>
+            <a-select-option value="admin" v-if="userStore.isSuperAdmin">관리자</a-select-option>
           </a-select>
         </a-form-item>
 
         <!-- 部门选择器（仅超级管理员可见） -->
-        <a-form-item v-if="userStore.isSuperAdmin" label="部门" class="form-item">
-          <a-select v-model:value="userManagement.form.departmentId" placeholder="请选择部门">
+        <a-form-item v-if="userStore.isSuperAdmin" label="부서" class="form-item">
+          <a-select v-model:value="userManagement.form.departmentId" placeholder="부서를 선택하세요">
             <a-select-option
               v-for="dept in departmentManagement.departments"
               :key="dept.id"
@@ -294,7 +294,7 @@ const userManagement = reactive({
   pageSize: 50,
   error: null,
   modalVisible: false,
-  modalTitle: '添加用户',
+  modalTitle: '사용자 추가',
   editMode: false,
   editUserId: null,
   form: {
@@ -337,7 +337,7 @@ const departmentFilterOptions = computed(() => {
     if (!options.has(value)) {
       options.set(value, {
         value,
-        label: departmentName || `部门 ${departmentId}`
+        label: departmentName || `부서 ${departmentId}`
       })
     }
   })
@@ -403,7 +403,7 @@ const validateAndGenerateUid = async () => {
     const result = await userStore.validateUsernameAndGenerateUid(username)
     userManagement.form.generatedUid = result.uid
   } catch (error) {
-    userManagement.form.usernameError = error.message || '用户名验证失败'
+    userManagement.form.usernameError = error.message || '사용자명 확인에 실패했습니다'
   }
 }
 
@@ -437,7 +437,7 @@ watch(
     userManagement.form.phoneError = ''
 
     if (newPhone && !validatePhoneNumber(newPhone)) {
-      userManagement.form.phoneError = '请输入正确的手机号格式'
+      userManagement.form.phoneError = '올바른 휴대폰 번호 형식을 입력하세요'
     }
   }
 )
@@ -477,7 +477,7 @@ const fetchUsers = async () => {
     userManagement.error = null
   } catch (error) {
     console.error('获取用户列表失败:', error)
-    userManagement.error = '获取用户列表失败'
+    userManagement.error = '사용자 목록을 불러오지 못했습니다'
   } finally {
     userManagement.loading = false
   }
@@ -489,10 +489,10 @@ const handleRefresh = async () => {
   userManagement.refreshing = true
   try {
     await Promise.all([fetchUsers(), fetchDepartments()])
-    message.success('刷新成功')
+    message.success('새로고침했습니다')
   } catch (error) {
     console.error('刷新失败:', error)
-    message.error('刷新失败')
+    message.error('새로고침에 실패했습니다')
   } finally {
     userManagement.refreshing = false
   }
@@ -500,7 +500,7 @@ const handleRefresh = async () => {
 
 // 打开添加用户模态框
 const showAddUserModal = () => {
-  userManagement.modalTitle = '添加用户'
+  userManagement.modalTitle = '사용자 추가'
   userManagement.editMode = false
   userManagement.editUserId = null
   userManagement.form = {
@@ -520,7 +520,7 @@ const showAddUserModal = () => {
 
 // 打开编辑用户模态框
 const showEditUserModal = (user) => {
-  userManagement.modalTitle = '编辑用户'
+  userManagement.modalTitle = '사용자 수정'
   userManagement.editMode = true
   userManagement.editUserId = user.id
   userManagement.form = {
@@ -543,7 +543,7 @@ const handleUserFormSubmit = async () => {
   try {
     // 简单验证
     if (!userManagement.form.username.trim()) {
-      message.error('用户名不能为空')
+      message.error('사용자명을 입력하세요')
       return
     }
 
@@ -552,29 +552,29 @@ const handleUserFormSubmit = async () => {
       userManagement.form.username.trim().length < 2 ||
       userManagement.form.username.trim().length > 20
     ) {
-      message.error('用户名长度必须在 2-20 个字符之间')
+      message.error('사용자명은 2~20자여야 합니다')
       return
     }
 
     // 验证手机号
     if (userManagement.form.phoneNumber && !validatePhoneNumber(userManagement.form.phoneNumber)) {
-      message.error('请输入正确的手机号格式')
+      message.error('올바른 휴대폰 번호 형식을 입력하세요')
       return
     }
 
     if (userManagement.displayPasswordFields) {
       if (!userManagement.form.password) {
-        message.error('密码不能为空')
+        message.error('비밀번호를 입력하세요')
         return
       }
 
       if (!isPasswordLongEnough(userManagement.form.password)) {
-        message.error(`密码至少需要 ${MIN_PASSWORD_LENGTH} 个字符`)
+        message.error(`비밀번호는 최소 ${MIN_PASSWORD_LENGTH}자여야 합니다`)
         return
       }
 
       if (userManagement.form.password !== userManagement.form.confirmPassword) {
-        message.error('两次输入的密码不一致')
+        message.error('입력한 비밀번호가 서로 다릅니다')
         return
       }
     }
@@ -605,7 +605,7 @@ const handleUserFormSubmit = async () => {
       }
 
       await userStore.updateUser(userManagement.editUserId, updateData)
-      message.success('用户更新成功')
+      message.success('사용자 정보를 수정했습니다')
     } else {
       // 创建新用户
       const createData = {
@@ -625,7 +625,7 @@ const handleUserFormSubmit = async () => {
       }
 
       await userStore.createUser(createData)
-      message.success('用户创建成功')
+      message.success('사용자를 추가했습니다')
     }
 
     // 重新获取用户列表
@@ -633,7 +633,7 @@ const handleUserFormSubmit = async () => {
     userManagement.modalVisible = false
   } catch (error) {
     console.error('用户操作失败:', error)
-    message.error(error.message || '操作失败，请稍后重试')
+    message.error(error.message || '작업에 실패했습니다. 잠시 후 다시 시도하세요')
   } finally {
     userManagement.loading = false
   }
@@ -643,27 +643,27 @@ const handleUserFormSubmit = async () => {
 const confirmDeleteUser = (user) => {
   // 自己不能删除自己
   if (user.id === userStore.userId) {
-    message.error('不能删除自己的账户')
+    message.error('자신의 계정은 삭제할 수 없습니다')
     return
   }
 
   // 确认对话框
   Modal.confirm({
-    title: '确认删除用户',
-    content: `确定要删除用户 "${user.username}" 吗？此操作不可撤销。`,
-    okText: '删除',
+    title: '사용자 삭제 확인',
+    content: `사용자 "${user.username}"을(를) 삭제할까요? 삭제 후에는 복구할 수 없습니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         userManagement.loading = true
         await userStore.deleteUser(user.id)
-        message.success('用户删除成功')
+        message.success('사용자를 삭제했습니다')
         // 重新获取用户列表
         await fetchUsers()
       } catch (error) {
         console.error('删除用户失败:', error)
-        message.error(error.message || '删除失败，请稍后重试')
+        message.error(error.message || '삭제에 실패했습니다. 잠시 후 다시 시도하세요')
       } finally {
         userManagement.loading = false
       }

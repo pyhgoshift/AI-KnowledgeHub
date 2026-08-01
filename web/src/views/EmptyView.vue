@@ -1,7 +1,7 @@
 <template>
   <div class="not-found">
-    <h1>404 - 页面还没做</h1>
-    <p>Sorry, Yemian has not been zuoed.</p>
+    <h1>404 - 페이지를 찾을 수 없습니다</h1>
+    <p>요청한 페이지가 없거나 아직 준비되지 않았습니다.</p>
   </div>
 </template>
 

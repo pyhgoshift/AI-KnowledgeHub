@@ -12,7 +12,7 @@
     :bodyStyle="{ padding: 0 }"
   >
     <div class="settings-container">
-      <button class="settings-close-btn lucide-icon-btn" @click="handleClose" aria-label="关闭设置">
+      <button class="settings-close-btn lucide-icon-btn" @click="handleClose" aria-label="설정 닫기">
         <X :size="16" />
       </button>
 
@@ -26,7 +26,7 @@
             v-if="userStore.isLoggedIn"
           >
             <CircleUser class="icon" :size="18" />
-            <span>账户设置</span>
+            <span>계정 설정</span>
           </div>
           <div
             class="sider-item"
@@ -35,7 +35,7 @@
             v-if="userStore.isLoggedIn"
           >
             <Key class="icon" :size="18" />
-            <span>API Keys</span>
+            <span>API 키</span>
           </div>
           <div
             class="sider-item"
@@ -44,7 +44,7 @@
             v-if="userStore.isAdmin"
           >
             <Settings class="icon" :size="18" />
-            <span>基本设置</span>
+            <span>기본 설정</span>
           </div>
           <div
             class="sider-item"
@@ -53,7 +53,7 @@
             v-if="userStore.isAdmin"
           >
             <User class="icon" :size="18" />
-            <span>用户管理</span>
+            <span>사용자 관리</span>
           </div>
           <div
             class="sider-item"
@@ -62,7 +62,7 @@
             v-if="userStore.isSuperAdmin"
           >
             <Users class="icon" :size="18" />
-            <span>部门管理</span>
+            <span>부서 관리</span>
           </div>
           <div
             class="sider-item"
@@ -71,7 +71,7 @@
             v-if="userStore.isLoggedIn"
           >
             <SquareTerminal class="icon" :size="18" />
-            <span>环境变量</span>
+            <span>환경 변수</span>
           </div>
         </div>
 
@@ -79,19 +79,19 @@
           <div class="star-card-header">
             <div class="star-card-badge">
               <Star :size="12" />
-              <span>支持项目</span>
+              <span>프로젝트 지원</span>
             </div>
             <button
               class="star-card-close lucide-icon-btn"
               @click="dismissStarCard"
-              aria-label="关闭 Star 提示"
+              aria-label="Star 안내 닫기"
             >
               <X :size="14" />
             </button>
           </div>
-          <p class="star-card-title">给 Yuxi 点个 Star</p>
+          <p class="star-card-title">AI KnowledgeHub에 Star 남기기</p>
           <p class="star-card-description">
-            如果这个项目帮到了你，欢迎去 GitHub 点亮一个 Star，让更多人看到它。
+            이 프로젝트가 도움이 되었다면 GitHub Star로 응원해 주세요.
           </p>
           <a
             class="star-card-link"
@@ -102,7 +102,7 @@
             <img
               class="star-card-link-image"
               src="https://img.shields.io/github/stars/pyhgoshift/AI-KnowledgeHub?label=AI-KnowledgeHub&style=social"
-              alt="GitHub stars for Yuxi"
+              alt="AI KnowledgeHub GitHub Star 수"
             />
             <ExternalLink :size="13" />
           </a>
@@ -117,7 +117,7 @@
           @click="activeTab = 'account'"
           v-if="userStore.isLoggedIn"
         >
-          账户设置
+          계정 설정
         </div>
         <div
           class="nav-item"
@@ -125,7 +125,7 @@
           @click="activeTab = 'apiKeys'"
           v-if="userStore.isLoggedIn"
         >
-          API Keys
+          API 키
         </div>
         <div
           class="nav-item"
@@ -133,7 +133,7 @@
           @click="activeTab = 'agentEnv'"
           v-if="userStore.isLoggedIn"
         >
-          沙盒环境变量
+          샌드박스 환경 변수
         </div>
         <div
           class="nav-item"
@@ -141,7 +141,7 @@
           @click="activeTab = 'base'"
           v-if="userStore.isAdmin"
         >
-          基本设置
+          기본 설정
         </div>
         <div
           class="nav-item"
@@ -149,7 +149,7 @@
           @click="activeTab = 'user'"
           v-if="userStore.isAdmin"
         >
-          用户管理
+          사용자 관리
         </div>
         <div
           class="nav-item"
@@ -157,7 +157,7 @@
           @click="activeTab = 'department'"
           v-if="userStore.isSuperAdmin"
         >
-          部门管理
+          부서 관리
         </div>
       </div>
 

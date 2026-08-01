@@ -3,23 +3,23 @@
     <!-- 头部区域 -->
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">API Key 管理</div>
+        <div class="section-title">API 키 관리</div>
         <p class="section-description">
-          用于外部系统调用 Agent 对话接口。密钥仅显示一次，请妥善保管。
+          외부 시스템에서 에이전트 대화 API를 호출할 때 사용합니다. 전체 키는 한 번만 표시되므로 안전하게 보관하세요.
         </p>
       </div>
       <div class="header-actions">
         <a-button
           @click="handleRefresh"
           :loading="refreshing"
-          title="刷新"
+          title="새로고침"
           class="refresh-btn lucide-icon-btn"
         >
           <template #icon><RefreshCw :size="16" :class="{ spin: refreshing }" /></template>
         </a-button>
         <a-button type="primary" @click="showCreateModal" class="add-btn lucide-icon-btn">
           <Plus :size="14" />
-          创建 API Key
+          API 키 만들기
         </a-button>
       </div>
     </div>
@@ -33,7 +33,7 @@
 
         <div class="cards-container">
           <div v-if="apiKeys.length === 0" class="empty-state">
-            <a-empty description="暂无 API Key，点击上方按钮创建一个" />
+            <a-empty description="API 키가 없습니다. 위 버튼을 눌러 만드세요." />
           </div>
           <div v-else class="apikey-cards-grid">
             <div v-for="key in apiKeys" :key="key.id" class="apikey-card">
@@ -49,22 +49,22 @@
 
               <div class="card-content">
                 <div class="info-item">
-                  <span class="info-label">过期时间:</span>
-                  <span class="info-value">{{ key.expires_at || '永不过期' }}</span>
+                  <span class="info-label">만료 시간:</span>
+                  <span class="info-value">{{ key.expires_at || '만료 없음' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">最后使用:</span>
+                  <span class="info-label">최근 사용:</span>
                   <span class="info-value">{{ formatTime(key.last_used_at) }}</span>
                 </div>
               </div>
 
               <div class="card-footer">
                 <div class="footer-left">
-                  <span class="switch-label">{{ key.is_enabled ? '已启用' : '已禁用' }}</span>
+                  <span class="switch-label">{{ key.is_enabled ? '사용 중' : '사용 안 함' }}</span>
                   <a-switch :checked="key.is_enabled" size="small" @change="toggleEnabled(key)" />
                 </div>
                 <div class="footer-actions">
-                  <a-tooltip title="重新生成（获取完整密钥）">
+                  <a-tooltip title="재발급(전체 키 확인)">
                     <a-button
                       type="text"
                       size="small"
@@ -72,19 +72,19 @@
                       class="action-btn lucide-icon-btn"
                     >
                       <RefreshCw :size="14" />
-                      <span>重新生成</span>
+                      <span>재발급</span>
                     </a-button>
                   </a-tooltip>
                   <a-popconfirm
-                    title="确定要删除此 API Key 吗？此操作不可恢复。"
+                    title="이 API 키를 삭제할까요? 삭제 후에는 복구할 수 없습니다."
                     @confirm="deleteKey(key)"
-                    ok-text="确定"
-                    cancel-text="取消"
+                    ok-text="삭제"
+                    cancel-text="취소"
                   >
-                    <a-tooltip title="删除">
+                    <a-tooltip title="삭제">
                       <a-button type="text" size="small" danger class="action-btn lucide-icon-btn">
                         <Trash2 :size="14" />
-                        <span>删除</span>
+                        <span>삭제</span>
                       </a-button>
                     </a-tooltip>
                   </a-popconfirm>
@@ -99,21 +99,21 @@
     <!-- 创建 Modal -->
     <a-modal
       v-model:open="createModalVisible"
-      title="创建 API Key"
+      title="API 키 만들기"
       @ok="handleCreate"
       :confirmLoading="createLoading"
-      ok-text="创建"
-      cancel-text="取消"
+      ok-text="만들기"
+      cancel-text="취소"
     >
       <a-form layout="vertical" :model="createForm">
-        <a-form-item label="名称" required>
-          <a-input v-model:value="createForm.name" placeholder="如：生产环境API" />
+        <a-form-item label="이름" required>
+          <a-input v-model:value="createForm.name" placeholder="예: 운영 환경 API" />
         </a-form-item>
-        <a-form-item label="过期时间">
+        <a-form-item label="만료 시간">
           <a-date-picker
             v-model:value="createForm.expires_at"
             show-time
-            placeholder="留空表示永不过期"
+            placeholder="비워 두면 만료되지 않습니다"
             style="width: 100%"
           />
         </a-form-item>
@@ -123,7 +123,7 @@
     <!-- 密钥显示 Modal (创建后一次性显示) -->
     <a-modal
       v-model:open="secretModalVisible"
-      title="API Key 已创建"
+      title="API 키가 만들어졌습니다"
       :closable="true"
       @cancel="secretModalVisible = false"
       :footer="null"
@@ -132,7 +132,7 @@
       <div class="secret-display">
         <a-alert
           type="warning"
-          message="请立即复制密钥，关闭后将无法再次查看完整密钥"
+          message="지금 키를 복사하세요. 창을 닫으면 전체 키를 다시 볼 수 없습니다."
           show-icon
           class="secret-alert"
         />
@@ -140,7 +140,7 @@
           <code class="secret-value">{{ createdSecret }}</code>
           <a-button type="primary" @click="copySecret" class="copy-btn lucide-icon-btn">
             <Copy :size="14" />
-            复制
+            복사
           </a-button>
         </div>
       </div>
@@ -173,7 +173,7 @@ const createForm = reactive({
 const formatTime = (timeStr) => {
   if (!timeStr) return '-'
   const date = new Date(timeStr)
-  return date.toLocaleString('zh-CN', {
+  return date.toLocaleString('ko-KR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -189,7 +189,7 @@ const loadApiKeys = async () => {
     const res = await apikeyApi.list()
     apiKeys.value = res.api_keys || []
   } catch (e) {
-    error.value = e.message || '加载失败'
+    error.value = e.message || '불러오기에 실패했습니다'
   } finally {
     loading.value = false
   }
@@ -201,10 +201,10 @@ const handleRefresh = async () => {
   refreshing.value = true
   try {
     await loadApiKeys()
-    message.success('刷新成功')
+    message.success('새로고침했습니다')
   } catch (e) {
     console.error('刷新失败:', e)
-    message.error('刷新失败')
+    message.error('새로고침에 실패했습니다')
   } finally {
     refreshing.value = false
   }
@@ -218,7 +218,7 @@ const showCreateModal = () => {
 
 const handleCreate = async () => {
   if (!createForm.name.trim()) {
-    message.error('请输入名称')
+    message.error('이름을 입력하세요')
     return
   }
 
@@ -235,7 +235,7 @@ const handleCreate = async () => {
     secretModalVisible.value = true
     await loadApiKeys()
   } catch (e) {
-    message.error(e.message || '创建失败')
+    message.error(e.message || '만들기에 실패했습니다')
   } finally {
     createLoading.value = false
   }
@@ -244,9 +244,9 @@ const handleCreate = async () => {
 const copySecret = async () => {
   try {
     await navigator.clipboard.writeText(createdSecret.value)
-    message.success('已复制到剪贴板')
+    message.success('클립보드에 복사했습니다')
   } catch {
-    message.error('复制失败')
+    message.error('복사에 실패했습니다')
   }
 }
 
@@ -257,27 +257,27 @@ const regenerateKey = async (key) => {
     secretModalVisible.value = true
     await loadApiKeys()
   } catch (e) {
-    message.error(e.message || '重新生成失败')
+    message.error(e.message || '재발급에 실패했습니다')
   }
 }
 
 const toggleEnabled = async (key) => {
   try {
     await apikeyApi.update(key.id, { is_enabled: !key.is_enabled })
-    message.success(key.is_enabled ? '已禁用' : '已启用')
+    message.success(key.is_enabled ? '사용 안 함으로 변경했습니다' : '사용으로 변경했습니다')
     await loadApiKeys()
   } catch (e) {
-    message.error(e.message || '操作失败')
+    message.error(e.message || '작업에 실패했습니다')
   }
 }
 
 const deleteKey = async (key) => {
   try {
     await apikeyApi.delete(key.id)
-    message.success('删除成功')
+    message.success('삭제했습니다')
     await loadApiKeys()
   } catch (e) {
-    message.error(e.message || '删除失败')
+    message.error(e.message || '삭제에 실패했습니다')
   }
 }
 

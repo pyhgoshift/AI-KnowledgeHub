@@ -1,6 +1,6 @@
 <template>
   <div class="workspace-view layout-container">
-    <PageHeader title="工作区" :loading="loadingTree || loadingPreview" :show-border="true">
+    <PageHeader title="작업공간" :loading="loadingTree || loadingPreview" :show-border="true">
       <template #actions>
         <a-button
           v-if="isAgentsWorkspacePath"
@@ -8,10 +8,10 @@
           @click="openAgentsGuideModal"
         >
           <template #icon><CircleHelp :size="16" /></template>
-          使用说明
+          사용 안내
         </a-button>
         <a-button :disabled="activeSourceKey !== 'personal'" @click="openCreateDirectoryModal">
-          新建文件夹
+          새 폴더
         </a-button>
         <a-button
           type="primary"
@@ -19,7 +19,7 @@
           :disabled="activeSourceKey !== 'personal'"
           @click="openUploadFilePicker"
         >
-          上传文件
+          파일 업로드
         </a-button>
       </template>
     </PageHeader>
@@ -37,7 +37,7 @@
         <button
           type="button"
           class="sidebar-collapse-action"
-          aria-label="收起工作区侧边栏"
+          aria-label="작업공간 사이드바 접기"
           @click="sidebarCollapsed = true"
         >
           <ChevronLeft :size="16" />
@@ -57,7 +57,7 @@
         v-else
         type="button"
         class="sidebar-expand-action"
-        aria-label="展开工作区侧边栏"
+        aria-label="작업공간 사이드바 펼치기"
         @click="sidebarCollapsed = false"
       >
         <ChevronRight :size="16" />
@@ -79,7 +79,7 @@
             :selection-mode="selectionMode"
             :loading="loadingTree"
             :readonly="isKnowledgeSource"
-            :root-label="selectedDatabase?.name || '工作区'"
+            :root-label="selectedDatabase?.name || '작업공간'"
             :breadcrumb-items="isKnowledgeSource ? knowledgeBreadcrumbItems : null"
             :pagination="isKnowledgeSource ? knowledgePagination : null"
             @select-entry="handleSelectEntry"
@@ -95,7 +95,7 @@
             v-if="showInlinePreview"
             class="workspace-preview-resizer"
             role="separator"
-            aria-label="调整预览宽度"
+            aria-label="미리보기 너비 조절"
             tabindex="0"
             @pointerdown="startPreviewResize"
           ></div>
@@ -113,23 +113,23 @@
 
         <div v-else class="workspace-placeholder">
           <LibraryBig :size="32" />
-          <h2>知识库</h2>
-          <p>请选择一个可访问知识库以浏览文件。</p>
+          <h2>지식베이스</h2>
+          <p>파일을 보려면 접근 가능한 지식베이스를 선택하세요.</p>
         </div>
       </main>
     </div>
 
     <a-modal
       v-model:open="createDirectoryModalVisible"
-      title="新建文件夹"
-      okText="创建"
-      cancelText="取消"
+      title="새 폴더"
+      okText="만들기"
+      cancelText="취소"
       :confirm-loading="creatingDirectory"
       @ok="createDirectory"
     >
       <a-input
         v-model:value="newDirectoryName"
-        placeholder="请输入文件夹名称"
+        placeholder="폴더 이름을 입력하세요"
         :disabled="creatingDirectory"
         @keyup.enter="createDirectory"
       />
@@ -137,31 +137,31 @@
 
     <a-modal
       v-model:open="agentsGuideModalVisible"
-      title="Agents 目录说明"
-      okText="我知道了"
+      title="Agents 폴더 안내"
+      okText="확인"
       :cancelButtonProps="{ style: { display: 'none' } }"
       @ok="closeAgentsGuideModal"
     >
       <div class="agents-guide-content">
         <p>
-          这个文件夹中的说明文件会在合适的时机注入到 Agent
-          的执行流程中，用来补充你的长期偏好、业务背景和协作要求。
+          이 폴더의 안내 파일은 적절한 시점에 에이전트 실행 과정에 적용되어
+          장기 선호, 업무 배경 및 협업 요구 사항을 보완합니다.
         </p>
         <p>
-          目前支持 <code>AGENTS.md</code>、<code>USER.md</code> 和
-          <code>MEMORY.md</code>：其中内容会在每次会话中注入到 Agent
-          Prompt，分别适合写入行为约束、用户信息和希望 Agent 记住的信息。
+          현재 <code>AGENTS.md</code>, <code>USER.md</code>,
+          <code>MEMORY.md</code>를 지원합니다. 각 파일의 내용은 대화마다 에이전트
+          프롬프트에 적용되며, 행동 규칙·사용자 정보·기억할 정보를 담는 데 적합합니다.
         </p>
 
         <section class="agents-guide-section">
-          <h3>填写建议</h3>
+          <h3>작성 권장 사항</h3>
           <ul>
-            <li>写清常用工作背景，例如部门职责、常见任务、知识库使用方式。</li>
-            <li>写清回答偏好，例如语言风格、详略程度、是否优先给结论。</li>
-            <li>写清业务术语和固定称呼，帮助 Agent 保持表达一致。</li>
-            <li>写清资料使用要求，例如优先引用哪些知识库、哪些内容需要谨慎确认。</li>
-            <li>写清协作边界，例如不确定时先提问，涉及重要决策时先给方案再执行。</li>
-            <li>优先使用明确、可执行的规则，避免“尽量做好”这类模糊描述。</li>
+            <li>부서 역할, 자주 하는 업무, 지식베이스 사용 방식 등 업무 배경을 구체적으로 작성하세요.</li>
+            <li>언어 스타일, 설명의 상세도, 결론 우선 여부 등 답변 선호를 작성하세요.</li>
+            <li>업무 용어와 고정 표현을 적어 에이전트의 표현을 일관되게 만드세요.</li>
+            <li>우선 참고할 지식베이스와 주의해서 확인할 내용을 작성하세요.</li>
+            <li>불확실할 때 먼저 질문하기, 중요한 결정 전에는 계획 제시하기 등 협업 범위를 작성하세요.</li>
+            <li>“최선을 다하기” 같은 모호한 표현 대신 명확하고 실행 가능한 규칙을 사용하세요.</li>
           </ul>
         </section>
       </div>
@@ -315,8 +315,8 @@ const normalizePreviewFile = async (entry, response) => {
 }
 
 const KNOWLEDGE_PREVIEW_LOAD_MESSAGES = {
-  log: '加载知识库文件预览失败:',
-  resolveUserMessage: () => '加载知识库文件预览失败'
+  log: '지식베이스 파일 미리보기를 불러오지 못했습니다:',
+  resolveUserMessage: () => '지식베이스 파일 미리보기를 불러오지 못했습니다'
 }
 
 const buildPreviewLoadingFile = (entry, baseFile = entry) => ({
@@ -334,7 +334,7 @@ const buildPreviewErrorFile = (entry, error) => ({
   content: `Error loading file: ${error?.message || 'unknown error'}`,
   supported: false,
   previewType: 'unsupported',
-  message: error?.message || '文件预览失败',
+  message: error?.message || '파일 미리보기에 실패했습니다',
   previewUrl: ''
 })
 
@@ -393,7 +393,7 @@ const loadWorkspacePreview = async (entry) => {
     const file = await normalizePreviewFile(entry, response)
     applyPreviewFile(requestId, entry, file)
   } catch (error) {
-    showPreviewError(requestId, entry, error, '加载文件预览失败:', '加载文件预览失败')
+    showPreviewError(requestId, entry, error, '파일 미리보기를 불러오지 못했습니다:', '파일 미리보기를 불러오지 못했습니다')
   } finally {
     finishPreviewRequest(requestId)
   }
@@ -446,7 +446,7 @@ const loadWorkspaceEntries = async (path = '/') => {
     }
   } catch (error) {
     console.warn('加载工作区目录失败:', error)
-    message.error('加载工作区目录失败')
+    message.error('작업공간 폴더를 불러오지 못했습니다')
   } finally {
     loadingTree.value = false
   }
@@ -475,7 +475,7 @@ const loadKnowledgeEntries = async (
     entries.value = response.entries || []
     knowledgeBreadcrumbItems.value = breadcrumbs || [
       {
-        name: database.name || '知识库',
+        name: database.name || '지식베이스',
         path: '/',
         parentId: null,
         pathPrefix: '',
@@ -498,7 +498,7 @@ const loadKnowledgeEntries = async (
   } catch (error) {
     console.warn('加载知识库目录失败:', error)
     entries.value = []
-    message.error(error?.message || '加载知识库目录失败')
+    message.error(error?.message || '지식베이스 폴더를 불러오지 못했습니다')
   } finally {
     loadingTree.value = false
   }
@@ -641,7 +641,7 @@ const closePreview = () => {
 
 const handleSavePreviewFile = async (content) => {
   if (selectedEntry.value?.source === 'knowledge') {
-    message.warning('知识库文件为只读，无法保存')
+    message.warning('지식베이스 파일은 읽기 전용이라 저장할 수 없습니다')
     return
   }
   if (!selectedEntry.value?.path || savingPreviewFile.value) return
@@ -657,10 +657,10 @@ const handleSavePreviewFile = async (content) => {
       content
     }
     await loadWorkspaceEntries(currentPath.value)
-    message.success('文件保存成功')
+    message.success('파일을 저장했습니다')
   } catch (error) {
     console.warn('保存工作区文件失败:', error)
-    message.error(error?.message || '文件保存失败')
+    message.error(error?.message || '파일 저장에 실패했습니다')
   } finally {
     savingPreviewFile.value = false
   }
@@ -684,7 +684,7 @@ const createDirectory = async () => {
   if (creatingDirectory.value) return
   const directoryName = newDirectoryName.value.trim()
   if (!directoryName) {
-    message.warning('请输入文件夹名')
+    message.warning('폴더 이름을 입력하세요')
     return
   }
 
@@ -694,10 +694,10 @@ const createDirectory = async () => {
     await loadWorkspaceEntries(currentPath.value)
     createDirectoryModalVisible.value = false
     newDirectoryName.value = ''
-    message.success('文件夹创建成功')
+    message.success('폴더를 만들었습니다')
   } catch (error) {
     console.warn('创建文件夹失败:', error)
-    message.error(error?.message || '创建文件夹失败')
+    message.error(error?.message || '폴더 만들기에 실패했습니다')
   } finally {
     creatingDirectory.value = false
   }
@@ -715,7 +715,7 @@ const handleUploadInputChange = async (event) => {
   const files = Array.from(event.target?.files || [])
   if (!files.length || uploadingFile.value) return
   if (files.length > MAX_WORKSPACE_UPLOAD_FILES) {
-    message.warning(`一次最多上传 ${MAX_WORKSPACE_UPLOAD_FILES} 个文件`)
+    message.warning(`한 번에 최대 ${MAX_WORKSPACE_UPLOAD_FILES}개 파일을 업로드할 수 있습니다`)
     event.target.value = ''
     return
   }
@@ -724,10 +724,10 @@ const handleUploadInputChange = async (event) => {
   try {
     await uploadWorkspaceFiles(currentPath.value, files)
     await loadWorkspaceEntries(currentPath.value)
-    message.success(`${files.length} 个文件上传成功`)
+    message.success(`${files.length}개 파일을 업로드했습니다`)
   } catch (error) {
     console.warn('上传文件失败:', error)
-    message.error(error?.message || '上传文件失败')
+    message.error(error?.message || '파일 업로드에 실패했습니다')
   } finally {
     uploadingFile.value = false
     event.target.value = ''
@@ -742,17 +742,17 @@ const confirmDeleteEntries = (targetEntries) => {
   const firstEntry = validEntries[0]
   Modal.confirm({
     title: isBatch
-      ? `确认删除选中的 ${validEntries.length} 项？`
+      ? `선택한 ${validEntries.length}개 항목을 삭제할까요?`
       : firstEntry.is_dir
-        ? `确认删除文件夹「${firstEntry.name}」？`
-        : `确认删除文件「${firstEntry.name}」？`,
+        ? `폴더 「${firstEntry.name}」을(를) 삭제할까요?`
+        : `파일 「${firstEntry.name}」을(를) 삭제할까요?`,
     content:
       isBatch || firstEntry.is_dir
-        ? '将删除文件夹及其所有内容，删除后不可恢复。'
-        : '删除后不可恢复。',
-    okText: '删除',
+        ? '폴더와 포함된 모든 내용이 삭제되며, 삭제 후에는 복구할 수 없습니다.'
+        : '삭제 후에는 복구할 수 없습니다.',
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     onOk: () => deleteEntries(validEntries)
   })
 }
@@ -770,10 +770,10 @@ const deleteEntries = async (targetEntries) => {
     }
     clearWorkspaceSelection()
     await loadWorkspaceEntries(currentPath.value)
-    message.success(paths.length > 1 ? '选中项删除成功' : '删除成功')
+    message.success(paths.length > 1 ? '선택한 항목을 삭제했습니다' : '삭제했습니다')
   } catch (error) {
     console.warn('删除工作区文件失败:', error)
-    message.error(error?.message || '删除失败')
+    message.error(error?.message || '삭제에 실패했습니다')
     await loadWorkspaceEntries(currentPath.value)
   } finally {
     deletingPaths.value = []
@@ -822,7 +822,7 @@ const downloadEntry = async (entry) => {
     window.URL.revokeObjectURL(url)
   } catch (error) {
     console.warn('下载文件失败:', error)
-    message.error(error?.message || '下载文件失败')
+    message.error(error?.message || '파일 다운로드에 실패했습니다')
   }
 }
 
