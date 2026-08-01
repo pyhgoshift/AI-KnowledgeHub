@@ -32,7 +32,7 @@
             :tool-name="toolName"
             :result-content="resultContent"
           >
-            工具&nbsp; <span class="tool-name">{{ toolName }}</span> &nbsp; 执行完成
+            도구&nbsp; <span class="tool-name">{{ toolName }}</span> &nbsp; 실행 완료
           </slot>
 
           <slot
@@ -41,12 +41,12 @@
             :tool-name="toolName"
             :error-message="toolCall.error_message"
           >
-            工具&nbsp; <span class="tool-name">{{ toolName }}</span> &nbsp; 执行失败
+            도구&nbsp; <span class="tool-name">{{ toolName }}</span> &nbsp; 실행 실패
             <span v-if="toolCall.error_message">（{{ toolCall.error_message }}）</span>
           </slot>
 
           <slot name="header-running" v-else :tool-name="toolName">
-            正在调用工具: &nbsp; <span class="tool-name">{{ toolName }}</span>
+            도구 호출 중: &nbsp; <span class="tool-name">{{ toolName }}</span>
           </slot>
         </template>
       </div>
@@ -64,7 +64,7 @@
       <div class="tool-params" v-if="hasParams && !hideParams">
         <slot name="params" :tool-call="toolCall" :args="formattedArgs">
           <div class="tool-params-content">
-            <strong>参数: </strong>
+            <strong>매개변수: </strong>
             <span>{{ formattedArgs }}</span>
           </div>
         </slot>

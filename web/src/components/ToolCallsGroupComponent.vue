@@ -111,9 +111,9 @@ const getToolCallLabel = (toolCall) => {
 
 const toolCallsSummaryTitle = computed(() => {
   if (normalizedToolCalls.value.length === 1) {
-    return `调用: ${getToolCallLabel(normalizedToolCalls.value[0])}`
+    return `호출: ${getToolCallLabel(normalizedToolCalls.value[0])}`
   }
-  return `已调用 ${normalizedToolCalls.value.length} 个工具`
+  return `${normalizedToolCalls.value.length}개 도구 호출됨`
 })
 
 const toolCallsNamesMeta = computed(() => {
@@ -134,10 +134,10 @@ const statusSummary = computed(() => {
 
   const parts = []
   if (successCount > 0 && successCount === normalizedToolCalls.value.length) {
-    return '已完成'
+    return '완료'
   }
-  if (errorCount > 0) parts.push(`${errorCount} 失败`)
-  if (runningCount > 0) parts.push(`${runningCount} 进行中`)
+  if (errorCount > 0) parts.push(`${errorCount}개 실패`)
+  if (runningCount > 0) parts.push(`${runningCount}개 진행 중`)
 
   return parts.join(' · ')
 })
