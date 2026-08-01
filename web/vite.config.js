@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
+      allowedHosts: ['pjthub.pyhgoshift.com'],
       proxy: {
         '^/api': {
           target: env.VITE_API_URL || 'http://api:5050',
