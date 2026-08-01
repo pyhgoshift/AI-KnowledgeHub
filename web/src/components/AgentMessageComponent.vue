@@ -2,11 +2,11 @@
   <div v-if="message.type === 'human' && message.image_content" class="message-image">
     <img
       :src="`data:${messageImageMimeType};base64,${message.image_content}`"
-      alt="用户上传的图片"
+      alt="사용자가 업로드한 이미지"
       @click="
         openImagePreview(
           `data:${messageImageMimeType};base64,${message.image_content}`,
-          '用户上传的图片'
+          '사용자가 업로드한 이미지'
         )
       "
     />
@@ -44,7 +44,7 @@
           </template>
           <a-collapse-panel
             key="show"
-            :header="message.status == 'reasoning' ? '正在思考...' : '推理过程'"
+            :header="message.status == 'reasoning' ? '생각하는 중...' : '추론 과정'"
             class="reasoning-header"
           >
             <p class="reasoning-content">{{ parsedData.reasoning_content }}</p>
@@ -66,12 +66,12 @@
       <!-- 错误提示块 -->
       <div v-if="displayError" class="error-hint">
         <span v-if="getErrorMessage">{{ getErrorMessage }}</span>
-        <span v-else-if="message.error_type === 'interrupted'">回答生成已中断</span>
-        <span v-else-if="message.error_type === 'unexpect'">生成过程中出现异常</span>
+        <span v-else-if="message.error_type === 'interrupted'">답변 생성이 중단되었습니다</span>
+        <span v-else-if="message.error_type === 'unexpect'">생성 중 오류가 발생했습니다</span>
         <span v-else-if="message.error_type === 'content_guard_blocked'"
-          >检测到敏感内容，已中断输出</span
+          >민감한 내용이 감지되어 출력을 중단했습니다</span
         >
-        <span v-else>{{ message.error_type || '未知错误' }}</span>
+        <span v-else>{{ message.error_type || '알 수 없는 오류' }}</span>
       </div>
 
       <ToolCallsGroupComponent
@@ -80,9 +80,9 @@
       />
 
       <div v-if="message.isStoppedByUser" class="retry-hint">
-        你停止生成了本次回答
+        이 답변 생성을 중지했습니다
         <span class="retry-link" @click="emit('retryStoppedMessage', message.id)"
-          >重新编辑问题</span
+          >질문 다시 편집</span
         >
       </div>
 
@@ -138,7 +138,7 @@
       class="message-image-preview-overlay"
       @click="closeImagePreview"
     >
-      <button class="message-image-preview-close" title="关闭" @click.stop="closeImagePreview">
+      <button class="message-image-preview-close" title="닫기" @click.stop="closeImagePreview">
         <X :size="20" />
       </button>
       <img :src="imagePreview.src" :alt="imagePreview.alt" class="message-image-preview-img" />
@@ -283,13 +283,13 @@ const getErrorMessage = computed(() => {
   // 对于已知的错误类型，返回默认提示
   switch (props.message.error_type) {
     case 'interrupted':
-      return '回答生成已中断'
+      return '답변 생성이 중단되었습니다'
     case 'content_guard_blocked':
-      return '检测到敏感内容，已中断输出'
+      return '민감한 내용이 감지되어 출력을 중단했습니다'
     case 'unexpect':
-      return '生成过程中出现异常'
+      return '생성 중 오류가 발생했습니다'
     case 'agent_error':
-      return '智能体获取失败'
+      return '에이전트를 불러오지 못했습니다'
     default:
       return null
   }

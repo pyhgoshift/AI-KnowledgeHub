@@ -40,7 +40,7 @@
             <button
               class="attachment-remove-btn"
               type="button"
-              :aria-label="`移除附件 ${attachment.name}`"
+              :aria-label="`첨부 파일 ${attachment.name} 제거`"
               @click.stop="handleAttachmentRemoved(attachment)"
             >
               <X :size="14" />
@@ -105,7 +105,7 @@ const emit = defineEmits([
 
 const inputRef = ref(null)
 const currentImage = ref(null)
-const placeholder = '问点什么？使用 @ 可以提及哦~'
+const placeholder = '무엇이든 물어보세요. @로 언급할 수 있습니다.'
 
 const previewAttachments = computed(() => normalizeAttachmentPreviews(props.attachments))
 
