@@ -1,12 +1,12 @@
 <template>
   <div class="mcp-cards-page extension-page-root">
-    <PageShoulder search-placeholder="搜索 MCP..." v-model:search="searchQuery">
+    <PageShoulder search-placeholder="MCP 검색..." v-model:search="searchQuery">
       <template #actions>
         <a-button type="primary" @click="handleMcpAdd" class="lucide-icon-btn">
           <Plus :size="14" />
-          <span>添加 MCP</span>
+          <span>MCP 추가</span>
         </a-button>
-        <a-tooltip title="刷新 MCP" placement="bottom">
+        <a-tooltip title="MCP 새로고침" placement="bottom">
           <a-button class="lucide-icon-btn" :disabled="loading" @click="fetchServers">
             <RefreshCw :size="14" />
           </a-button>
@@ -20,19 +20,19 @@
     >
       <a-empty
         :image="false"
-        :description="searchQuery ? '无匹配 MCP' : '暂无 MCP，点击上方按钮添加'"
+        :description="searchQuery ? '일치하는 MCP가 없습니다' : 'MCP가 없습니다. 위 버튼을 눌러 추가하세요'"
       />
     </div>
 
     <template v-else>
-      <div v-if="filteredEnabledServers.length" class="extension-section-header">已添加</div>
+      <div v-if="filteredEnabledServers.length" class="extension-section-header">추가됨</div>
       <ExtensionCardGrid v-if="filteredEnabledServers.length" :min-width="360">
         <InfoCard
           v-for="server in filteredEnabledServers"
           :key="server.slug"
           variant="mini"
           :title="formatExtensionCardTitle(server.name)"
-          :description="server.description || '暂无描述'"
+          :description="server.description || '설명 없음'"
           @click="handleCardClick(server)"
         >
           <template #icon>
@@ -53,7 +53,7 @@
         </InfoCard>
       </ExtensionCardGrid>
 
-      <div v-if="filteredDisabledServers.length" class="extension-section-header">可添加</div>
+      <div v-if="filteredDisabledServers.length" class="extension-section-header">추가 가능</div>
       <ExtensionCardGrid v-if="filteredDisabledServers.length" :min-width="360">
         <InfoCard
           v-for="server in filteredDisabledServers"
@@ -71,7 +71,7 @@
               type="button"
               class="mcp-card-action"
               :disabled="isActionLoading(server)"
-              aria-label="添加 MCP"
+              aria-label="MCP 추가"
               @click.stop="handleSetServerEnabled(server, true)"
             >
               <Plus :size="15" class="action-icon" />
@@ -99,9 +99,9 @@
               {{ formatExtensionCardTitle(previewServer.name) }}
             </div>
             <div class="mcp-basic-info-meta">
-              <span>{{ previewServer.transport || '未知传输类型' }}</span>
+              <span>{{ previewServer.transport || '알 수 없는 전송 유형' }}</span>
               <span v-if="previewServer.created_by === 'system'" class="mcp-basic-info-tag">
-                内置
+                기본 제공
               </span>
             </div>
           </div>
@@ -109,30 +109,30 @@
 
         <div class="mcp-basic-info-body">
           <div class="mcp-basic-info-row">
-            <label>描述</label>
-            <span>{{ previewServer.description || '暂无描述' }}</span>
+            <label>설명</label>
+            <span>{{ previewServer.description || '설명 없음' }}</span>
           </div>
           <div class="mcp-basic-info-row">
-            <label>传输类型</label>
+            <label>전송 유형</label>
             <span>{{ previewServer.transport || '-' }}</span>
           </div>
           <div
             v-if="Array.isArray(previewServer.tags) && previewServer.tags.length > 0"
             class="mcp-basic-info-row"
           >
-            <label>标签</label>
+            <label>태그</label>
             <span class="mcp-basic-info-tags">
               <a-tag v-for="tag in previewServer.tags" :key="tag">{{ tag }}</a-tag>
             </span>
           </div>
           <div class="mcp-basic-info-row">
-            <label>创建人</label>
+            <label>만든 사람</label>
             <span>{{ previewServer.created_by || '-' }}</span>
           </div>
         </div>
 
         <div class="mcp-basic-info-footer">
-          <a-button @click="closeBasicInfo">关闭</a-button>
+          <a-button @click="closeBasicInfo">닫기</a-button>
           <a-button
             type="primary"
             class="lucide-icon-btn"
@@ -140,7 +140,7 @@
             @click="handleSetServerEnabled(previewServer, true)"
           >
             <template #icon><Plus :size="14" /></template>
-            添加
+            추가
           </a-button>
         </div>
       </div>
@@ -258,11 +258,11 @@ const handleRemoveServer = (server) => {
 
 const confirmDeleteServer = (server) => {
   Modal.confirm({
-    title: '确认删除 MCP',
-    content: `确定要删除 MCP "${server.name}" 吗？此操作不可撤销。`,
-    okText: '删除',
+    title: 'MCP 삭제 확인',
+    content: `MCP "${server.name}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         actionLoadingSlug.value = server.slug

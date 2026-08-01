@@ -16,8 +16,8 @@ const agentPanelRef = ref(null)
 const providerPanelRef = ref(null)
 
 const modelManageTabs = computed(() => {
-  const tabs = [{ key: 'agents', label: '智能体' }]
-  if (userStore.isAdmin) tabs.push({ key: 'providers', label: '模型供应商' })
+  const tabs = [{ key: 'agents', label: '에이전트' }]
+  if (userStore.isAdmin) tabs.push({ key: 'providers', label: '모델 공급자' })
   return tabs
 })
 
@@ -57,26 +57,26 @@ watch(activeTab, (tab) => {
   <div class="model-manage-view">
     <PageHeader
       v-model:active-key="activeTab"
-      title="智能体管理"
+      title="에이전트 관리"
       :tabs="modelManageTabs"
       :loading="activeLoading"
       :show-border="true"
-      aria-label="智能体管理视图切换"
+      aria-label="에이전트 관리 화면 전환"
     >
       <template #info>
         <div v-if="activeTab === 'agents'" class="summary-strip">
-          <span>{{ activeStats.total || 0 }} 个智能体</span>
-          <span>{{ activeStats.global || 0 }} 个全局</span>
-          <span v-if="activeStats.builtin">{{ activeStats.builtin }} 个内置</span>
-          <span>{{ activeStats.manageable || 0 }} 个可管理</span>
+          <span>에이전트 {{ activeStats.total || 0 }}개</span>
+          <span>전역 {{ activeStats.global || 0 }}개</span>
+          <span v-if="activeStats.builtin">기본 제공 {{ activeStats.builtin }}개</span>
+          <span>관리 가능 {{ activeStats.manageable || 0 }}개</span>
         </div>
         <div v-else class="summary-strip">
-          <span>{{ activeStats.total || 0 }} 个供应商</span>
-          <span>{{ activeStats.enabled || 0 }} 个启用</span>
+          <span>공급자 {{ activeStats.total || 0 }}개</span>
+          <span>사용 중 {{ activeStats.enabled || 0 }}개</span>
           <span v-if="activeStats.warning > 0" class="warning-count">
-            {{ activeStats.warning }} 个凭证缺失
+            자격 증명 누락 {{ activeStats.warning }}개
           </span>
-          <span>{{ activeStats.models || 0 }} 个模型</span>
+          <span>모델 {{ activeStats.models || 0 }}개</span>
         </div>
       </template>
     </PageHeader>
