@@ -328,15 +328,15 @@
         <div class="url-input-wrapper">
           <a-textarea
             v-model:value="newUrl"
-            placeholder="输入 URL，一行一个&#10;https://site1.com&#10;https://site2.com"
+            placeholder="URL을 한 줄에 하나씩 입력하세요&#10;https://site1.com&#10;https://site2.com"
             :auto-size="{ minRows: 4, maxRows: 8 }"
             class="url-input"
             @keydown.enter.ctrl="handleFetchUrls"
           />
           <div class="url-actions">
             <span class="url-hint">
-              支持批量粘贴，自动过滤空行。
-              <span class="warning-text">需配置白名单，详见文档说明</span>
+              여러 URL을 한 번에 붙여넣을 수 있으며 빈 줄은 자동으로 제외됩니다.
+              <span class="warning-text">허용 목록 설정이 필요합니다. 자세한 내용은 문서를 확인하세요.</span>
             </span>
             <a-button
               type="primary"
@@ -345,7 +345,7 @@
               :loading="fetchingUrls"
               :disabled="!newUrl.trim()"
             >
-              加载 URLs
+              URL 불러오기
             </a-button>
           </div>
         </div>
@@ -372,7 +372,7 @@
         </div>
         <div class="url-empty-tip" v-else>
           <Info :size="16" />
-          <span>输入 URL 后点击加载，系统将自动抓取网页内容</span>
+          <span>URL을 입력한 뒤 불러오기를 누르면 웹 페이지 내용을 자동으로 가져옵니다</span>
         </div>
       </div>
 
@@ -380,7 +380,7 @@
       <div v-if="sameNameFiles.length > 0" class="conflict-files-panel">
         <div class="panel-header">
           <Info :size="14" class="icon-warning" />
-          <span>已存在同名文件 ({{ sameNameFiles.length }})</span>
+          <span>같은 이름의 파일이 있습니다 ({{ sameNameFiles.length }})</span>
         </div>
         <div class="file-list-scroll">
           <div v-for="file in sameNameFiles" :key="file.file_id" class="conflict-item">
@@ -544,7 +544,7 @@ const acceptedFileTypes = computed(() => {
 
 const uploadHint = computed(() => {
   if (!supportedFileTypes.value.length) {
-    return '加载中...'
+    return '불러오는 중...'
   }
   const exts = new Set(supportedFileTypes.value)
   exts.add('.zip')
@@ -572,7 +572,7 @@ const loadSupportedFileTypes = async () => {
     applySupportedFileTypes(data?.file_types)
   } catch (error) {
     console.error('获取支持的文件类型失败:', error)
-    message.warning('获取支持的文件类型失败，已使用默认配置')
+    message.warning('지원 파일 형식을 불러오지 못해 기본 설정을 사용합니다')
     applySupportedFileTypes(DEFAULT_SUPPORTED_TYPES)
   }
 }
@@ -640,9 +640,9 @@ const failedDetailItems = computed(() => {
       const detail = file?.response?.detail || file?.error?.message || ''
       return {
         uid,
-        name: file.name || '未命名文件',
+        name: file.name || '이름 없는 파일',
         status: rawStatus,
-        errorText: detail || '上传失败'
+        errorText: detail || '업로드에 실패했습니다'
       }
     })
     .filter((item) => item.status === 'error')
@@ -663,28 +663,28 @@ const uploadModeOptions = computed(() => [
     value: 'file',
     label: h('div', { class: 'segmented-option' }, [
       h(FileUp, { size: 16, class: 'option-icon' }),
-      h('span', { class: 'option-text' }, '上传文件')
+      h('span', { class: 'option-text' }, '파일 업로드')
     ])
   },
   {
     value: 'folder',
     label: h('div', { class: 'segmented-option' }, [
       h(FolderUp, { size: 16, class: 'option-icon' }),
-      h('span', { class: 'option-text' }, '上传文件夹')
+      h('span', { class: 'option-text' }, '폴더 업로드')
     ])
   },
   {
     value: 'url',
     label: h('div', { class: 'segmented-option' }, [
       h(Link, { size: 16, class: 'option-icon' }),
-      h('span', { class: 'option-text' }, '解析 URL')
+      h('span', { class: 'option-text' }, 'URL 분석')
     ])
   },
   {
     value: 'workspace',
     label: h('div', { class: 'segmented-option' }, [
       h(FolderOpen, { size: 16, class: 'option-icon' }),
-      h('span', { class: 'option-text' }, '工作区')
+      h('span', { class: 'option-text' }, '작업공간')
     ])
   }
 ])
@@ -736,7 +736,7 @@ watch(fileList, (newFileList) => {
 const urlList = ref([])
 const newUrl = ref('')
 const fetchingUrls = ref(false)
-const CONTENT_EXISTS_ERROR_TEXT = '内容已存在于知识库中'
+const CONTENT_EXISTS_ERROR_TEXT = '내용이 이미 지식베이스에 있습니다'
 
 // 同名文件列表（用于显示提示）
 const sameNameFiles = ref([])
@@ -808,7 +808,7 @@ const handleFetchUrls = async () => {
 
   if (newItems.length === 0) {
     if (lines.length > 0) {
-      message.warning('没有检测到有效的新 URL')
+      message.warning('유효한 새 URL을 찾지 못했습니다')
     }
     return
   }
@@ -859,7 +859,7 @@ const loadWorkspaceFiles = async (path = workspaceCurrentPath.value) => {
     workspaceItems.value = entries
   } catch (error) {
     console.error('加载工作区文件失败:', error)
-    message.error('加载工作区文件失败: ' + (error.message || '未知错误'))
+    message.error('작업공간 파일을 불러오지 못했습니다: ' + (error.message || '알 수 없는 오류'))
   } finally {
     workspaceLoading.value = false
   }
@@ -981,8 +981,8 @@ const hasZipFiles = computed(() => {
 const ocrEngineOptions = [
   {
     value: 'disable',
-    label: '不启用',
-    description: '不启用 OCR，仅处理文本文件'
+    label: '사용 안 함',
+    description: 'OCR을 사용하지 않고 텍스트 파일만 처리합니다'
   },
   {
     value: 'rapid_ocr',
@@ -1044,15 +1044,15 @@ watch(
 )
 
 const ocrStatusLabels = {
-  local: '不启用',
-  healthy: '可用',
-  configured: '已配置',
-  unavailable: '不可用',
-  unhealthy: '异常',
-  timeout: '超时',
-  error: '异常',
-  checking: '检查中',
-  unknown: '状态未知'
+  local: '사용 안 함',
+  healthy: '사용 가능',
+  configured: '설정됨',
+  unavailable: '사용 불가',
+  unhealthy: '오류',
+  timeout: '시간 초과',
+  error: '오류',
+  checking: '확인 중',
+  unknown: '상태 알 수 없음'
 }
 
 const getOcrStatus = (engine) => {
@@ -1066,21 +1066,21 @@ const getOcrStatusLabel = (engine) => ocrStatusLabels[getOcrStatus(engine)] || '
 
 const getOcrDescription = (engine) => {
   const option = ocrEngineOptions.find((item) => item.value === engine)
-  if (engine === 'disable') return option?.description || '不启用 OCR，仅处理文本文件'
+  if (engine === 'disable') return option?.description || 'OCR을 사용하지 않고 텍스트 파일만 처리합니다'
 
   const messageText = ocrHealthStatus.value?.[engine]?.message
   if (messageText) return messageText
 
   const status = getOcrStatus(engine)
   const fallbackMap = {
-    healthy: '服务正常',
-    configured: 'Token 已配置，将在解析时验证',
-    unavailable: '服务不可用',
-    unhealthy: '服务异常',
-    timeout: '服务检查超时',
-    error: '服务异常',
-    checking: '正在检查服务状态',
-    unknown: option?.description || '服务状态未知'
+    healthy: '서비스가 정상입니다',
+    configured: '토큰이 설정되어 있으며 분석 시 확인합니다',
+    unavailable: '서비스를 사용할 수 없습니다',
+    unhealthy: '서비스 오류',
+    timeout: '서비스 확인 시간이 초과되었습니다',
+    error: '서비스 오류',
+    checking: '서비스 상태를 확인하는 중입니다',
+    unknown: option?.description || '서비스 상태를 알 수 없습니다'
   }
   return fallbackMap[status] || option?.description || '服务状态未知'
 }

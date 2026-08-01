@@ -1,19 +1,19 @@
 <template>
   <div class="attachment-options">
     <div class="option-item" :class="{ disabled: disabled }" @click="handleAttachmentClick">
-      <a-tooltip title="支持任意文件格式 ≤ 5 MB" placement="right">
+      <a-tooltip title="모든 파일 형식 지원, 최대 5MB" placement="right">
         <div class="option-content">
           <FileText :size="14" class="option-icon" />
-          <span class="option-text">添加附件</span>
+          <span class="option-text">첨부 파일 추가</span>
         </div>
       </a-tooltip>
     </div>
 
     <div class="option-item" @click="handleImageUpload">
-      <a-tooltip title="支持 jpg/jpeg/png/gif， ≤ 5 MB" placement="right">
+      <a-tooltip title="jpg/jpeg/png/gif 지원, 최대 5MB" placement="right">
         <div class="option-content">
           <Image :size="14" class="option-icon" />
-          <span class="option-text">上传图片</span>
+          <span class="option-text">이미지 업로드</span>
         </div>
       </a-tooltip>
     </div>
@@ -78,7 +78,7 @@ const processImageUpload = async (file) => {
   } catch (error) {
     console.error('图片上传失败:', error)
     message.error({
-      content: `图片上传失败: ${error.message || '未知错误'}`,
+      content: `이미지 업로드에 실패했습니다: ${error.message || '알 수 없는 오류'}`,
       key: 'image-upload'
     })
   }
