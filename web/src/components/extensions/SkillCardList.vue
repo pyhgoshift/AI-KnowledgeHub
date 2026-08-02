@@ -241,15 +241,15 @@
             :disabled="installingRemoteSkill"
             class="install-tabs"
           >
-            <!-- Tab 1: 按仓库拉取 -->
-            <a-tab-pane key="repo" tab="按仓库拉取">
+            <!-- Tab 1: 저장소에서 가져오기 -->
+            <a-tab-pane key="repo" tab="저장소에서 가져오기">
               <div class="tab-content-wrapper">
                 <a-form layout="vertical" class="remote-install-form">
                   <div class="repo-input-row">
                     <div class="repo-input-field">
                       <a-input
                         v-model:value="remoteInstallForm.source"
-                        placeholder="来源仓库，如 anthropics/skills 或 GitHub URL"
+                        placeholder="원본 저장소(예: anthropics/skills) 또는 GitHub URL"
                         :disabled="installingRemoteSkill"
                       >
                         <template #suffix>
@@ -259,7 +259,7 @@
                             overlay-class-name="history-dropdown-menu"
                           >
                             <div class="history-trigger-wrapper">
-                              <a-tooltip title="历史仓库">
+                              <a-tooltip title="최근 저장소">
                                 <History
                                   :size="14"
                                   class="history-icon-trigger"
@@ -270,7 +270,7 @@
                             <template #overlay>
                               <a-menu @click="handleSelectHistory">
                                 <a-menu-item v-if="repoHistory.length === 0" disabled>
-                                  <span class="history-empty-text">暂无使用历史</span>
+                                  <span class="history-empty-text">최근 사용 기록이 없습니다</span>
                                 </a-menu-item>
                                 <template v-else>
                                   <a-menu-item v-for="item in repoHistory" :key="item">
@@ -293,7 +293,7 @@
                                   >
                                     <div class="clear-history-btn-content">
                                       <Trash2 :size="12" class="clear-icon" />
-                                      <span>清空历史记录</span>
+                                      <span>사용 기록 지우기</span>
                                     </div>
                                   </a-menu-item>
                                 </template>
@@ -309,21 +309,20 @@
                       :disabled="installingRemoteSkill"
                       @click="handleListRemoteSkills"
                     >
-                      拉取技能
+                      스킬 가져오기
                     </a-button>
                   </div>
                   <div class="repo-hint-text">
-                    支持 `owner/repo` 或 GitHub URL。可前往
+                    `owner/repo` 또는 GitHub URL을 지원합니다.
                     <a href="https://skills.sh/" target="_blank" rel="noopener noreferrer"
                       >skills.sh</a
                     >
-                    查询开源 skills。 也支持 ModelScope 单个 Skill
-                    地址，每次仅限安装一个：`https://modelscope.cn/skills/&lt;skill-id&gt;`。 Skill
-                    ID 可在
+                    에서 오픈소스 스킬을 찾을 수 있습니다. ModelScope의 개별 스킬 주소도
+                    지원하며, 한 번에 하나만 설치할 수 있습니다: `https://modelscope.cn/skills/&lt;skill-id&gt;`. 스킬
+                    ID는
                     <a href="https://modelscope.cn/skills" target="_blank" rel="noopener noreferrer"
-                      >ModelScope Skill 市场</a
-                    >
-                    进入详情后从地址栏获取。
+                      >ModelScope 스킬 마켓</a
+                    >의 상세 페이지 주소에서 확인할 수 있습니다.
                   </div>
 
                   <!-- 仓库技能分页多选列表 -->
@@ -332,7 +331,7 @@
                       <div class="single-remote-skill-card">
                         <div class="single-remote-skill-name">{{ singleRepoSkill.name }}</div>
                         <div class="single-remote-skill-meta">
-                          {{ singleRepoSkill.description || '暂无描述' }}
+                          {{ singleRepoSkill.description || '설명이 없습니다' }}
                         </div>
                       </div>
                     </template>
@@ -340,18 +339,18 @@
                       <div class="list-operations-bar">
                         <div class="op-buttons">
                           <a-button size="small" type="link" @click="handleRepoSelectAll"
-                            >全选</a-button
+                            >전체 선택</a-button
                           >
                           <a-button size="small" type="link" @click="handleRepoSelectInvert"
-                            >反选</a-button
+                            >선택 반전</a-button
                           >
                           <a-button size="small" type="link" @click="handleRepoSelectNone"
-                            >清空</a-button
+                            >지우기</a-button
                           >
                         </div>
                         <a-input
                           v-model:value="repoFilterKeyword"
-                          placeholder="本地过滤检索..."
+                          placeholder="목록에서 검색..."
                           size="small"
                           style="width: 180px"
                           allow-clear
@@ -380,11 +379,11 @@
                                 </div>
                                 <div class="skill-desc-col">
                                   <a-tooltip
-                                    :title="item.description || '暂无描述'"
+                                    :title="item.description || '설명이 없습니다'"
                                     placement="topLeft"
                                   >
                                     <span class="skill-item-desc">{{
-                                      item.description || '暂无描述'
+                                      item.description || '설명이 없습니다'
                                     }}</span>
                                   </a-tooltip>
                                 </div>
@@ -394,8 +393,8 @@
                         </a-list>
                       </div>
                       <div class="remote-skill-summary">
-                        已选 {{ selectedRepoSkills.length }} / 共发现
-                        {{ remoteSkillOptions.length }} 个 skills。
+                        {{ selectedRepoSkills.length }}개 선택 / 총
+                        {{ remoteSkillOptions.length }}개 스킬을 찾았습니다.
                       </div>
                     </template>
                   </div>
@@ -403,15 +402,15 @@
               </div>
             </a-tab-pane>
 
-            <!-- Tab 2: 全局搜索发现 -->
-            <a-tab-pane key="search" tab="全局搜索发现">
+            <!-- Tab 2: 전체 검색 -->
+            <a-tab-pane key="search" tab="전체 검색">
               <div class="tab-content-wrapper">
                 <a-form layout="vertical" class="remote-install-form">
                   <div class="repo-input-row">
                     <div class="repo-input-field">
                       <a-input
                         v-model:value="searchKeyword"
-                        placeholder="输入 web、python 等关键字进行全局查找"
+                        placeholder="web, python 등의 키워드로 전체 검색"
                         :disabled="installingRemoteSkill"
                         @pressEnter="handleSearchRemoteSkills"
                       />
@@ -422,11 +421,11 @@
                       :disabled="installingRemoteSkill"
                       @click="handleSearchRemoteSkills"
                     >
-                      查找技能
+                      스킬 찾기
                     </a-button>
                   </div>
                   <div class="repo-hint-text">
-                    直接输入关键字检索 skills.sh 上的开源 Skills 并批量拉取安装。
+                    키워드로 skills.sh의 오픈소스 스킬을 검색하여 한 번에 가져와 설치합니다.
                   </div>
 
                   <!-- 搜索结果列表 -->
@@ -454,13 +453,13 @@
                       <div class="list-operations-bar">
                         <div class="op-buttons">
                           <a-button size="small" type="link" @click="handleSearchSelectAll"
-                            >全选</a-button
+                            >전체 선택</a-button
                           >
                           <a-button size="small" type="link" @click="handleSearchSelectInvert"
-                            >反选</a-button
+                            >선택 반전</a-button
                           >
                           <a-button size="small" type="link" @click="handleSearchSelectNone"
-                            >清空</a-button
+                            >지우기</a-button
                           >
                         </div>
                       </div>
@@ -507,8 +506,8 @@
                         </a-list>
                       </div>
                       <div class="remote-skill-summary">
-                        已选择 {{ selectedSearchSkills.length }} / 共找到
-                        {{ searchedSkills.length }} 个 skills。
+                        {{ selectedSearchSkills.length }}개 선택 / 총
+                        {{ searchedSkills.length }}개 스킬을 찾았습니다.
                       </div>
                     </template>
                   </div>
@@ -517,7 +516,7 @@
             </a-tab-pane>
           </a-tabs>
 
-          <!-- 底部操作区 -->
+          <!-- 하단 작업 영역 -->
           <div class="modal-footer-actions">
             <a-button :disabled="installingRemoteSkill" @click="handleCancelInstall">
               취소
@@ -532,9 +531,9 @@
               "
               @click="startInstallRemoteSkills"
             >
-              解析并确认 (已选
+              분석 후 확인 (선택됨
               {{ activeTab === 'repo' ? selectedRepoSkills.length : selectedSearchSkills.length }}
-              个)
+              개)
             </a-button>
           </div>
         </div>
@@ -556,7 +555,7 @@
     >
       <div v-if="pendingDraft" class="skill-draft-confirm-panel">
         <div class="draft-source-row">
-          <span class="draft-source-label">来源</span>
+          <span class="draft-source-label">출처</span>
           <span>{{ pendingDraft.source || sourceTypeLabel(pendingDraft.source_type) }}</span>
         </div>
         <div class="draft-items-list">
@@ -568,18 +567,18 @@
           >
             <div class="draft-item-main">
               <div class="draft-item-title">{{ item.name || item.slug }}</div>
-              <div class="draft-item-desc">{{ item.description || item.error || '暂无描述' }}</div>
+              <div class="draft-item-desc">{{ item.description || item.error || '설명이 없습니다' }}</div>
               <div v-if="item.warnings?.length" class="draft-item-warning">
                 {{ item.warnings.join('；') }}
               </div>
             </div>
-            <a-tag v-if="item.success === false" color="red">解析失败</a-tag>
+            <a-tag v-if="item.success === false" color="red">분석 실패</a-tag>
             <a-tag v-else color="blue">{{
               sourceTypeLabel(item.source_type || pendingDraft.source_type)
             }}</a-tag>
           </div>
         </div>
-        <div class="draft-share-title">生效范围</div>
+        <div class="draft-share-title">적용 범위</div>
         <ShareConfigForm
           ref="shareConfigFormRef"
           v-model="draftShareConfig"
@@ -748,17 +747,17 @@ const filteredInstalledSkills = computed(() => installedSkillCards.value.filter(
 const skillGroups = computed(() => [
   {
     key: 'recommended',
-    title: '推荐',
+    title: '추천',
     skills: isBatchDeleteMode.value ? [] : recommendedSkillCards.value.filter(matchesSearch)
   },
   {
     key: 'builtin',
-    title: '内置',
+    title: '기본 제공',
     skills: filteredInstalledSkills.value.filter((skill) => skill.sourceType === 'builtin')
   },
   {
     key: 'uploaded',
-    title: '上传的',
+    title: '업로드됨',
     skills: filteredInstalledSkills.value.filter((skill) => skill.sourceType !== 'builtin')
   }
 ])
@@ -1047,7 +1046,7 @@ const fetchSkills = async () => {
     skills.value = skillResult?.data || []
     allowedSkillAccessLevels.value = skillResult?.allowed_access_levels || ['user']
   } catch {
-    message.error('加载失败')
+    message.error('불러오기에 실패했습니다')
   } finally {
     loading.value = false
   }
@@ -1082,7 +1081,7 @@ const normalizePendingDraft = (draftPayload) => {
   return {
     ...first,
     draft_ids: validDrafts.map((item) => item.draft_id),
-    source: validDrafts.length === 1 ? first.source : `${validDrafts.length} 个来源`,
+    source: validDrafts.length === 1 ? first.source : `${validDrafts.length}개 출처`,
     items: validDrafts.flatMap((draft) =>
       (draft.items || []).map((item) => ({
         ...item,
@@ -1156,11 +1155,11 @@ const handleImportUpload = async ({ file, onSuccess, onError }) => {
   try {
     const result = await skillApi.prepareSkillUpload(file)
     if (await openDraftConfirmation(result?.data)) {
-      message.success('解析完成，请确认 Skill 生效范围')
+      message.success('분석이 완료되었습니다. 스킬 적용 범위를 확인하세요')
     }
     onSuccess?.(result)
   } catch (e) {
-    message.error(e?.response?.data?.detail || e.message || '解析 Skill 失败')
+    message.error(e?.response?.data?.detail || e.message || '스킬 분석에 실패했습니다')
     onError?.(e)
   } finally {
     importing.value = false
@@ -1197,7 +1196,7 @@ const rememberRemoteSource = (source) => {
 const handleListRemoteSkills = async () => {
   const source = remoteInstallForm.source.trim()
   if (!source) {
-    message.warning('请输入来源仓库')
+    message.warning('원본 저장소를 입력하세요')
     return
   }
   listingRemoteSkills.value = true
@@ -1207,18 +1206,18 @@ const handleListRemoteSkills = async () => {
     selectedRepoSkills.value =
       remoteSkillOptions.value.length === 1 ? [remoteSkillOptions.value[0].name] : []
     if (!remoteSkillOptions.value.length) {
-      message.warning('未发现可安装的 Skills')
+      message.warning('설치할 수 있는 스킬을 찾지 못했습니다')
       return
     }
     if (remoteSkillOptions.value.length === 1) {
-      message.success('已发现 1 个 Skill，已自动选中')
+      message.success('스킬 1개를 찾아 자동 선택했습니다')
     } else {
-      message.success(`已发现 ${remoteSkillOptions.value.length} 个 Skills`)
+      message.success(`스킬 ${remoteSkillOptions.value.length}개를 찾았습니다`)
     }
 
     rememberRemoteSource(source)
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '获取远程 Skills 失败')
+    message.error(error?.response?.data?.detail || error.message || '원격 스킬을 가져오지 못했습니다')
   } finally {
     listingRemoteSkills.value = false
   }
@@ -1250,7 +1249,7 @@ const handleRecommendedSkillInstall = async (skill) => {
 
     if (!matchedSkill?.name) {
       remoteInstallModalVisible.value = true
-      message.warning('已拉取推荐来源，请选择要安装的 Skill')
+      message.warning('추천 출처를 가져왔습니다. 설치할 스킬을 선택하세요')
       return
     }
 
@@ -1261,10 +1260,10 @@ const handleRecommendedSkillInstall = async (skill) => {
       skills: [matchedSkill.name]
     })
     if (await openDraftConfirmation(prepareResult?.data)) {
-      message.success('解析完成，请确认 Skill 生效范围')
+      message.success('분석이 완료되었습니다. 스킬 적용 범위를 확인하세요')
     }
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '解析推荐 Skill 失败')
+    message.error(error?.response?.data?.detail || error.message || '추천 스킬 분석에 실패했습니다')
   } finally {
     installingRecommendedSources.value = installingRecommendedSources.value.filter(
       (source) => source !== skill.source
@@ -1291,7 +1290,7 @@ const deleteHistoryItem = (item) => {
 const clearAllHistory = () => {
   repoHistory.value = []
   localStorage.removeItem('yuxi_remote_repo_history')
-  message.success('历史记录已清空')
+  message.success('사용 기록을 지웠습니다')
 }
 
 const handleSelectHistory = ({ key }) => {
@@ -1305,7 +1304,7 @@ const handleSelectHistory = ({ key }) => {
 const handleSearchRemoteSkills = async () => {
   const query = searchKeyword.value.trim()
   if (!query) {
-    message.warning('请输入搜索关键字')
+    message.warning('검색어를 입력하세요')
     return
   }
   searchingRemoteSkills.value = true
@@ -1314,14 +1313,14 @@ const handleSearchRemoteSkills = async () => {
     searchedSkills.value = result?.data || []
     selectedSearchSkills.value = searchedSkills.value.length === 1 ? [...searchedSkills.value] : []
     if (!searchedSkills.value.length) {
-      message.warning('未搜索到相关的 Skills')
+      message.warning('관련 스킬을 찾지 못했습니다')
     } else if (searchedSkills.value.length === 1) {
-      message.success('搜索到 1 个 Skill，已自动选中')
+      message.success('스킬 1개를 찾아 자동 선택했습니다')
     } else {
-      message.success(`搜索到 ${searchedSkills.value.length} 个 Skills`)
+      message.success(`스킬 ${searchedSkills.value.length}개를 찾았습니다`)
     }
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '搜索远程 Skills 失败')
+    message.error(error?.response?.data?.detail || error.message || '원격 스킬 검색에 실패했습니다')
   } finally {
     searchingRemoteSkills.value = false
   }
@@ -1352,10 +1351,10 @@ const startInstallRemoteSkills = async () => {
 
     if (await openDraftConfirmation(drafts)) {
       remoteInstallModalVisible.value = false
-      message.success('解析完成，请确认 Skill 生效范围')
+      message.success('분석이 완료되었습니다. 스킬 적용 범위를 확인하세요')
     }
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '解析远程 Skill 失败')
+    message.error(error?.response?.data?.detail || error.message || '원격 스킬 분석에 실패했습니다')
   } finally {
     installingRemoteSkill.value = false
   }
