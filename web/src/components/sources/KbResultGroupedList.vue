@@ -1,7 +1,7 @@
 <template>
   <div class="kb-result-grouped-list">
     <div v-if="showSummary" class="result-summary">
-      找到 {{ normalizedChunks.length }} 个相关文档片段，来自 {{ fileGroupList.length }} 个文件
+      관련 문서 조각 {{ normalizedChunks.length }}개를 {{ fileGroupList.length }}개 파일에서 찾았습니다
     </div>
 
     <div class="kb-results" v-if="normalizedChunks.length > 0">
@@ -20,13 +20,13 @@
             <ChevronDown v-else :size="14" class="expand-icon" />
             <FileText :size="14" color="var(--gray-600)" />
             <span class="file-name">{{ fileGroup.filename }}</span>
-            <span class="chunk-count">{{ fileGroup.chunks.length }} chunks</span>
+            <span class="chunk-count">조각 {{ fileGroup.chunks.length }}개</span>
           </div>
           <button
             v-if="fileGroup.kb_id && fileGroup.file_id"
             class="view-file-btn"
             @click.stop="openFileDetail(fileGroup)"
-            title="查看文件"
+            title="파일 보기"
           >
             <Eye :size="14" />
           </button>
@@ -44,10 +44,10 @@
               <span class="chunk-index">#{{ index + 1 }}</span>
               <div class="chunk-scores">
                 <span v-if="typeof chunk.score === 'number'" class="score-item"
-                  >相似度 {{ (chunk.score * 100).toFixed(0) }}%</span
+                  >유사도 {{ (chunk.score * 100).toFixed(0) }}%</span
                 >
                 <span v-if="typeof chunk.rerank_score === 'number'" class="score-item"
-                  >重排序 {{ (chunk.rerank_score * 100).toFixed(0) }}%</span
+                  >재정렬 {{ (chunk.rerank_score * 100).toFixed(0) }}%</span
                 >
                 <span v-if="getLineRange(chunk)" class="score-item">{{ getLineRange(chunk) }}</span>
               </div>
@@ -66,7 +66,7 @@
     <KbChunkDetailModal
       v-model:open="modalVisible"
       :chunk="selectedChunk"
-      :title-prefix="`文档片段 #${selectedChunkIndex || '-'} `"
+      :title-prefix="`문서 조각 #${selectedChunkIndex || '-'} `"
     />
 
     <FileDetailModal
@@ -94,7 +94,7 @@ const props = defineProps({
   },
   emptyText: {
     type: String,
-    default: '未找到相关知识库内容'
+    default: '관련 지식베이스 내용을 찾지 못했습니다'
   }
 })
 
@@ -130,7 +130,7 @@ const normalizedChunks = computed(() =>
         item.filename ||
         item.file_id ||
         item.kb_id ||
-        '未知来源'
+        '알 수 없는 출처'
 
       return {
         ...item,
@@ -147,7 +147,7 @@ const normalizedChunks = computed(() =>
 const fileGroupList = computed(() => {
   const groups = new Map()
   for (const item of normalizedChunks.value) {
-    const filename = item?.metadata?.source || '未知来源'
+    const filename = item?.metadata?.source || '알 수 없는 출처'
     if (!groups.has(filename)) {
       groups.set(filename, {
         filename,
@@ -196,7 +196,7 @@ const getLineRange = (chunk) => {
   const startLine = Number(chunk?.metadata?.start_line || 0)
   const endLine = Number(chunk?.metadata?.end_line || 0)
   if (!startLine || !endLine) return ''
-  return startLine === endLine ? `第 ${startLine} 行` : `第 ${startLine}-${endLine} 行`
+  return startLine === endLine ? `${startLine}번째 줄` : `${startLine}-${endLine}번째 줄`
 }
 
 const openChunkDetail = (chunk, index) => {

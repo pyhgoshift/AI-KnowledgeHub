@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:open="showModal"
-    title="调试面板（请在生产环境中谨慎使用）"
+    title="디버그 패널(운영 환경에서는 주의해서 사용하세요)"
     width="90%"
     :footer="null"
     :maskClosable="true"
@@ -21,32 +21,32 @@
           <a-button @click="clearLogs" :icon="h(ClearOutlined)" class="icon-only"> </a-button>
           <a-button @click="printSystemConfig">
             <template #icon><SettingOutlined /></template>
-            系统配置
+            시스템 설정
           </a-button>
           <a-button @click="printUserInfo">
             <template #icon><UserOutlined /></template>
-            用户信息
+            사용자 정보
           </a-button>
           <a-button @click="printDatabaseInfo">
             <template #icon><DatabaseOutlined /></template>
-            知识库信息
+            지식베이스 정보
           </a-button>
           <a-button @click="printAgentConfig">
             <template #icon><RobotOutlined /></template>
-            智能体配置
+            에이전트 설정
           </a-button>
           <a-button @click="toggleDebugMode" :type="infoStore.debugMode ? 'primary' : 'default'">
             <template #icon><BugOutlined /></template>
-            Debug 模式: {{ infoStore.debugMode ? '开启' : '关闭' }}
+            디버그 모드: {{ infoStore.debugMode ? '켜짐' : '꺼짐' }}
           </a-button>
           <a-button @click="toggleFullscreen">
             <template #icon>
               <FullscreenOutlined v-if="!state.isFullscreen" />
               <FullscreenExitOutlined v-else />
             </template>
-            {{ state.isFullscreen ? '退出全屏' : '全屏' }}
+            {{ state.isFullscreen ? '전체 화면 종료' : '전체 화면' }}
           </a-button>
-          <a-tooltip :title="state.autoRefresh ? '点击停止自动刷新' : '点击开启自动刷新'">
+          <a-tooltip :title="state.autoRefresh ? '자동 새로고침 중지' : '자동 새로고침 시작'">
             <a-button
               :type="state.autoRefresh ? 'primary' : 'default'"
               :class="{ 'auto-refresh-button': state.autoRefresh }"
@@ -55,19 +55,19 @@
               <template #icon>
                 <SyncOutlined :spin="state.autoRefresh" />
               </template>
-              自动刷新
+              자동 새로고침
               <span v-if="state.autoRefresh" class="refresh-interval">(5s)</span>
             </a-button>
           </a-tooltip>
           <a-button @click="openUserSwitcher">
             <template #icon><SwapOutlined /></template>
-            切换用户
+            사용자 전환
           </a-button>
         </div>
         <div class="filter-group">
           <a-input-search
             v-model:value="state.searchText"
-            placeholder="搜索日志..."
+            placeholder="로그 검색..."
             style="width: 200px; height: 32px"
             @search="onSearch"
           />
@@ -108,13 +108,13 @@
             <span class="message">{{ log.message }}</span>
           </div>
         </div>
-        <div v-else class="empty-logs">暂无日志</div>
+        <div v-else class="empty-logs">로그가 없습니다</div>
       </div>
       <p v-if="error" class="error">{{ error }}</p>
       <!-- 用户切换 Modal -->
       <a-modal
         v-model:open="state.showUserSwitcher"
-        title="切换用户"
+        title="사용자 전환"
         :confirmLoading="state.switchingUser"
         :footer="null"
         :bodyStyle="{ padding: '12px' }"
@@ -126,7 +126,7 @@
             </a-list-item>
           </template>
           <template #empty>
-            <a-empty description="暂无用户" />
+            <a-empty description="사용자가 없습니다" />
           </template>
         </a-list>
       </a-modal>
@@ -293,7 +293,7 @@ const fetchLogs = async () => {
     }, 100)
     scrollToBottom()
   } catch (err) {
-    error.value = `错误: ${err.message}`
+    error.value = `오류: ${err.message}`
   } finally {
     state.fetching = false
   }
@@ -373,7 +373,7 @@ const toggleFullscreen = async () => {
       }
     }
   } catch (err) {
-    console.error('全屏切换失败:', err)
+    console.error('전체 화면 전환 실패:', err)
   }
 }
 
@@ -461,8 +461,8 @@ const printDatabaseInfo = async () => {
       selectedFileCount: databaseStore.selectedRowKeys.length
     })
   } catch (error) {
-    console.error('获取知识库信息失败:', error)
-    message.error('获取知识库信息失败: ' + error.message)
+    console.error('지식베이스 정보 조회 실패:', error)
+    message.error('지식베이스 정보 조회 실패: ' + error.message)
   }
 }
 
@@ -531,8 +531,8 @@ const printAgentConfig = async () => {
       console.log('可配置项:', toRaw(agentStore.configurableItems))
     }
   } catch (error) {
-    console.error('获取智能体配置失败:', error)
-    message.error('获取智能体配置失败: ' + error.message)
+    console.error('에이전트 설정 조회 실패:', error)
+    message.error('에이전트 설정 조회 실패: ' + error.message)
   }
 }
 
@@ -543,11 +543,11 @@ const fetchUsers = async () => {
       headers: userStore.getAuthHeaders()
     })
     if (!response.ok) {
-      throw new Error('获取用户列表失败')
+      throw new Error('사용자 목록 조회 실패')
     }
     state.users = await response.json()
   } catch (err) {
-    message.error(`获取用户列表失败: ${err.message}`)
+    message.error(`사용자 목록 조회 실패: ${err.message}`)
   }
 }
 
@@ -564,10 +564,10 @@ const switchToUser = async (user) => {
 
   // 危险操作确认
   Modal.confirm({
-    title: '⚠️ 危险操作确认',
-    content: `确定要切换为用户 "${user.username}" 吗？此操作将被记录。`,
-    okText: '确认切换',
-    cancelText: '取消',
+    title: '⚠️ 위험한 작업 확인',
+    content: `사용자를 "${user.username}"(으)로 전환하시겠습니까? 이 작업은 기록됩니다.`,
+    okText: '전환 확인',
+    cancelText: '취소',
     okType: 'danger',
     onOk: async () => {
       state.switchingUser = true
@@ -578,17 +578,17 @@ const switchToUser = async (user) => {
         })
         if (!response.ok) {
           const error = await response.json()
-          throw new Error(error.detail || '切换用户失败')
+          throw new Error(error.detail || '사용자 전환 실패')
         }
         const data = await response.json()
         // 设置新 token
         localStorage.setItem('user_token', data.access_token)
-        message.success(`已切换用户: ${user.username}`)
+        message.success(`사용자를 전환했습니다: ${user.username}`)
         state.showUserSwitcher = false
         // 刷新页面以重新初始化应用
         window.location.reload()
       } catch (err) {
-        message.error(`切换失败: ${err.message}`)
+        message.error(`전환 실패: ${err.message}`)
       } finally {
         state.switchingUser = false
       }

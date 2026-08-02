@@ -12,7 +12,7 @@
         <div v-if="activeStatsPanel" class="floating-panel type-stats-card">
           <div class="panel-header">
             <span class="panel-title">
-              {{ activeStatsPanel === 'node' ? '实体类型' : '关系类型' }}
+              {{ activeStatsPanel === 'node' ? '개체 유형' : '관계 유형' }}
             </span>
           </div>
           <div class="panel-body">
@@ -37,7 +37,7 @@
             type="button"
             @click="toggleStatsPanel('node')"
           >
-            <span class="stat-label">实体</span>
+            <span class="stat-label">개체</span>
             <span class="stat-value">{{ visibleEntityCount }}</span>
           </button>
           <button
@@ -46,7 +46,7 @@
             type="button"
             @click="toggleStatsPanel('edge')"
           >
-            <span class="stat-label">关系</span>
+            <span class="stat-label">관계</span>
             <span class="stat-value">{{ visibleRelationshipCount }}</span>
           </button>
         </div>
