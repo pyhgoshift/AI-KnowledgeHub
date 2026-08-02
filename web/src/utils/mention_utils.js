@@ -124,7 +124,7 @@ export const getMentionDisplayLabel = (type, value, displayLabels = {}) => {
 
   if (type === 'file') {
     const normalizedPath = String(value ?? '').replace(/\/+$/, '')
-    return getDisplayFileName(normalizedPath || value, '文件')
+    return getDisplayFileName(normalizedPath || value, '파일')
   }
   return String(value ?? '').trim() || type
 }

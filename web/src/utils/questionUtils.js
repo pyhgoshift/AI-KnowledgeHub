@@ -19,7 +19,7 @@ export const isOtherOption = (option) => {
   return (
     value === DEFAULT_OTHER_OPTION_VALUE ||
     value === 'other' ||
-    label.includes('其他') ||
+    label.includes('기타') ||
     label.includes('other')
   )
 }
@@ -65,7 +65,7 @@ export const normalizeQuestions = (rawQuestions) => {
       const hasOtherOption = baseOptions.some((option) => isOtherOption(option))
       const options =
         allowOther && !hasOtherOption
-          ? [...baseOptions, { label: '其他', value: DEFAULT_OTHER_OPTION_VALUE }]
+          ? [...baseOptions, { label: '기타', value: DEFAULT_OTHER_OPTION_VALUE }]
           : baseOptions
 
       return {

@@ -1344,7 +1344,7 @@ defineExpose({
     background: var(--main-10);
 
     &::after {
-      content: '释放以上传附件';
+      content: '놓으면 첨부 파일을 업로드합니다';
       position: absolute;
       inset: 6px;
       z-index: 5;

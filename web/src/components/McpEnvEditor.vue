@@ -19,18 +19,18 @@
           size="small"
           type="text"
           class="env-value-toggle"
-          :aria-label="isValueHidden(row) ? '查看变量值' : '隐藏变量值'"
+          :aria-label="isValueHidden(row) ? '변수 값 보기' : '변수 값 숨기기'"
           @click="toggleValueVisible(row)"
         >
           <Eye v-if="isValueHidden(row)" :size="14" />
           <EyeOff v-else :size="14" />
         </a-button>
       </div>
-      <a-button size="small" type="text" danger @click="removeRow(index)"> 删除 </a-button>
+      <a-button size="small" type="text" danger @click="removeRow(index)"> 삭제 </a-button>
     </div>
     <a-button @click="addRow" class="add-env">
       <template #icon><PlusOutlined /></template>
-      添加变量
+      변수 추가
     </a-button>
   </div>
 </template>

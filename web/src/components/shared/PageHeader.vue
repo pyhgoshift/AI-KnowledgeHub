@@ -44,7 +44,7 @@ defineProps({
   tabs: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
   showBorder: { type: Boolean, default: false },
-  ariaLabel: { type: String, default: '视图切换' }
+  ariaLabel: { type: String, default: '보기 전환' }
 })
 
 const emit = defineEmits(['update:activeKey', 'change'])

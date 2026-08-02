@@ -1,17 +1,17 @@
 <template>
   <div class="markdown-content-viewer">
     <div class="viewer-header">
-      <h4>文件内容</h4>
+      <h4>파일 내용</h4>
       <div class="header-controls">
         <div class="header-info">
-          <span v-if="mappedChunks.length > 0">共 {{ mappedChunks.length }} 个片段</span>
-          <span>总长度 {{ formatTextLength(mergedContent.length) }}</span>
+          <span v-if="mappedChunks.length > 0">조각 {{ mappedChunks.length }}개</span>
+          <span>전체 길이 {{ formatTextLength(mergedContent.length) }}</span>
         </div>
         <button
           class="toggle-btn"
           v-if="mappedChunks.length > 0"
           @click="toggleChunkPanel"
-          :title="chunkPanelVisible ? '隐藏片段列表' : '显示片段列表'"
+          :title="chunkPanelVisible ? '조각 목록 숨기기' : '조각 목록 표시'"
         >
           <ChevronLeft v-if="chunkPanelVisible" :size="14" />
           <ChevronRight v-else :size="14" />
@@ -57,7 +57,7 @@
     <!-- 悬浮提示 -->
     <div v-if="showTooltip && currentChunk" class="chunk-tooltip" :style="tooltipStyle">
       <div class="tooltip-header">
-        <strong>片段信息</strong>
+        <strong>조각 정보</strong>
       </div>
       <div class="tooltip-content">
         <div class="tooltip-row">
@@ -65,15 +65,15 @@
           <span class="value">{{ currentChunk.id }}</span>
         </div>
         <div class="tooltip-row">
-          <span class="label">序号:</span>
+          <span class="label">번호:</span>
           <span class="value">{{ currentChunk.chunk_order_index }}</span>
         </div>
         <div class="tooltip-row">
-          <span class="label">位置:</span>
+          <span class="label">위치:</span>
           <span class="value">{{ currentChunk.startOffset }} - {{ currentChunk.endOffset }}</span>
         </div>
         <div class="tooltip-row">
-          <span class="label">长度:</span>
+          <span class="label">길이:</span>
           <span class="value">{{ formatTextLength(currentChunk.content.length) }}</span>
         </div>
       </div>
@@ -113,12 +113,12 @@ const mappedChunks = computed(() => mergeResult.value.chunks)
 
 // 格式化文本长度
 function formatTextLength(length) {
-  if (!length && length !== 0) return '0 字符'
+  if (!length && length !== 0) return '0자'
 
   if (length < 1000) {
-    return `${length} 字符`
+    return `${length}자`
   } else {
-    return `${(length / 1000).toFixed(1)}k 字符`
+    return `${(length / 1000).toFixed(1)}k자`
   }
 }
 

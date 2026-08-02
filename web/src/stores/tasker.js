@@ -17,7 +17,7 @@ const createDefaultSummary = () => ({
 
 const toTask = (raw = {}) => ({
   id: raw.id,
-  name: raw.name || '后台任务',
+  name: raw.name || '백그라운드 작업',
   type: raw.type || 'general',
   status: raw.status || 'pending',
   progress: raw.progress ?? 0,
@@ -131,11 +131,11 @@ export const useTaskerStore = defineStore('tasker', () => {
     if (!taskId) return
     try {
       await taskerApi.cancelTask(taskId)
-      message.success('取消任务成功')
+      message.success('작업을 취소했습니다')
       await refreshTask(taskId)
     } catch (error) {
       console.error(`取消任务 ${taskId} 失败`, error)
-      message.error(error?.message || '取消任务失败')
+      message.error(error?.message || '작업 취소에 실패했습니다')
     }
   }
 
@@ -143,7 +143,7 @@ export const useTaskerStore = defineStore('tasker', () => {
     if (!taskId) return
     try {
       await taskerApi.deleteTask(taskId)
-      message.success('删除任务成功')
+      message.success('작업을 삭제했습니다')
       // 从本地列表中移除
       const index = tasks.value.findIndex((item) => item.id === taskId)
       if (index >= 0) {
@@ -151,7 +151,7 @@ export const useTaskerStore = defineStore('tasker', () => {
       }
     } catch (error) {
       console.error(`删除任务 ${taskId} 失败`, error)
-      message.error(error?.message || '删除任务失败')
+      message.error(error?.message || '작업 삭제에 실패했습니다')
     }
   }
 
@@ -160,11 +160,11 @@ export const useTaskerStore = defineStore('tasker', () => {
     const now = new Date().toISOString()
     upsertTask({
       id: task_id,
-      name: name || '后台任务',
+      name: name || '백그라운드 작업',
       type: task_type || 'manual',
       status: 'queued',
       progress: 0,
-      message: msg || '任务已排队',
+      message: msg || '작업이 대기열에 추가되었습니다',
       created_at: now,
       updated_at: now,
       payload: payload || {}

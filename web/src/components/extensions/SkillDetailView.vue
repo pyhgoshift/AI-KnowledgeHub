@@ -673,10 +673,10 @@ const confirmDeleteSkill = () => {
     onOk: async () => {
       try {
         await skillApi.deleteSkill(target.slug)
-        message.success(`已${actionText}`)
+        message.success(`${actionText}했습니다`)
         router.push({ path: '/extensions', query: { tab: 'skills' } })
       } catch {
-        message.error(`${actionText}失败`)
+        message.error(`${actionText}에 실패했습니다`)
       }
     }
   })

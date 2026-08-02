@@ -18,9 +18,9 @@ const STATUS_VIEW = {
 }
 
 const STATUS_ACTION = {
-  uploaded: { type: FILE_ACTIONS.PARSE, label: '解析파일' },
+  uploaded: { type: FILE_ACTIONS.PARSE, label: '파일 분석' },
   error_parsing: { type: FILE_ACTIONS.PARSE, label: '분석 재시도' },
-  parsed: { type: FILE_ACTIONS.INDEX, label: '入库' },
+  parsed: { type: FILE_ACTIONS.INDEX, label: '지식베이스에 추가' },
   error_indexing: { type: FILE_ACTIONS.INDEX, label: '색인 재시도' }
 }
 

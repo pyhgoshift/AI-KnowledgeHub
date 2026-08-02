@@ -13,7 +13,7 @@
             </a>
           </h5>
           <span v-if="typeof result.score === 'number'" class="result-score">
-            相关度: {{ (result.score * 100).toFixed(1) }}%
+            관련도: {{ (result.score * 100).toFixed(1) }}%
           </span>
         </div>
 
@@ -37,7 +37,7 @@ defineProps({
   },
   emptyText: {
     type: String,
-    default: '未找到相关搜索结果'
+    default: '관련 검색 결과를 찾지 못했습니다'
   }
 })
 
