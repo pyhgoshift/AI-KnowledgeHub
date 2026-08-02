@@ -14,7 +14,7 @@
             class="model-clear-btn"
             @mousedown.prevent.stop
             @click.stop="handleClear"
-            title="清空选择"
+            title="선택 비우기"
           >
             <X :size="14" />
           </button>
@@ -36,7 +36,7 @@
             :disabled="props.disabled || state.checkingStatus"
             class="status-check-button"
           >
-            {{ state.checkingStatus ? '检查中...' : '检查' }}
+            {{ state.checkingStatus ? '확인 중...' : '확인' }}
           </a-button>
         </div>
       </div>
@@ -46,14 +46,14 @@
         <div class="model-search">
           <a-input
             v-model:value="modelSearchKeyword"
-            placeholder="搜索模型"
+            placeholder="모델 검색"
             allow-clear
             @keydown.stop
           >
             <template #suffix>
               <button
                 :disabled="props.disabled || state.refreshingCache"
-                :title="state.refreshingCache ? '刷新中...' : '刷新缓存'"
+                :title="state.refreshingCache ? '새로 고치는 중...' : '캐시 새로 고침'"
                 class="cache-refresh-button"
                 @mousedown.prevent.stop
                 @click.stop="refreshCache"
@@ -64,9 +64,9 @@
           </a-input>
         </div>
         <a-menu class="scrollable-menu">
-          <a-menu-item v-if="loadingV2Models" key="loading" disabled>加载中...</a-menu-item>
+          <a-menu-item v-if="loadingV2Models" key="loading" disabled>불러오는 중...</a-menu-item>
           <a-menu-item v-else-if="!hasFilteredModels" key="empty" disabled
-            >暂无匹配模型</a-menu-item
+            >일치하는 모델이 없습니다</a-menu-item
           >
           <template v-else>
             <a-menu-item-group
@@ -106,7 +106,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '请选择模型'
+    default: '모델을 선택하세요'
   },
   size: {
     type: String,
@@ -314,14 +314,14 @@ const modelStatusIcon = computed(() => {
 
 const getCurrentModelStatusTitle = () => {
   const status = state.currentModelStatus
-  if (!status) return '状态未知'
+  if (!status) return '상태를 알 수 없음'
 
   let statusText = ''
-  if (status.status === 'available') statusText = '可用'
-  else if (status.status === 'unavailable') statusText = '不可用'
-  else if (status.status === 'error') statusText = '错误'
+  if (status.status === 'available') statusText = '사용 가능'
+  else if (status.status === 'unavailable') statusText = '사용 불가'
+  else if (status.status === 'error') statusText = '오류'
 
-  const message = status.message || '无详细信息'
+  const message = status.message || '상세 정보 없음'
   return `${statusText}: ${message}`
 }
 

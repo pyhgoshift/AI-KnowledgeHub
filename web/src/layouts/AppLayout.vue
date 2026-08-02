@@ -389,12 +389,12 @@ provide('settingsModal', {
         <div class="nav-item user-info" @click.stop>
           <UserInfoComponent :show-role="!sidebarCollapsed">
             <template v-if="userStore.isAdmin" #actions>
-              <a-tooltip placement="top" title="任务中心">
+              <a-tooltip placement="top" title="작업 센터">
                 <button
                   class="user-task-center"
                   :class="{ active: isDrawerOpen }"
                   type="button"
-                  aria-label="任务中心"
+                  aria-label="작업 센터"
                   @click.stop="taskerStore.openDrawer()"
                 >
                   <a-badge
@@ -430,7 +430,7 @@ provide('settingsModal', {
     <!-- Debug Modal -->
     <a-modal
       v-model:open="showDebugModal"
-      title="调试面板"
+      title="디버그 패널"
       width="90%"
       :footer="null"
       @cancel="handleDebugModalClose"

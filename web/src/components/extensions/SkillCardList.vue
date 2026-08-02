@@ -1,6 +1,6 @@
 <template>
   <div class="skill-cards-page extension-page-root">
-    <PageShoulder search-placeholder="搜索技能..." v-model:search="searchQuery">
+    <PageShoulder search-placeholder="스킬 검색..." v-model:search="searchQuery">
       <template #actions>
         <template v-if="!isBatchDeleteMode">
           <a-button
@@ -8,7 +8,7 @@
             :disabled="loading || importing || filteredDeletableSkills.length === 0"
             class="lucide-icon-btn"
           >
-            <span>批量管理</span>
+            <span>일괄 관리</span>
           </a-button>
           <a-button
             @click="handleOpenRemoteInstall"
@@ -16,7 +16,7 @@
             class="lucide-icon-btn"
           >
             <Computer :size="14" />
-            <span>远程安装</span>
+            <span>원격 설치</span>
           </a-button>
           <a-upload
             accept=".zip,.md"
@@ -27,19 +27,19 @@
           >
             <a-button type="primary" :loading="importing" class="lucide-icon-btn">
               <Upload :size="14" />
-              <span>上传 Skill</span>
+              <span>스킬 업로드</span>
             </a-button>
           </a-upload>
-          <a-tooltip title="刷新 Skills" placement="bottom">
+          <a-tooltip title="스킬 새로 고침" placement="bottom">
             <a-button class="lucide-icon-btn" :disabled="loading" @click="fetchSkills">
               <RefreshCw :size="14" />
             </a-button>
           </a-tooltip>
         </template>
         <template v-else>
-          <a-button size="small" type="link" @click="handleBatchSelectAll">全选</a-button>
-          <a-button size="small" type="link" @click="handleBatchSelectInvert">反选</a-button>
-          <a-button size="small" type="link" @click="handleBatchSelectNone">清空</a-button>
+          <a-button size="small" type="link" @click="handleBatchSelectAll">전체 선택</a-button>
+          <a-button size="small" type="link" @click="handleBatchSelectInvert">선택 반전</a-button>
+          <a-button size="small" type="link" @click="handleBatchSelectNone">비우기</a-button>
           <a-button
             type="primary"
             danger
@@ -47,9 +47,9 @@
             :loading="loading"
             @click="handleBatchDelete"
           >
-            批量删除 ({{ selectedCardSlugs.length }})
+            일괄 삭제 ({{ selectedCardSlugs.length }})
           </a-button>
-          <a-button :disabled="loading" @click="exitBatchDeleteMode">退出管理</a-button>
+          <a-button :disabled="loading" @click="exitBatchDeleteMode">관리 종료</a-button>
         </template>
       </template>
     </PageShoulder>
@@ -63,13 +63,13 @@
           <BookMarked :size="22" />
         </div>
         <div class="skill-empty-title">
-          {{ searchQuery ? '没有匹配的 Skill' : '还没有添加 Skill' }}
+          {{ searchQuery ? '일치하는 스킬이 없습니다' : '아직 추가한 스킬이 없습니다' }}
         </div>
         <div class="skill-empty-desc">
           {{
             searchQuery
-              ? '换个关键词试试，或清空搜索条件。'
-              : '可以从远程仓库安装，或上传本地 Skill 文件。'
+              ? '다른 검색어를 입력하거나 검색 조건을 비우세요.'
+              : '원격 저장소에서 설치하거나 로컬 스킬 파일을 업로드할 수 있습니다.'
           }}
         </div>
       </div>
@@ -102,7 +102,7 @@
             <InfoCard
               variant="mini"
               :title="formatExtensionCardTitle(skill.name)"
-              :description="skill.description || '暂无描述'"
+              :description="skill.description || '설명 없음'"
               :default-icon="BookMarkedIcon"
               @click="handleCardClick(skill)"
               :class="{
@@ -117,7 +117,7 @@
                   class="skill-enabled-action"
                   :class="{ loading: isRecommendedSkillInstalling(skill.source) }"
                   :disabled="isRecommendedSkillInstallDisabled(skill.source)"
-                  aria-label="安装推荐 Skill"
+                  aria-label="추천 스킬 설치"
                   @click.stop="handleRecommendedSkillInstall(skill)"
                 >
                   <LoaderCircle
@@ -133,7 +133,7 @@
                   class="skill-enabled-action"
                   :class="{ enabled: skill.enabled !== false }"
                   :disabled="!canManageSkill(skill) || isSkillToggling(skill.slug)"
-                  :aria-label="skill.enabled === false ? '启用 Skill' : '禁用 Skill'"
+                  :aria-label="skill.enabled === false ? '스킬 사용' : '스킬 사용 안 함'"
                   @click.stop="handleToggleSkillEnabled(skill)"
                 >
                   <Plus v-if="skill.enabled === false" :size="15" class="action-icon" />
@@ -176,7 +176,7 @@
                   Skill</span
                 >
                 <span v-if="previewSkill.enabled === false" class="skill-preview-disabled-tag">
-                  已禁用
+                  사용 안 함
                 </span>
               </div>
             </div>
@@ -201,7 +201,7 @@
             :content="skillPreviewMarkdown"
             :compact="true"
           />
-          <a-empty v-else :description="skillPreviewError || '未读取到 SKILL.md'" />
+          <a-empty v-else :description="skillPreviewError || 'SKILL.md를 읽지 못했습니다'" />
         </div>
 
         <div class="skill-preview-footer">
@@ -212,13 +212,13 @@
               :loading="deletingPreviewSkill"
               @click="confirmDeletePreviewSkill"
             >
-              卸载
+              제거
             </a-button>
           </div>
           <div class="skill-preview-footer-right">
-            <a-button @click="closeSkillPreview">关闭</a-button>
+            <a-button @click="closeSkillPreview">닫기</a-button>
             <a-button type="primary" class="lucide-icon-btn" @click="goToPreviewSkillManagement">
-              <span>去管理</span>
+              <span>관리하기</span>
             </a-button>
           </div>
         </div>
@@ -227,7 +227,7 @@
 
     <a-modal
       v-model:open="remoteInstallModalVisible"
-      title="远程安装 Skill"
+      title="원격 스킬 설치"
       :footer="null"
       width="760px"
       :closable="!installingRemoteSkill"
@@ -520,7 +520,7 @@
           <!-- 底部操作区 -->
           <div class="modal-footer-actions">
             <a-button :disabled="installingRemoteSkill" @click="handleCancelInstall">
-              取消
+              취소
             </a-button>
             <a-button
               type="primary"
@@ -543,14 +543,14 @@
 
     <a-modal
       v-model:open="draftConfirmVisible"
-      title="确认添加 Skill"
+      title="스킬 추가 확인"
       width="720px"
       :confirm-loading="draftConfirmLoading"
       :closable="!draftConfirmLoading"
       :mask-closable="!draftConfirmLoading"
       :keyboard="!draftConfirmLoading"
-      ok-text="确认添加"
-      cancel-text="取消"
+      ok-text="추가 확인"
+      cancel-text="취소"
       @ok="confirmSkillDraft"
       @cancel="cancelSkillDraft"
     >
@@ -621,7 +621,7 @@ const RECOMMENDED_SKILLS = [
     slug: 'skill-creator',
     name: 'skill-creator',
     description:
-      '创建、维护和改进 Agent Skill，适合编写 SKILL.md、设计使用流程、整理依赖与优化技能说明。',
+      '에이전트 스킬을 만들고 유지·개선합니다. SKILL.md 작성, 사용 흐름 설계, 의존성 정리와 스킬 설명 개선에 적합합니다.',
     source: 'https://modelscope.cn/skills/@anthropics/skill-creator',
     aliases: ['skill-creator', 'Skill Creator']
   },
@@ -629,7 +629,7 @@ const RECOMMENDED_SKILLS = [
     slug: 'frontend-design',
     name: 'frontend-design',
     description:
-      '提供前端界面与交互设计建议，适合规划页面结构、组件状态、响应式布局和可访问性细节。',
+      '프런트엔드 화면과 상호작용 설계 제안을 제공합니다. 페이지 구조, 컴포넌트 상태, 반응형 레이아웃과 접근성 설계에 적합합니다.',
     source: 'https://modelscope.cn/skills/@anthropics/frontend-design',
     aliases: ['frontend-design', 'Frontend Design']
   },
@@ -637,7 +637,7 @@ const RECOMMENDED_SKILLS = [
     slug: 'docx',
     name: 'docx',
     description:
-      '读取、编辑和生成 Word DOCX 文档，适合处理正文、表格、批注、样式和文档结构化内容。',
+      'Word DOCX 문서를 읽고 편집·생성합니다. 본문, 표, 주석, 스타일과 구조화된 문서 작업에 적합합니다.',
     source: 'https://modelscope.cn/skills/@anthropics/docx',
     aliases: ['docx', 'DOCX']
   },
@@ -645,7 +645,7 @@ const RECOMMENDED_SKILLS = [
     slug: 'xlsx',
     name: 'xlsx',
     description:
-      '读取、分析和生成 Excel XLSX 表格，适合处理多工作表数据、公式结果、统计汇总和结构化导出。',
+      'Excel XLSX 표를 읽고 분석·생성합니다. 다중 시트 데이터, 수식 결과, 통계 요약과 구조화된 내보내기에 적합합니다.',
     source: 'https://modelscope.cn/skills/@anthropics/xlsx',
     aliases: ['xlsx', 'XLSX']
   },
@@ -653,7 +653,7 @@ const RECOMMENDED_SKILLS = [
     slug: 'pdf',
     name: 'pdf',
     description:
-      '读取、提取和分析 PDF 文档内容，适合从报告、论文、合同等文件中整理要点、定位证据并生成摘要。',
+      'PDF 문서 내용을 읽고 추출·분석합니다. 보고서, 논문, 계약서 등에서 핵심을 정리하고 근거를 찾거나 요약하는 데 적합합니다.',
     source: 'https://modelscope.cn/skills/@anthropics/pdf',
     aliases: ['pdf', 'PDF']
   }
@@ -849,9 +849,9 @@ const handleToggleSearchSkill = (item, checked) => {
 }
 
 const sourceTypeLabel = (sourceType) => {
-  if (sourceType === 'builtin') return '内置'
-  if (sourceType === 'remote') return '远程'
-  return '上传'
+  if (sourceType === 'builtin') return '내장'
+  if (sourceType === 'remote') return '원격'
+  return '업로드'
 }
 
 const canManageSkill = (skill) => skill?.can_manage !== false
@@ -884,7 +884,7 @@ const openSkillPreview = async (skill) => {
     skillPreviewMarkdown.value = result?.data?.content || ''
   } catch (error) {
     if (requestSeq !== previewRequestSeq || previewSkill.value?.slug !== skill.slug) return
-    skillPreviewError.value = error?.response?.data?.detail || error.message || '读取 SKILL.md 失败'
+    skillPreviewError.value = error?.response?.data?.detail || error.message || 'SKILL.md를 읽지 못했습니다'
   } finally {
     if (requestSeq === previewRequestSeq) skillPreviewLoading.value = false
   }
@@ -936,9 +936,9 @@ const handleToggleSkillEnabled = async (skill) => {
         ? { ...updatedSkill, sourceType: updatedSkill.source_type || 'upload' }
         : { ...previewSkill.value, enabled }
     }
-    message.success(`Skill 已${enabled ? '启用' : '禁用'}`)
+    message.success(`스킬을 ${enabled ? '사용' : '사용 안 함'}으로 설정했습니다`)
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '更新 Skill 启用状态失败')
+    message.error(error?.response?.data?.detail || error.message || '스킬 사용 상태를 업데이트하지 못했습니다')
   } finally {
     togglingSkillSlugs.value = togglingSkillSlugs.value.filter((slug) => slug !== skill.slug)
   }
@@ -954,21 +954,21 @@ const confirmDeletePreviewSkill = () => {
   if (!target || !canDeletePreviewSkill.value || deletingPreviewSkill.value) return
 
   Modal.confirm({
-    title: `卸载 ${target.name || target.slug}`,
-    content: '卸载后会删除该 Skill 的数据库记录和本地文件，操作不可恢复。',
-    okText: '卸载',
+    title: `${target.name || target.slug} 제거`,
+    content: '제거하면 이 스킬의 데이터베이스 기록과 로컬 파일이 삭제되며, 되돌릴 수 없습니다.',
+    okText: '제거',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       deletingPreviewSkill.value = true
       try {
         await skillApi.deleteSkill(target.slug)
-        message.success('Skill 已卸载')
+        message.success('스킬을 제거했습니다')
         closeSkillPreview()
         previewSkill.value = null
         await fetchSkills()
       } catch (error) {
-        message.error(error?.response?.data?.detail || error.message || '卸载 Skill 失败')
+        message.error(error?.response?.data?.detail || error.message || '스킬을 제거하지 못했습니다')
       } finally {
         deletingPreviewSkill.value = false
       }
@@ -1010,11 +1010,11 @@ const handleBatchDelete = () => {
   if (deletableSlugs.length === 0) return
 
   Modal.confirm({
-    title: '确定要批量删除选中的技能吗？',
-    content: `您已选中了 ${deletableSlugs.length} 个技能。该操作将从数据库和物理磁盘中彻底删除这些技能包，且不可恢复！`,
-    okText: '确定删除',
+    title: '선택한 스킬을 일괄 삭제할까요?',
+    content: `${deletableSlugs.length}개 스킬을 선택했습니다. 이 작업은 데이터베이스와 디스크에서 스킬 패키지를 영구 삭제하며, 되돌릴 수 없습니다.`,
+    okText: '삭제 확인',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     onOk: async () => {
       loading.value = true
       try {
@@ -1024,15 +1024,15 @@ const handleBatchDelete = () => {
         const failList = results.filter((r) => !r.success)
 
         if (failList.length === 0) {
-          message.success(`批量删除成功，已删除 ${successList.length} 个技能`)
+          message.success(`${successList.length}개 스킬을 삭제했습니다`)
         } else {
-          message.warning(`批量删除完成：成功 ${successList.length} 个，失败 ${failList.length} 个`)
+          message.warning(`일괄 삭제 완료: 성공 ${successList.length}개, 실패 ${failList.length}개`)
         }
 
         exitBatchDeleteMode()
         await fetchSkills()
       } catch (error) {
-        message.error(error?.response?.data?.detail || error.message || '批量删除失败')
+        message.error(error?.response?.data?.detail || error.message || '일괄 삭제하지 못했습니다')
       } finally {
         loading.value = false
       }
@@ -1056,7 +1056,7 @@ const fetchSkills = async () => {
 const beforeSkillUpload = (file) => {
   const lower = file.name.toLowerCase()
   if (!lower.endsWith('.zip') && lower !== 'skill.md') {
-    message.error('仅支持上传 .zip 文件或 SKILL.md 文件')
+    message.error('.zip 파일 또는 SKILL.md 파일만 업로드할 수 있습니다')
     return false
   }
   return true
@@ -1101,7 +1101,7 @@ const openDraftConfirmation = async (draftPayload) => {
     await Promise.allSettled(
       draft.draft_ids.map((draftId) => skillApi.discardSkillInstallDraft(draftId))
     )
-    message.error('没有可添加的 Skill')
+    message.error('추가할 수 있는 스킬이 없습니다')
     return false
   }
   pendingDraft.value = draft
@@ -1120,7 +1120,7 @@ const cancelSkillDraft = async () => {
 const confirmSkillDraft = async () => {
   const validation = shareConfigFormRef.value?.validate?.()
   if (validation && !validation.valid) {
-    message.warning(validation.message || '请完善 Skill 生效范围')
+    message.warning(validation.message || '스킬 적용 범위를 설정하세요')
     return
   }
 
@@ -1137,15 +1137,15 @@ const confirmSkillDraft = async () => {
     const successCount = results.filter((item) => item.success).length
     const failedCount = results.length - successCount
     if (failedCount === 0) {
-      message.success(`已添加 ${successCount} 个 Skill`)
+      message.success(`${successCount}개 스킬을 추가했습니다`)
     } else {
-      message.warning(`添加完成：成功 ${successCount} 个，失败 ${failedCount} 个`)
+      message.warning(`추가 완료: 성공 ${successCount}개, 실패 ${failedCount}개`)
     }
     remoteInstallModalVisible.value = false
     resetDraftConfirmation()
     await fetchSkills()
   } catch (error) {
-    message.error(error?.response?.data?.detail || error.message || '确认添加 Skill 失败')
+    message.error(error?.response?.data?.detail || error.message || '스킬 추가를 확정하지 못했습니다')
   } finally {
     draftConfirmLoading.value = false
   }

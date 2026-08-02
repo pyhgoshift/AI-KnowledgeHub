@@ -6,7 +6,7 @@
     <div class="detail-top-bar">
       <button class="detail-back-btn" @click="goBack">
         <ArrowLeft :size="16" />
-        <span>返回</span>
+        <span>뒤로</span>
       </button>
       <div class="detail-title-area">
         <span class="detail-icon">{{ server?.icon || '🔌' }}</span>
@@ -24,7 +24,7 @@
             class="lucide-icon-btn extension-panel-action extension-panel-action-secondary"
           >
             <Zap :size="14" v-if="!testLoading" />
-            <span>测试</span>
+            <span>테스트</span>
           </button>
           <button
             type="button"
@@ -33,7 +33,7 @@
             class="lucide-icon-btn extension-panel-action extension-panel-action-secondary"
           >
             <Pencil :size="14" />
-            <span>编辑</span>
+            <span>편집</span>
           </button>
           <button
             type="button"
@@ -60,34 +60,34 @@
           <a-tabs v-model:activeKey="detailTab" class="detail-tabs">
             <a-tab-pane key="general">
               <template #tab>
-                <span class="tab-title"><Settings2 :size="14" />信息</span>
+                <span class="tab-title"><Settings2 :size="14" />정보</span>
               </template>
               <div class="tab-content">
                 <div v-if="isEditing" class="edit-panel">
                   <div class="edit-panel-header">
                     <div>
-                      <h3>编辑 MCP</h3>
-                      <p>修改后保存会立即更新当前 MCP 配置。</p>
+                      <h3>MCP 편집</h3>
+                      <p>저장하면 현재 MCP 설정이 즉시 업데이트됩니다.</p>
                     </div>
                   </div>
 
                   <a-form layout="vertical" class="extension-form inline-edit-form">
                     <section class="form-section">
                       <div class="form-section-title">
-                        <span>基础信息</span>
-                        <small>定义 MCP 的名称、描述与展示方式。</small>
+                        <span>기본 정보</span>
+                        <small>MCP의 이름, 설명, 표시 방식을 설정합니다.</small>
                       </div>
                       <div class="form-grid form-grid-three">
-                        <a-form-item label="MCP 标识" required class="form-item">
+                        <a-form-item label="MCP 식별자" required class="form-item">
                           <a-input v-model:value="editForm.slug" disabled />
                         </a-form-item>
-                        <a-form-item label="MCP 名称" required class="form-item">
+                        <a-form-item label="MCP 이름" required class="form-item">
                           <a-input
                             v-model:value="editForm.name"
-                            placeholder="请输入 MCP 展示名称"
+                            placeholder="표시할 MCP 이름을 입력하세요"
                           />
                         </a-form-item>
-                        <a-form-item label="传输类型" required class="form-item">
+                        <a-form-item label="전송 유형" required class="form-item">
                           <a-select v-model:value="editForm.transport">
                             <a-select-option value="streamable_http"
                               >streamable_http</a-select-option
@@ -96,18 +96,18 @@
                             <a-select-option value="stdio">stdio</a-select-option>
                           </a-select>
                         </a-form-item>
-                        <a-form-item label="图标" class="form-item">
+                        <a-form-item label="아이콘" class="form-item">
                           <a-input
                             v-model:value="editForm.icon"
-                            placeholder="输入 emoji，如 🧠"
+                            placeholder="이모지를 입력하세요. 예: 🧠"
                             :maxlength="2"
                           />
                         </a-form-item>
                       </div>
-                      <a-form-item label="描述" class="form-item form-item-full">
+                      <a-form-item label="설명" class="form-item form-item-full">
                         <a-textarea
                           v-model:value="editForm.description"
-                          placeholder="请输入 MCP 描述"
+                          placeholder="MCP 설명을 입력하세요"
                           :rows="2"
                         />
                       </a-form-item>
@@ -115,8 +115,8 @@
 
                     <section class="form-section">
                       <div class="form-section-title">
-                        <span>连接配置</span>
-                        <small>配置当前传输方式需要的连接参数。</small>
+                        <span>연결 설정</span>
+                        <small>현재 전송 방식에 필요한 연결 매개변수를 설정합니다.</small>
                       </div>
                       <template
                         v-if="
@@ -130,7 +130,7 @@
                           />
                         </a-form-item>
                         <div class="form-grid">
-                          <a-form-item label="HTTP 超时（秒）" class="form-item">
+                          <a-form-item label="HTTP 시간 초과(초)" class="form-item">
                             <a-input-number
                               v-model:value="editForm.timeout"
                               :min="1"
@@ -138,7 +138,7 @@
                               style="width: 100%"
                             />
                           </a-form-item>
-                          <a-form-item label="SSE 读取超时（秒）" class="form-item">
+                          <a-form-item label="SSE 읽기 시간 초과(초)" class="form-item">
                             <a-input-number
                               v-model:value="editForm.sse_read_timeout"
                               :min="1"
@@ -149,18 +149,18 @@
                         </div>
                       </template>
                       <template v-if="isStdioTransport">
-                        <a-form-item label="命令" required class="form-item form-item-full">
+                        <a-form-item label="명령" required class="form-item form-item-full">
                           <a-input
                             v-model:value="editForm.command"
-                            placeholder="例如：npx 或 /path/to/server"
+                            placeholder="예: npx 또는 /path/to/server"
                           />
                         </a-form-item>
                       </template>
-                      <a-form-item label="标签" class="form-item form-item-full">
+                      <a-form-item label="태그" class="form-item form-item-full">
                         <a-select
                           v-model:value="editForm.tags"
                           mode="tags"
-                          placeholder="输入标签后回车添加"
+                          placeholder="태그를 입력한 뒤 Enter를 누르세요"
                           style="width: 100%"
                         />
                       </a-form-item>
@@ -168,8 +168,8 @@
 
                     <section class="form-section">
                       <div class="form-section-title">
-                        <span>高级配置</span>
-                        <small>请求头、启动参数和环境变量会直接影响 MCP 运行。</small>
+                        <span>고급 설정</span>
+                        <small>요청 헤더, 시작 인수와 환경 변수는 MCP 실행에 직접 영향을 줍니다.</small>
                       </div>
                       <template
                         v-if="
@@ -209,7 +209,7 @@
                   <div class="edit-panel-actions">
                     <a-button @click="cancelEdit" :disabled="editLoading" class="lucide-icon-btn">
                       <template #icon><X :size="14" /></template>
-                      取消
+                      취소
                     </a-button>
                     <a-button
                       type="primary"
@@ -218,18 +218,18 @@
                       class="lucide-icon-btn"
                     >
                       <template #icon><Save :size="14" /></template>
-                      保存
+                      저장
                     </a-button>
                   </div>
                 </div>
 
                 <div v-else class="info-grid">
                   <div class="info-item" v-if="server.description">
-                    <label>描述</label>
+                    <label>설명</label>
                     <span>{{ server.description }}</span>
                   </div>
                   <div class="info-item">
-                    <label>传输类型</label>
+                    <label>전송 유형</label>
                     <span>
                       <a-tag :color="getTransportColor(server.transport)">{{
                         server.transport
@@ -240,7 +240,7 @@
                     class="info-item"
                     v-if="Array.isArray(server.tags) && server.tags.length > 0"
                   >
-                    <label>标签</label>
+                    <label>태그</label>
                     <span>
                       <a-tag v-for="tag in server.tags" :key="tag">{{ tag }}</a-tag>
                     </span>
@@ -256,25 +256,25 @@
                       class="info-item"
                       v-if="server.headers && Object.keys(server.headers).length > 0"
                     >
-                      <label>请求头</label>
+                      <label>요청 헤더</label>
                       <pre class="code-pre">{{ JSON.stringify(server.headers, null, 2) }}</pre>
                     </div>
                     <div class="info-item" v-if="server.timeout">
-                      <label>HTTP 超时</label>
-                      <span>{{ server.timeout }} 秒</span>
+                      <label>HTTP 시간 초과</label>
+                      <span>{{ server.timeout }}초</span>
                     </div>
                     <div class="info-item" v-if="server.sse_read_timeout">
-                      <label>SSE 读取超时</label>
-                      <span>{{ server.sse_read_timeout }} 秒</span>
+                      <label>SSE 읽기 시간 초과</label>
+                      <span>{{ server.sse_read_timeout }}초</span>
                     </div>
                   </template>
                   <template v-if="server.transport === 'stdio'">
                     <div class="info-item" v-if="server.command">
-                      <label>命令</label>
+                      <label>명령</label>
                       <span class="code-inline">{{ server.command }}</span>
                     </div>
                     <div class="info-item" v-if="server.args && server.args.length > 0">
-                      <label>参数</label>
+                      <label>매개변수</label>
                       <span>
                         <a-tag v-for="(arg, index) in server.args" :key="index" size="small">{{
                           arg
@@ -282,20 +282,20 @@
                       </span>
                     </div>
                     <div class="info-item" v-if="server.env && Object.keys(server.env).length > 0">
-                      <label>环境变量</label>
+                      <label>환경 변수</label>
                       <pre class="code-pre">{{ JSON.stringify(server.env, null, 2) }}</pre>
                     </div>
                   </template>
                   <div class="info-item">
-                    <label>创建时间</label>
+                    <label>생성 시각</label>
                     <span>{{ formatTime(server.created_at) }}</span>
                   </div>
                   <div class="info-item">
-                    <label>更新时间</label>
+                    <label>수정 시각</label>
                     <span>{{ formatTime(server.updated_at) }}</span>
                   </div>
                   <div class="info-item">
-                    <label>创建人</label>
+                    <label>생성자</label>
                     <span>{{ server.created_by }}</span>
                   </div>
                 </div>
@@ -304,24 +304,24 @@
 
             <a-tab-pane key="tools">
               <template #tab>
-                <span class="tab-title"><Wrench :size="14" />工具 ({{ tools.length }})</span>
+                <span class="tab-title"><Wrench :size="14" />도구 ({{ tools.length }})</span>
               </template>
               <div class="tab-content tools-tab">
                 <div class="tools-toolbar">
                   <a-input-search
                     v-model:value="toolSearchText"
-                    placeholder="搜索工具..."
+                    placeholder="도구 검색..."
                     style="width: 200px"
                     allowClear
                   />
                   <a-button @click="fetchTools" :loading="toolsLoading" class="lucide-icon-btn">
                     <RotateCw :size="14" />
-                    <span>刷新</span>
+                    <span>새로 고침</span>
                   </a-button>
                 </div>
                 <a-spin :spinning="toolsLoading">
                   <div v-if="filteredTools.length === 0" class="empty-tools">
-                    <a-empty :description="toolsError || '暂无工具'" />
+                    <a-empty :description="toolsError || '도구가 없습니다'" />
                   </div>
                   <div v-else class="tools-list">
                     <div
@@ -344,7 +344,7 @@
                             :loading="toggleToolLoading === tool.name"
                             size="small"
                           />
-                          <a-tooltip title="复制工具名称">
+                          <a-tooltip title="도구 이름 복사">
                             <a-button
                               type="text"
                               size="small"
@@ -363,7 +363,7 @@
                         v-if="tool.parameters && Object.keys(tool.parameters).length > 0"
                         ghost
                       >
-                        <a-collapse-panel key="params" header="参数">
+                        <a-collapse-panel key="params" header="매개변수">
                           <div class="params-list">
                             <div
                               v-for="(param, paramName) in tool.parameters"
@@ -375,7 +375,7 @@
                                 <span
                                   class="param-required"
                                   v-if="tool.required?.includes(paramName)"
-                                  >必填</span
+                                  >필수</span
                                 >
                                 <span class="param-type">{{ param.type || 'any' }}</span>
                               </div>
@@ -394,7 +394,7 @@
           </a-tabs>
         </div>
         <div v-else-if="!loading" class="detail-empty">
-          <a-empty description="未找到 MCP 服务器" />
+          <a-empty description="MCP 서버를 찾지 못했습니다" />
         </div>
       </a-spin>
     </div>
@@ -458,8 +458,8 @@ const editForm = reactive({
 })
 
 const actionLabel = computed(() => {
-  if (server.value?.enabled === false) return '添加'
-  return server.value?.created_by === 'system' ? '移除' : '删除'
+  if (server.value?.enabled === false) return '추가'
+  return server.value?.created_by === 'system' ? '제거' : '삭제'
 })
 
 const filteredTools = computed(() => {
@@ -526,7 +526,7 @@ const buildEditPayload = () => {
     try {
       headers = JSON.parse(editForm.headersText)
     } catch {
-      message.error('请求头 JSON 格式错误')
+    message.error('요청 헤더 JSON 형식이 올바르지 않습니다')
       return null
     }
   }
@@ -549,19 +549,19 @@ const buildEditPayload = () => {
 
 const validateEditPayload = (data) => {
   if (!data.name?.trim()) {
-    message.error('MCP 名称不能为空')
+    message.error('MCP 이름을 입력하세요')
     return false
   }
   if (!data.transport) {
-    message.error('请选择传输类型')
+    message.error('전송 유형을 선택하세요')
     return false
   }
   if (['sse', 'streamable_http'].includes(data.transport) && !data.url?.trim()) {
-    message.error('HTTP 类型必须填写 MCP URL')
+    message.error('HTTP 유형에는 MCP URL을 입력해야 합니다')
     return false
   }
   if (data.transport === 'stdio' && !data.command?.trim()) {
-    message.error('StdIO 类型必须填写命令')
+    message.error('StdIO 유형에는 명령을 입력해야 합니다')
     return false
   }
   return true
@@ -576,14 +576,14 @@ const handleSaveEdit = async () => {
     editLoading.value = true
     const result = await mcpApi.updateMcpServer(server.value.slug, data)
     if (result.success) {
-      message.success('MCP 更新成功')
+      message.success('MCP를 업데이트했습니다')
       isEditing.value = false
       await fetchServer()
     } else {
-      message.error(result.message || '更新失败')
+      message.error(result.message || '업데이트하지 못했습니다')
     }
   } catch (err) {
-    message.error(err.message || '更新失败')
+    message.error(err.message || '업데이트하지 못했습니다')
   } finally {
     editLoading.value = false
   }
@@ -596,16 +596,16 @@ const fetchServer = async () => {
     if (result.success) {
       if (result.data?.enabled === false) {
         server.value = null
-        message.info('请先添加 MCP 后再查看详情')
+        message.info('먼저 MCP를 추가한 후 상세 정보를 확인하세요')
         router.replace({ path: '/extensions', query: { tab: 'mcp' } })
         return
       }
       server.value = result.data
     } else {
-      message.error(result.message || '获取 MCP 详情失败')
+      message.error(result.message || 'MCP 상세 정보를 불러오지 못했습니다')
     }
   } catch (err) {
-    message.error(err.message || '获取 MCP 详情失败')
+    message.error(err.message || 'MCP 상세 정보를 불러오지 못했습니다')
   } finally {
     loading.value = false
   }
@@ -620,11 +620,11 @@ const fetchTools = async () => {
     if (result.success) {
       tools.value = result.data || []
     } else {
-      toolsError.value = result.message || '获取工具列表失败'
+      toolsError.value = result.message || '도구 목록을 불러오지 못했습니다'
       tools.value = []
     }
   } catch (err) {
-    toolsError.value = err.message || '获取工具列表失败'
+    toolsError.value = err.message || '도구 목록을 불러오지 못했습니다'
     tools.value = []
   } finally {
     toolsLoading.value = false
@@ -641,10 +641,10 @@ const handleToggleTool = async (tool) => {
       const targetTool = tools.value.find((t) => t.name === tool.name)
       if (targetTool) targetTool.enabled = result.enabled
     } else {
-      message.error(result.message || '操作失败')
+      message.error(result.message || '작업에 실패했습니다')
     }
   } catch (err) {
-    message.error(err.message || '操作失败')
+    message.error(err.message || '작업에 실패했습니다')
   } finally {
     toggleToolLoading.value = null
   }
@@ -653,9 +653,9 @@ const handleToggleTool = async (tool) => {
 const copyToolName = async (toolName) => {
   try {
     await navigator.clipboard.writeText(toolName)
-    message.success('已复制到剪贴板')
+    message.success('클립보드에 복사했습니다')
   } catch {
-    message.error('复制失败')
+    message.error('복사하지 못했습니다')
   }
 }
 
@@ -667,10 +667,10 @@ const handleTestServer = async () => {
     if (result.success) {
       message.success(result.message)
     } else {
-      message.warning(result.message || '连接失败')
+      message.warning(result.message || '연결하지 못했습니다')
     }
   } catch (err) {
-    message.error(err.message || '测试失败')
+    message.error(err.message || '테스트에 실패했습니다')
   } finally {
     testLoading.value = null
   }
@@ -693,7 +693,7 @@ const handleSetServerEnabled = async (srv, enabled) => {
   try {
     const result = await mcpApi.updateMcpServerStatus(srv.slug, enabled)
     if (result.success) {
-      message.success(result.message || `MCP 已${enabled ? '添加' : '移除'}`)
+      message.success(result.message || `MCP를 ${enabled ? '추가' : '제거'}했습니다`)
       await fetchServer()
     } else {
       message.error(result.message || '操作失败')
@@ -705,22 +705,22 @@ const handleSetServerEnabled = async (srv, enabled) => {
 
 const confirmDeleteServer = (srv) => {
   Modal.confirm({
-    title: '确认删除 MCP',
-    content: `确定要删除 MCP "${srv.name}" 吗？此操作不可撤销。`,
-    okText: '删除',
+    title: 'MCP 삭제 확인',
+    content: `MCP "${srv.name}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         const result = await mcpApi.deleteMcpServer(srv.slug)
         if (result.success) {
-          message.success('MCP 删除成功')
+          message.success('MCP를 삭제했습니다')
           router.push({ path: '/extensions', query: { tab: 'mcp' } })
         } else {
-          message.error(result.message || '删除失败')
+          message.error(result.message || '삭제하지 못했습니다')
         }
       } catch (err) {
-        message.error(err.message || '删除失败')
+        message.error(err.message || '삭제하지 못했습니다')
       }
     }
   })

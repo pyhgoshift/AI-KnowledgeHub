@@ -46,8 +46,8 @@ export function renderSvgBlocks(markdown) {
             .trim()
           const actionsHtml = [
             `<div class="svg-actions">`,
-            `<button class="svg-action-btn svg-copy-btn" type="button">复制 SVG</button>`,
-            `<button class="svg-action-btn svg-png-btn" type="button">复制为 PNG</button>`,
+            `<button class="svg-action-btn svg-copy-btn" type="button">SVG 복사</button>`,
+            `<button class="svg-action-btn svg-png-btn" type="button">PNG으로 복사</button>`,
             `</div>`
           ].join('')
           output.push(`<div class="svg-inline-render">${actionsHtml}${singleLine}</div>`)

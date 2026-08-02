@@ -190,7 +190,7 @@ export class MessageProcessor {
   }
 
   /**
-   * 提取一轮对话中的网络搜索来源
+   * 提取一轮对话中的웹 검색来源
    * @param {Object} conv - 单轮对话
    * @returns {Array} 归一化后的网络来源
    */
@@ -233,7 +233,7 @@ export class MessageProcessor {
           dedupSet.add(url)
 
           webSources.push({
-            tool_name: toolCall?.name || toolCall?.function?.name || '网络搜索',
+            tool_name: toolCall?.name || toolCall?.function?.name || '웹 검색',
             title,
             url,
             score: typeof item?.score === 'number' ? item.score : null,
@@ -271,7 +271,7 @@ export class MessageProcessor {
   }
 
   /**
-   * 提取一轮对话中的全部来源（知识库+网络搜索）
+   * 提取一轮对话中的全部来源（知识库+웹 검색）
    * @param {Object} conv - 单轮对话
    * @param {Array} databases - 知识库列表
    * @returns {{knowledgeChunks: Array, webSources: Array}}
@@ -316,7 +316,7 @@ export class MessageProcessor {
     // 深拷贝第一个chunk作为结果
     const result = JSON.parse(JSON.stringify(chunks[0]))
 
-    // 处理用户消息的内容格式 - 确保显示纯文本
+    // 处理사용자消息的内容格式 - 确保显示纯文本
     if (result.type === 'human' || result.role === 'user') {
       // 如果content是数组格式（LangChain多模态消息），提取文本部分
       if (Array.isArray(result.content)) {

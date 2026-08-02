@@ -40,7 +40,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '请选择重排序模型'
+    default: '리랭크 모델을 선택하세요'
   },
   size: {
     type: String,

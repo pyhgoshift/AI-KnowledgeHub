@@ -21,7 +21,7 @@
       >
         <template #content>
           <slot name="options-left">
-            <div class="no-options">没有配置 options</div>
+            <div class="no-options">설정된 옵션이 없습니다</div>
           </slot>
         </template>
         <a-button type="text" class="expand-btn">
@@ -56,9 +56,9 @@
       <div class="mention-popup" @mousedown.prevent>
         <!-- 文件列表 -->
         <div v-if="mentionItems.files.length > 0 || showFileSearchPrompt" class="mention-group">
-          <div class="mention-group-title">文件</div>
+          <div class="mention-group-title">파일</div>
           <div v-if="showFileSearchPrompt" class="mention-search-placeholder">
-            输入相关内容以搜索文件
+            관련 내용을 입력해 파일을 검색하세요
           </div>
           <template v-else>
             <div
@@ -104,7 +104,7 @@
 
         <!-- 知识库列表 -->
         <div v-if="mentionItems.knowledgeBases.length > 0" class="mention-group">
-          <div class="mention-group-title">知识库</div>
+          <div class="mention-group-title">지식베이스</div>
           <div
             v-for="(item, index) in mentionItems.knowledgeBases"
             :key="'kb-' + item.value"
@@ -251,13 +251,13 @@
         </div>
 
         <!-- 无结果 -->
-        <div v-if="!hasAnyItems" class="mention-empty">暂无可引用的项</div>
+        <div v-if="!hasAnyItems" class="mention-empty">참조할 항목이 없습니다</div>
       </div>
     </div>
 
     <div class="send-button-container">
       <slot name="actions-right"></slot>
-      <a-tooltip :title="isLoading ? '停止回答' : ''">
+      <a-tooltip :title="isLoading ? '응답 중지' : ''">
         <a-button
           @click="handleSendOrStop"
           :disabled="sendButtonDisabled"
@@ -330,7 +330,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '输入问题...'
+    default: '무엇이든 물어보세요...'
   },
   isLoading: {
     type: Boolean,
@@ -418,7 +418,7 @@ const formatMentionPath = (path) => {
 
 const getMentionDescription = (description) => {
   const value = String(description || '').trim()
-  if (!value || value === '暂无描述') return ''
+  if (!value || value === '설명 없음') return ''
   return value
 }
 

@@ -113,19 +113,19 @@ const loadAllStats = async () => {
     }
 
     console.log('Dashboard 数据加载完成:', response)
-    message.success('数据加载成功')
+    message.success('통계 데이터를 불러왔습니다')
   } catch (error) {
     console.error('加载统计数据失败:', error)
-    message.error('加载统计数据失败')
+    message.error('통계 데이터를 불러오지 못했습니다')
 
     // 如果并行请求失败，尝试单独加载基础数据
     try {
       const basicResponse = await dashboardApi.getStats()
       basicStats.value = basicResponse
-      message.warning('详细数据加载失败，仅显示基础统计')
+      message.warning('상세 데이터를 불러오지 못해 기본 통계만 표시합니다')
     } catch (basicError) {
       console.error('加载基础统计数据也失败:', basicError)
-      message.error('无法加载任何统计数据')
+      message.error('통계 데이터를 불러올 수 없습니다')
     }
   } finally {
     loading.value = false

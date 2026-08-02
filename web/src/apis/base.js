@@ -30,7 +30,7 @@ export async function apiRequest(url, options = {}, requiresAuth = true, respons
     if (requiresAuth) {
       const userStore = useUserStore()
       if (!userStore.isLoggedIn) {
-        throw new Error('用户未登录')
+        throw new Error('로그인하지 않았습니다')
       }
 
       Object.assign(requestOptions.headers, userStore.getAuthHeaders())
@@ -42,7 +42,7 @@ export async function apiRequest(url, options = {}, requiresAuth = true, respons
     // 处理API返回的错误
     if (!response.ok) {
       // 尝试解析错误信息
-      let errorMessage = `请求失败: ${response.status}, ${response.statusText}`
+      let errorMessage = `요청 실패: ${response.status}, ${response.statusText}`
       let errorData = null
 
       console.log('API请求失败:', {
@@ -95,7 +95,7 @@ export async function apiRequest(url, options = {}, requiresAuth = true, respons
         const isTokenExpired =
           errorMessage?.includes('令牌已过期') || errorMessage?.includes('token expired')
 
-        message.error(isTokenExpired ? '登录已过期，请重新登录' : '认证失败，请重新登录')
+        message.error(isTokenExpired ? '로그인이 만료되었습니다. 다시 로그인하세요' : '인증에 실패했습니다. 다시 로그인하세요')
 
         // 如果用户当前认为自己已登录，则登出
         if (userStore.isLoggedIn) {
@@ -109,10 +109,10 @@ export async function apiRequest(url, options = {}, requiresAuth = true, respons
 
         throw error
       } else if (response.status === 403) {
-        error.message = '没有权限执行此操作'
+        error.message = '이 작업을 수행할 권한이 없습니다'
         throw error
       } else if (response.status === 500) {
-        error.message = '服务器内部错误，请使用 docker logs api-dev 查看详细日志'
+        error.message = '서버 내부 오류입니다. docker logs api-dev에서 상세 로그를 확인하세요'
         throw error
       }
 

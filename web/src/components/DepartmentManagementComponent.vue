@@ -3,14 +3,14 @@
     <!-- 头部区域 -->
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">部门管理</div>
-        <p class="section-description">管理系统部门，部门下的用户会被隔离管理。</p>
+        <div class="section-title">부서 관리</div>
+        <p class="section-description">시스템 부서를 관리합니다. 부서별 사용자는 분리하여 관리됩니다.</p>
       </div>
       <div class="header-actions">
         <a-button
           @click="handleRefresh"
           :loading="departmentManagement.refreshing"
-          title="刷新"
+          title="새로 고침"
           class="refresh-btn lucide-icon-btn"
         >
           <template #icon
@@ -19,7 +19,7 @@
         </a-button>
         <a-button type="primary" @click="showAddDepartmentModal" class="add-btn lucide-icon-btn">
           <template #icon><Plus :size="16" /></template>
-          添加部门
+          부서 추가
         </a-button>
       </div>
     </div>
@@ -49,11 +49,11 @@
                 <span class="description-text">{{ record.description || '-' }}</span>
               </template>
               <template v-if="column.key === 'userCount'">
-                <span>{{ record.user_count ?? 0 }} 人</span>
+                <span>{{ record.user_count ?? 0 }}명</span>
               </template>
               <template v-if="column.key === 'action'">
                 <a-space>
-                  <a-tooltip title="编辑部门">
+                  <a-tooltip title="부서 편집">
                     <a-button
                       type="text"
                       size="small"
@@ -63,7 +63,7 @@
                       <SquarePen :size="14" />
                     </a-button>
                   </a-tooltip>
-                  <a-tooltip title="删除部门">
+                  <a-tooltip title="부서 삭제">
                     <a-button
                       type="text"
                       size="small"
@@ -82,7 +82,7 @@
         </template>
 
         <div v-else class="empty-state">
-          <a-empty description="暂无部门数据" />
+          <a-empty description="부서 데이터가 없습니다" />
         </div>
       </a-spin>
     </div>
@@ -99,19 +99,19 @@
       class="department-modal"
     >
       <a-form layout="vertical" class="department-form">
-        <a-form-item label="部门名称" required class="form-item">
+        <a-form-item label="부서 이름" required class="form-item">
           <a-input
             v-model:value="departmentManagement.form.name"
-            placeholder="请输入部门名称"
+            placeholder="부서 이름을 입력하세요"
             size="large"
             :maxlength="50"
           />
         </a-form-item>
 
-        <a-form-item label="部门描述" class="form-item">
+        <a-form-item label="부서 설명" class="form-item">
           <a-textarea
             v-model:value="departmentManagement.form.description"
-            placeholder="请输入部门描述（可选）"
+            placeholder="부서 설명을 입력하세요(선택 사항)"
             :rows="3"
             :maxlength="255"
             show-count
@@ -122,13 +122,13 @@
 
         <template v-if="!departmentManagement.editMode">
           <p class="admin-section-hint">
-            创建部门时必须同时创建管理员，该管理员将负责管理本部门用户
+            부서를 만들 때 관리자를 함께 만들어야 합니다. 이 관리자가 해당 부서의 사용자를 관리합니다.
           </p>
 
-          <a-form-item label="管理员UID" required class="form-item">
+        <a-form-item label="관리자 UID" required class="form-item">
             <a-input
               v-model:value="departmentManagement.form.adminUid"
-              placeholder="请输入管理员UID（3-20位字母/数字/下划线）"
+              placeholder="관리자 UID를 입력하세요(영문·숫자·밑줄 3~20자)"
               size="large"
               :maxlength="20"
               @blur="checkAdminUid"
@@ -136,32 +136,32 @@
             <div v-if="departmentManagement.form.uidError" class="error-text">
               {{ departmentManagement.form.uidError }}
             </div>
-            <div v-else class="help-text">此 UID 将用于登录</div>
+            <div v-else class="help-text">이 UID로 로그인합니다</div>
           </a-form-item>
 
-          <a-form-item label="密码" required class="form-item">
+        <a-form-item label="비밀번호" required class="form-item">
             <a-input-password
               v-model:value="departmentManagement.form.adminPassword"
-              :placeholder="`请输入管理员密码（至少 ${MIN_PASSWORD_LENGTH} 位）`"
+              :placeholder="`관리자 비밀번호를 입력하세요(최소 ${MIN_PASSWORD_LENGTH}자)`"
               size="large"
               :minlength="MIN_PASSWORD_LENGTH"
               :maxlength="50"
             />
           </a-form-item>
 
-          <a-form-item label="确认密码" required class="form-item">
+        <a-form-item label="비밀번호 확인" required class="form-item">
             <a-input-password
               v-model:value="departmentManagement.form.adminConfirmPassword"
-              placeholder="请再次输入密码"
+              placeholder="비밀번호를 다시 입력하세요"
               size="large"
               :maxlength="50"
             />
           </a-form-item>
 
-          <a-form-item label="手机号（可选）" class="form-item">
+        <a-form-item label="휴대폰 번호(선택 사항)" class="form-item">
             <a-input
               v-model:value="departmentManagement.form.adminPhone"
-              placeholder="请输入手机号（可用于登录）"
+              placeholder="휴대폰 번호를 입력하세요(로그인에 사용할 수 있음)"
               size="large"
               :maxlength="11"
             />
@@ -185,26 +185,26 @@ import { isPasswordLongEnough, MIN_PASSWORD_LENGTH } from '@/utils/passwordValid
 // 表格列定义
 const columns = [
   {
-    title: '部门名称',
+    title: '부서 이름',
     dataIndex: 'name',
     key: 'name',
     width: 200
   },
   {
-    title: '描述',
+    title: '설명',
     dataIndex: 'description',
     key: 'description',
     ellipsis: true
   },
   {
-    title: '用户数量',
+    title: '사용자 수',
     dataIndex: 'user_count',
     key: 'userCount',
     width: 100,
     align: 'center'
   },
   {
-    title: '操作',
+    title: '작업',
     key: 'action',
     width: 120,
     align: 'center'
@@ -218,7 +218,7 @@ const departmentManagement = reactive({
   departments: [],
   error: null,
   modalVisible: false,
-  modalTitle: '添加部门',
+  modalTitle: '부서 추가',
   editMode: false,
   editDepartmentId: null,
   form: {
@@ -265,7 +265,7 @@ const handleRefresh = async () => {
 
 // 打开添加部门模态框
 const showAddDepartmentModal = () => {
-  departmentManagement.modalTitle = '添加部门'
+  departmentManagement.modalTitle = '부서 추가'
   departmentManagement.editMode = false
   departmentManagement.editDepartmentId = null
   departmentManagement.form = {
@@ -283,7 +283,7 @@ const showAddDepartmentModal = () => {
 
 // 打开编辑部门模态框
 const showEditDepartmentModal = (department) => {
-  departmentManagement.modalTitle = '编辑部门'
+  departmentManagement.modalTitle = '부서 편집'
   departmentManagement.editMode = true
   departmentManagement.editDepartmentId = department.id
   departmentManagement.form = {

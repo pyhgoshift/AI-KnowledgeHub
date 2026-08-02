@@ -1,13 +1,13 @@
 <template>
   <div class="chunk-params-config">
     <div class="params-info">
-      <p>调整分块参数可以控制文本的切分方式，影响检索质量和文档加载效率。</p>
+      <p>청크 매개변수를 조정하면 텍스트 분할 방식을 제어하여 검색 품질과 문서 처리 효율에 영향을 줍니다.</p>
     </div>
     <a-form :model="localParams" name="chunkConfig" autocomplete="off" layout="vertical">
       <a-form-item v-if="showPreset" name="chunk_preset_id">
         <template #label>
           <span class="chunk-preset-label">
-            分块策略
+            청크 전략
             <a-tooltip :title="presetDescription">
               <QuestionCircleOutlined class="chunk-preset-help-icon" />
             </a-tooltip>
@@ -20,8 +20,8 @@
           style="width: 100%"
         />
         <p class="param-description">
-          选择适合当前文档结构的分块策略。
-          <span v-if="allowPresetFollowDefault">留空时沿用知识库默认策略。</span>
+          현재 문서 구조에 맞는 청크 전략을 선택하세요.
+          <span v-if="allowPresetFollowDefault">비워 두면 지식베이스 기본 전략을 사용합니다.</span>
         </p>
       </a-form-item>
 
@@ -29,8 +29,8 @@
         <a-form-item v-if="showChunkSizeOverlap" name="chunk_token_num">
           <template #label>
             <span class="chunk-preset-label">
-              最大 Token 数
-              <a-tooltip title="每个文本片段的最大 token 数，留空时使用默认值 512">
+              최대 토큰 수
+              <a-tooltip title="각 텍스트 조각의 최대 토큰 수입니다. 비워 두면 기본값 512를 사용합니다">
                 <QuestionCircleOutlined class="chunk-preset-help-icon" />
               </a-tooltip>
             </span>
@@ -39,15 +39,15 @@
             v-model:value="parserConfig.chunk_token_num"
             :min="100"
             :max="10000"
-            placeholder="默认 512"
+            placeholder="기본값 512"
             style="width: 100%"
           />
         </a-form-item>
         <a-form-item v-if="showChunkSizeOverlap" name="overlapped_percent">
           <template #label>
             <span class="chunk-preset-label">
-              重叠比例 (%)
-              <a-tooltip title="相邻文本片段按 token 数计算的重叠比例，留空时使用默认值 0">
+              겹침 비율(%)
+              <a-tooltip title="인접한 텍스트 조각의 토큰 기준 겹침 비율입니다. 비워 두면 기본값 0을 사용합니다">
                 <QuestionCircleOutlined class="chunk-preset-help-icon" />
               </a-tooltip>
             </span>
@@ -56,22 +56,22 @@
             v-model:value="parserConfig.overlapped_percent"
             :min="0"
             :max="99"
-            placeholder="默认 0"
+            placeholder="기본값 0"
             style="width: 100%"
           />
         </a-form-item>
         <a-form-item v-if="showQaSplit" name="delimiter">
           <template #label>
             <span class="chunk-preset-label">
-              分隔符
-              <a-tooltip title="支持 \\n、\\t 等转义字符。留空时使用默认分隔符 \\n">
+              구분자
+              <a-tooltip title="\\n, \\t 같은 이스케이프 문자를 지원합니다. 비워 두면 기본 구분자 \\n을 사용합니다">
                 <QuestionCircleOutlined class="chunk-preset-help-icon" />
               </a-tooltip>
             </span>
           </template>
           <a-input
             v-model:value="parserConfig.delimiter"
-            placeholder="默认 \\n，可输入 \\n\\n\\n 或 ---"
+            placeholder="기본값 \\n, \\n\\n\\n 또는 --- 입력 가능"
             style="width: 100%"
           />
         </a-form-item>
@@ -140,7 +140,7 @@ const presetOptions = computed(() => {
   if (props.allowPresetFollowDefault) {
     options.push({
       value: '',
-      label: `沿用知识库默认（${defaultPresetLabel}）`
+      label: `지식베이스 기본값 사용(${defaultPresetLabel})`
     })
   }
 

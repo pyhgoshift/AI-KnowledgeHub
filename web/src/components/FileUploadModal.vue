@@ -778,7 +778,7 @@ const fetchSingleUrlItem = async (item) => {
       item.error = CONTENT_EXISTS_ERROR_TEXT
       mergeSameNameFiles(detailData?.same_name_files)
     } else {
-      item.error = detailMessage || '加载失败'
+      item.error = detailMessage || '불러오지 못했습니다'
     }
   }
 }
@@ -1160,11 +1160,11 @@ const downloadSameNameFile = async (file) => {
     // 获取当前数据库ID
     const currentDbId = kbId.value
     if (!currentDbId) {
-      message.error('知识库ID不存在')
+      message.error('지식베이스 ID가 없습니다')
       return
     }
 
-    message.loading('正在下载文件...', 0)
+    message.loading('파일을 다운로드하는 중...', 0)
     const response = await documentApi.downloadDocument(currentDbId, file.file_id)
     message.destroy()
 
@@ -1179,42 +1179,42 @@ const downloadSameNameFile = async (file) => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
 
-    message.success(`文件 ${file.filename} 下载成功`)
+    message.success(`파일 ${file.filename}을(를) 다운로드했습니다`)
   } catch (error) {
     message.destroy()
     console.error('下载文件失败:', error)
-    message.error(`下载文件失败: ${error.message || '未知错误'}`)
+    message.error(`파일을 다운로드하지 못했습니다: ${error.message || '알 수 없는 오류'}`)
   }
 }
 
 const deleteSameNameFile = (file) => {
   Modal.confirm({
-    title: '确认删除文件',
-    content: `确定要删除文件 "${file.filename}" 吗？此操作不可恢复。`,
-    okText: '删除',
+    title: '파일 삭제 확인',
+    content: `파일 "${file.filename}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     onOk: async () => {
       try {
         // 获取当前数据库ID
         const currentDbId = kbId.value
         if (!currentDbId) {
-          message.error('知识库ID不存在')
+          message.error('지식베이스 ID가 없습니다')
           return
         }
 
-        message.loading('正在删除文件...', 0)
+        message.loading('파일을 삭제하는 중...', 0)
         await documentApi.deleteDocument(currentDbId, file.file_id)
         message.destroy()
 
         // 从同名文件列表中移除
         sameNameFiles.value = sameNameFiles.value.filter((f) => f.file_id !== file.file_id)
 
-        message.success(`文件 ${file.filename} 删除成功`)
+        message.success(`파일 ${file.filename}을(를) 삭제했습니다`)
       } catch (error) {
         message.destroy()
         console.error('删除文件失败:', error)
-        message.error(`删除文件失败: ${error.message || '未知错误'}`)
+        message.error(`파일을 삭제하지 못했습니다: ${error.message || '알 수 없는 오류'}`)
       }
     }
   })
@@ -1384,9 +1384,9 @@ const handleFileUpload = (info) => {
     // 尝试多种方式获取错误信息
     const detail = file?.response?.detail || file?.error?.message || ''
     if (detail.includes('same content') || detail.includes('相同内容')) {
-      message.error(`${file.name} 已是相同内容文件，无需重复上传`)
+      message.error(`${file.name}은(는) 같은 내용의 파일입니다. 다시 업로드할 필요가 없습니다`)
     } else {
-      message.error(detail || `文件上传失败：${file.name}`)
+      message.error(detail || `파일을 업로드하지 못했습니다: ${file.name}`)
     }
   }
 
@@ -1414,7 +1414,7 @@ const checkOcrHealth = async () => {
     ocrHealthStatus.value = healthData.services
   } catch (error) {
     console.error('OCR健康检查失败:', error)
-    message.error('OCR服务健康检查失败')
+    message.error('OCR 서비스 상태를 확인하지 못했습니다')
   } finally {
     ocrHealthChecking.value = false
   }
@@ -1442,7 +1442,7 @@ const openDocLink = () => {
 
 const chunkData = async () => {
   if (!kbId.value) {
-    message.error('请先选择知识库')
+    message.error('먼저 지식베이스를 선택하세요')
     return
   }
 
@@ -1453,7 +1453,7 @@ const chunkData = async () => {
 
   if (uploadMode.value === 'workspace') {
     if (selectedWorkspacePaths.value.length === 0) {
-      message.error('请先选择工作区文件')
+      message.error('먼저 작업공간 파일을 선택하세요')
       return
     }
 
@@ -1462,7 +1462,7 @@ const chunkData = async () => {
       const res = await fileApi.importWorkspaceFiles(kbId.value, selectedWorkspacePaths.value)
       const importedItems = Array.isArray(res?.items) ? res.items : []
       if (importedItems.length === 0) {
-        message.error('工作区文件导入失败')
+        message.error('작업공간 파일을 가져오지 못했습니다')
         return
       }
 
@@ -1481,7 +1481,7 @@ const chunkData = async () => {
         const ext = filePath.substring(filePath.lastIndexOf('.')).toLowerCase()
         if (imageExtensions.includes(ext) && !isOcrEnabled.value) {
           message.error({
-            content: '检测到图片文件，必须启用 OCR 才能提取文本内容。',
+            content: '이미지 파일이 있습니다. 텍스트를 추출하려면 OCR을 사용해야 합니다.',
             duration: 5
           })
           return
@@ -1506,7 +1506,7 @@ const chunkData = async () => {
       selectedWorkspacePaths.value = []
     } catch (error) {
       console.error('工作区文件导入失败:', error)
-      message.error('工作区文件导入失败: ' + (error.message || '未知错误'))
+      message.error('작업공간 파일을 가져오지 못했습니다: ' + (error.message || '알 수 없는 오류'))
     } finally {
       store.state.chunkLoading = false
     }
@@ -1518,7 +1518,7 @@ const chunkData = async () => {
     // 过滤出成功的项
     const successfulItems = urlList.value.filter((item) => item.status === 'success' && item.data)
     if (successfulItems.length === 0) {
-      message.error('请添加并等待至少一个 URL 解析成功')
+      message.error('URL을 추가하고 최소 하나의 URL 분석이 완료될 때까지 기다리세요')
       return
     }
 
@@ -1537,12 +1537,12 @@ const chunkData = async () => {
     }
 
     if (deduplicatedItems.length === 0) {
-      message.error('URL 内容均为重复项，请更换后重试')
+      message.error('모든 URL 내용이 중복됩니다. 다른 URL로 다시 시도하세요')
       return
     }
 
     if (skippedDuplicates > 0) {
-      message.warning(`检测到 ${skippedDuplicates} 个重复 URL 内容，已保留首个并跳过其余项`)
+      message.warning(`중복된 URL 내용 ${skippedDuplicates}개를 찾았습니다. 첫 항목만 유지하고 나머지는 건너뜁니다`)
     }
 
     try {
@@ -1585,7 +1585,7 @@ const chunkData = async () => {
       newUrl.value = ''
     } catch (error) {
       console.error('URL 提交失败:', error)
-      message.error('URL 提交失败: ' + (error.message || '未知错误'))
+      message.error('URL을 제출하지 못했습니다: ' + (error.message || '알 수 없는 오류'))
     } finally {
       store.state.chunkLoading = false
     }
@@ -1613,7 +1613,7 @@ const chunkData = async () => {
     const ext = file_path.substring(file_path.lastIndexOf('.')).toLowerCase()
     if (imageExtensions.includes(ext) && !isOcrEnabled.value) {
       message.error({
-        content: '检测到图片文件，必须启用 OCR 才能提取文本内容。',
+        content: '이미지 파일이 있습니다. 텍스트를 추출하려면 OCR을 사용해야 합니다.',
         duration: 5
       })
       return
@@ -1621,7 +1621,7 @@ const chunkData = async () => {
   }
 
   if (items.length === 0) {
-    message.error('请先上传文件')
+    message.error('먼저 파일을 업로드하세요')
     return
   }
 
@@ -1646,7 +1646,7 @@ const chunkData = async () => {
     sameNameFiles.value = []
   } catch (error) {
     console.error('文件上传失败:', error)
-    message.error('文件上传失败: ' + (error.message || '未知错误'))
+    message.error('파일을 업로드하지 못했습니다: ' + (error.message || '알 수 없는 오류'))
   } finally {
     store.state.chunkLoading = false
   }

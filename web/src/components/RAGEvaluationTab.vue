@@ -5,14 +5,14 @@
       <template v-if="!selectedDataset">
         <ResourceEmptyState
           class="rag-evaluation-empty"
-          title="暂无可用评估基准"
-          description="先上传或生成评估基准，再运行 RAG 评估。"
+          title="사용 가능한 평가 기준이 없습니다"
+          description="평가 기준을 업로드하거나 생성한 후 RAG 평가를 실행하세요."
           :icon="BarChart3"
         >
           <template #actions>
             <a-button type="primary" class="lucide-icon-btn" @click="$emit('switch-to-benchmarks')">
               <ClipboardList :size="16" />
-              前往基准管理
+              기준 관리로 이동
             </a-button>
           </template>
         </ResourceEmptyState>
@@ -20,7 +20,7 @@
       <template v-else>
         <div class="last-evaluation-section">
           <div class="section-header">
-            <h4 class="section-title">最后一次评估</h4>
+            <h4 class="section-title">최근 평가</h4>
             <a-dropdown
               v-model:open="evaluationDropdownOpen"
               :trigger="['click']"
@@ -33,31 +33,31 @@
                 :disabled="availableDatasets.length === 0"
                 class="lucide-icon-btn"
               >
-                开始评估
+                평가 시작
                 <ChevronDown :size="14" />
               </a-button>
               <template #overlay>
                 <div class="evaluation-start-dropdown" @click.stop>
                   <div class="dropdown-header">
-                    <div class="dropdown-title">配置本次评估</div>
-                    <div class="dropdown-subtitle">选择评估基准与可选模型后开始评估</div>
+                    <div class="dropdown-title">이번 평가 설정</div>
+                    <div class="dropdown-subtitle">평가 기준과 선택 모델을 고른 뒤 평가를 시작하세요</div>
                   </div>
 
                   <div class="dropdown-model-fields">
-                    <a-form-item label="评估名称">
+                    <a-form-item label="평가 이름">
                       <a-input
                         v-model:value="configForm.name"
-                        placeholder="请输入评估名称"
+                        placeholder="평가 이름을 입력하세요"
                         :maxlength="100"
                         show-count
                       />
                     </a-form-item>
 
-                    <a-form-item label="评估基准">
+                    <a-form-item label="평가 기준">
                       <div class="dropdown-benchmark-row">
                         <a-select
                           v-model:value="selectedDatasetId"
-                          placeholder="请选择评估基准"
+                          placeholder="평가 기준을 선택하세요"
                           style="width: 100%"
                           :loading="datasetsLoading"
                           @change="onDatasetChanged"
@@ -67,7 +67,7 @@
                             :key="benchmark.dataset_id"
                             :value="benchmark.dataset_id"
                           >
-                            {{ benchmark.name }} ({{ benchmark.item_count }} 个问题)
+                            {{ benchmark.name }} ({{ benchmark.item_count }}개 질문)
                           </a-select-option>
                         </a-select>
                         <a-button
@@ -75,7 +75,7 @@
                           :loading="datasetsLoading"
                           :icon="h(RefreshCw, { size: 16 })"
                           class="refresh-benchmarks-btn lucide-icon-btn"
-                          title="刷新评估基准列表"
+                          title="평가 기준 목록 새로 고침"
                           @click="() => loadDatasets(true)"
                         />
                       </div>
@@ -84,8 +84,8 @@
                     <a-form-item
                       :label="
                         selectedDataset?.has_gold_answers
-                          ? '答案生成模型（可选）'
-                          : '答案生成模型（当前基准无需）'
+                          ? '답변 생성 모델(선택 사항)'
+                          : '답변 생성 모델(현재 기준에는 필요 없음)'
                       "
                     >
                       <ModelSelectorComponent
@@ -101,8 +101,8 @@
                     <a-form-item
                       :label="
                         selectedDataset?.has_gold_answers
-                          ? '答案评判模型（可选）'
-                          : '答案评判模型（当前基准无需）'
+                          ? '답변 평가 모델(선택 사항)'
+                          : '답변 평가 모델(현재 기준에는 필요 없음)'
                       "
                     >
                       <ModelSelectorComponent
@@ -127,7 +127,7 @@
                     :disabled="!selectedDataset"
                     @click="startEvaluation"
                   >
-                    开始评估
+                    평가 시작
                   </a-button>
                 </div>
               </template>
@@ -180,28 +180,28 @@
                 </strong>
               </div>
               <div class="metric-card">
-                <span class="metric-label">耗时</span>
+                <span class="metric-label">소요 시간</span>
                 <strong>{{ formatRunDuration(latestEvaluation) }}</strong>
               </div>
               <div class="metric-card">
-                <span class="metric-label">数据量</span>
+                <span class="metric-label">데이터 수</span>
                 <strong>{{ formatRunItems(latestEvaluation) }}</strong>
               </div>
               <div class="metric-card">
-                <span class="metric-label">完成率</span>
+                <span class="metric-label">완료율</span>
                 <strong>{{ formatCompletionRate(latestEvaluation) }}</strong>
               </div>
             </div>
           </div>
 
           <div v-else class="last-evaluation-empty">
-            暂无评估记录，开始评估后会在这里展示最近一次结果。
+            평가 기록이 없습니다. 평가를 시작하면 최근 결과가 여기에 표시됩니다.
           </div>
         </div>
 
         <div class="history-section">
           <div class="section-header">
-            <h4 class="section-title">历史评估记录</h4>
+            <h4 class="section-title">평가 기록</h4>
             <a-button
               type="text"
               size="small"
@@ -210,7 +210,7 @@
               :icon="h(RefreshCw, { size: 14 })"
               class="refresh-btn lucide-icon-btn"
             >
-              刷新
+              새로 고침
             </a-button>
           </div>
           <a-table
@@ -230,21 +230,21 @@
                     class="history-action-link"
                     @click.prevent="viewResults(record.run_id)"
                   >
-                    查看
+                    보기
                   </a>
                   <a-popconfirm
-                    title="确定要删除这条评估记录吗？"
-                    description="删除后将无法恢复"
+                    title="이 평가 기록을 삭제할까요?"
+                    description="삭제 후에는 되돌릴 수 없습니다"
                     @confirm="deleteEvaluationRecord(record.run_id)"
-                    ok-text="确定"
-                    cancel-text="取消"
+                    ok-text="확인"
+                    cancel-text="취소"
                   >
                     <a
                       href=""
                       class="history-action-link history-action-link-danger"
                       @click.prevent
                     >
-                      删除
+                      삭제
                     </a>
                   </a-popconfirm>
                 </a-space>
@@ -260,12 +260,12 @@
     <div v-if="resultModalVisible" class="evaluation-detail-overlay">
       <div class="evaluation-detail-panel">
         <div class="evaluation-detail-titlebar">
-          <div class="evaluation-detail-title">评估结果 - {{ getRunName(selectedResult) }}</div>
+          <div class="evaluation-detail-title">평가 결과 - {{ getRunName(selectedResult) }}</div>
           <a-button
             type="text"
             size="small"
             class="lucide-icon-btn"
-            title="关闭"
+            title="닫기"
             @click="resultModalVisible = false"
           >
             <X :size="16" />
@@ -274,23 +274,23 @@
 
         <div v-if="resultsLoading" class="loading-container">
           <a-spin size="large" />
-          <p style="margin-top: 16px; color: var(--gray-600)">正在加载评估结果...</p>
+          <p style="margin-top: 16px; color: var(--gray-600)">평가 결과를 불러오는 중...</p>
         </div>
 
         <div v-else-if="selectedResult && detailedResults.length > 0" class="result-detail-content">
           <div class="result-summary-bar">
             <div class="summary-items">
               <span class="summary-item summary-run-id" :title="selectedResult.run_id">
-                运行ID：{{ selectedResult.run_id }}
+                실행 ID: {{ selectedResult.run_id }}
               </span>
               <span class="summary-item">
-                状态：
+                상태:
                 <a-tag :color="getStatusColor(selectedResult.status)">
                   {{ getStatusText(selectedResult.status) }}
                 </a-tag>
               </span>
               <span class="summary-item">
-                总体评分：
+                종합 점수:
                 <a-tag
                   v-if="selectedResult.overall_score != null"
                   :color="getScoreTagColor(selectedResult.overall_score)"
@@ -299,10 +299,10 @@
                 </a-tag>
                 <span v-else>-</span>
               </span>
-              <span class="summary-item">总问题数：{{ selectedResult.total_items }}</span>
-              <span class="summary-item">完成数：{{ selectedResult.completed_items }}</span>
+              <span class="summary-item">전체 질문 수: {{ selectedResult.total_items }}</span>
+              <span class="summary-item">완료 수: {{ selectedResult.completed_items }}</span>
               <span class="summary-item">
-                总耗时：{{
+                전체 소요 시간: {{
                   evaluationStats.totalDuration
                     ? formatDuration(evaluationStats.totalDuration)
                     : '-'
@@ -315,7 +315,7 @@
               @click="toggleErrorOnly"
               :class="{ 'error-only-active': showErrorsOnly }"
             >
-              {{ showErrorsOnly ? '显示全部' : '仅查看错误' }}
+              {{ showErrorsOnly ? '전체 표시' : '오류만 보기' }}
             </a-button>
           </div>
 
@@ -324,8 +324,8 @@
               <span class="result-count">
                 {{
                   showErrorsOnly
-                    ? `仅显示错误结果，共 ${paginationTotal} 条`
-                    : `显示全部结果，共 ${paginationTotal} 条`
+                    ? `오류 결과만 표시: 총 ${paginationTotal}개`
+                    : `전체 결과 표시: 총 ${paginationTotal}개`
                 }}
               </span>
               <template v-if="Object.keys(evaluationStats.retrievalMetrics || {}).length > 0">
@@ -340,7 +340,7 @@
                 </span>
               </template>
               <span v-if="evaluationStats.totalQuestions" class="compact-metric">
-                答案准确率：<strong
+                답변 정확도: <strong
                   :style="{ color: getScoreColor(evaluationStats.answerAccuracy) }"
                 >
                   {{ (evaluationStats.answerAccuracy * 100).toFixed(1) }}%
@@ -349,8 +349,8 @@
             </div>
             <a-switch
               v-model:checked="resultAutoWrap"
-              checked-children="换行"
-              un-checked-children="不换行"
+              checked-children="줄바꿈"
+              un-checked-children="줄바꿈 안 함"
             />
           </div>
 
@@ -364,7 +364,7 @@
               showSizeChanger: true,
               pageSizeOptions: ['10', '20', '50', '100'],
               showQuickJumper: true,
-              showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+              showTotal: (total, range) => `${range[0]}-${range[1]} / 총 ${total}개`,
               onChange: handlePageChange,
               onShowSizeChange: handlePageSizeChange
             }"
@@ -420,7 +420,7 @@
                   class="answer-judgement"
                 >
                   <a-tag :color="record.metrics.score > 0.5 ? 'green' : 'red'">
-                    {{ record.metrics.score === 1.0 ? '正确' : '错误' }}
+                    {{ record.metrics.score === 1.0 ? '정확' : '오류' }}
                   </a-tag>
                   <div
                     v-if="record.metrics.reasoning"
@@ -437,8 +437,8 @@
         </div>
 
         <div v-else-if="selectedResult" class="empty-results">
-          <a-empty description="暂无详细结果数据">
-            <a-button @click="viewDetails(selectedResult)">查看基本信息</a-button>
+          <a-empty description="상세 결과 데이터가 없습니다">
+            <a-button @click="viewDetails(selectedResult)">기본 정보 보기</a-button>
           </a-empty>
         </div>
       </div>
@@ -530,28 +530,28 @@ const configForm = reactive({
 })
 
 const evaluationStartHint = computed(() => {
-  if (!selectedDataset.value?.has_gold_answers) return '当前基准只会执行检索评估，无需选择模型。'
-  if (!configForm.answer_llm && !configForm.judge_llm) return '不选择模型时，将仅执行检索评估。'
-  if (configForm.answer_llm && configForm.judge_llm) return '将执行检索评估与答案评估。'
-  return '答案生成模型和答案评判模型需要同时选择。'
+  if (!selectedDataset.value?.has_gold_answers) return '현재 기준은 검색 평가만 실행하므로 모델을 선택할 필요가 없습니다.'
+  if (!configForm.answer_llm && !configForm.judge_llm) return '모델을 선택하지 않으면 검색 평가만 실행합니다.'
+  if (configForm.answer_llm && configForm.judge_llm) return '검색 평가와 답변 평가를 모두 실행합니다.'
+  return '답변 생성 모델과 답변 평가 모델은 함께 선택해야 합니다.'
 })
 
 // 表格列定义
 const resultColumns = computed(() => {
   const columns = [
     {
-      title: '问题',
+      title: '질문',
       dataIndex: 'query',
       key: 'query',
       width: resultColumnWidths.query
     },
     {
-      title: '生成答案',
+      title: '생성된 답변',
       key: 'generated_answer',
       width: resultColumnWidths.generated_answer
     },
     {
-      title: '答案评判',
+      title: '답변 평가',
       key: 'answer_score',
       width: resultColumnWidths.answer_score
     }
@@ -569,7 +569,7 @@ const resultColumns = computed(() => {
   // 如果有检索指标数据，添加检索指标列
   if (hasRetrievalMetrics) {
     columns.splice(2, 0, {
-      title: '检索指标',
+      title: '검색 지표',
       key: 'retrieval_score',
       width: resultColumnWidths.retrieval_score
     })
@@ -627,7 +627,7 @@ const withResizableTitle = (column) => ({
 
 const historyColumns = [
   {
-    title: '评估名称',
+    title: '평가 이름',
     dataIndex: 'name',
     key: 'name',
     width: 180,
@@ -635,20 +635,20 @@ const historyColumns = [
     customRender: ({ record }) => getRunName(record)
   },
   {
-    title: '评估基准',
+    title: '평가 기준',
     key: 'dataset_name',
     width: 180,
     ellipsis: true,
     customRender: ({ record }) => getDatasetName(record.dataset_id)
   },
   {
-    title: '数据量',
+    title: '데이터 수',
     key: 'items',
     width: 92,
     customRender: ({ record }) => formatRunItems(record)
   },
   {
-    title: '耗时',
+    title: '소요 시간',
     key: 'duration',
     width: 100,
     customRender: ({ record }) => formatRunDuration(record)
@@ -660,20 +660,20 @@ const historyColumns = [
     customRender: ({ record }) => renderMetricTag(getRecall10(record), record.status)
   },
   {
-    title: '综合评分',
+    title: '종합 점수',
     key: 'overall_score',
     width: 100,
     customRender: ({ record }) => renderMetricTag(record.overall_score, record.status, 0)
   },
   {
-    title: '状态',
+    title: '상태',
     key: 'status',
     width: 86,
     customRender: ({ record }) =>
       h('a-tag', { color: getStatusColor(record.status) }, getStatusText(record.status))
   },
   {
-    title: '操作',
+    title: '작업',
     key: 'actions',
     width: 120
   }
@@ -750,7 +750,7 @@ const loadResultsWithPagination = async () => {
     }
   } catch (error) {
     console.error('加载评估结果失败:', error)
-    message.error('加载评估结果失败')
+    message.error('평가 결과를 불러오지 못했습니다')
   } finally {
     resultsLoading.value = false
   }
@@ -788,15 +788,15 @@ const loadDatasets = async (showSuccessMessage = false) => {
 
       // 如果是手动刷新，显示成功提示
       if (showSuccessMessage) {
-        message.success(`已刷新，找到 ${completedDatasets.length} 个可评估基准`)
+        message.success(`새로 고쳤습니다. 평가 가능한 기준 ${completedDatasets.length}개를 찾았습니다`)
       }
     } else {
       console.error('响应格式不符合预期:', response)
-      message.error('基准数据格式错误')
+      message.error('평가 기준 데이터 형식이 올바르지 않습니다')
     }
   } catch (error) {
     console.error('加载评估基准失败:', error)
-    message.error('加载评估基准失败')
+    message.error('평가 기준을 불러오지 못했습니다')
   } finally {
     datasetsLoading.value = false
   }
@@ -837,10 +837,10 @@ const refreshHistory = async () => {
   refreshingHistory.value = true
   try {
     await loadEvaluationHistory()
-    message.success('历史记录已刷新')
+    message.success('평가 기록을 새로 고쳤습니다')
   } catch (error) {
     console.error('刷新历史记录失败:', error)
-    message.error('刷新历史记录失败')
+    message.error('평가 기록을 새로 고치지 못했습니다')
   } finally {
     refreshingHistory.value = false
   }
@@ -849,7 +849,7 @@ const refreshHistory = async () => {
 // 开始评估
 const startEvaluation = async () => {
   if (!selectedDataset.value) {
-    message.error('请先选择评估基准')
+    message.error('먼저 평가 기준을 선택하세요')
     return
   }
 
@@ -860,11 +860,11 @@ const startEvaluation = async () => {
   const runName = configForm.name.trim()
 
   if (hasAnswerModel !== hasJudgeModel) {
-    message.warning('生成模型和评估模型必须同时选择或者同时不选择')
+    message.warning('생성 모델과 평가 모델은 함께 선택하거나 모두 선택하지 않아야 합니다')
     return
   }
   if (!runName) {
-    message.warning('请输入评估名称')
+    message.warning('평가 이름을 입력하세요')
     return
   }
 
@@ -883,17 +883,17 @@ const startEvaluation = async () => {
     const response = await evaluationApi.runEvaluation(props.kbId, params)
 
     if (response.message === 'success') {
-      message.success('评估任务已开始')
+      message.success('평가 작업을 시작했습니다')
       evaluationDropdownOpen.value = false
       configForm.name = buildDefaultEvaluationName()
       loadEvaluationHistory()
       taskerStore.loadTasks()
     } else {
-      message.error(response.message || '启动评估失败')
+      message.error(response.message || '평가를 시작하지 못했습니다')
     }
   } catch (error) {
     console.error('启动评估失败:', error)
-    message.error('启动评估失败')
+    message.error('평가를 시작하지 못했습니다')
   } finally {
     startingEvaluation.value = false
   }
@@ -908,7 +908,7 @@ const loadEvaluationHistory = async (silent = false) => {
     }
   } catch (error) {
     console.error('加载评估历史失败:', error)
-    if (!silent) message.error('加载评估历史失败')
+    if (!silent) message.error('평가 기록을 불러오지 못했습니다')
   } finally {
     syncEvaluationRefresh()
   }
@@ -1010,11 +1010,11 @@ const viewResults = async (runId) => {
       // 加载分页数据
       await loadResultsWithPagination()
     } else {
-      message.error('获取评估结果失败：数据格式错误')
+      message.error('평가 결과를 가져오지 못했습니다. 데이터 형식이 올바르지 않습니다')
     }
   } catch (error) {
     console.error('获取评估结果失败:', error)
-    message.error('获取评估结果失败')
+    message.error('평가 결과를 가져오지 못했습니다')
   } finally {
     resultsLoading.value = false
   }
@@ -1031,13 +1031,13 @@ const deleteEvaluationRecord = async (runId) => {
 
     const response = await evaluationApi.deleteRun(props.kbId, runId)
     if (response.message === 'success') {
-      message.success('删除成功')
+      message.success('삭제했습니다')
       // 重新加载评估历史
       await loadEvaluationHistory()
     }
   } catch (error) {
     console.error('删除评估记录失败:', error)
-    message.error('删除评估记录失败')
+    message.error('평가 기록을 삭제하지 못했습니다')
   } finally {
     // 清除loading状态
     const record = evaluationHistory.value.find((r) => r.run_id === runId)
@@ -1079,7 +1079,7 @@ const formatCompletionRate = (record) => {
 }
 
 const formatRunDuration = (record) => {
-  if (record?.status === 'running') return '进行中'
+  if (record?.status === 'running') return '진행 중'
   if (!record?.started_at || !record?.completed_at) return '-'
   const duration = (new Date(record.completed_at) - new Date(record.started_at)) / 1000
   return Number.isFinite(duration) && duration >= 0 ? formatDuration(duration) : '-'
@@ -1098,8 +1098,8 @@ const getRunProgress = (record) => {
 const getRunProgressMessage = (record) => {
   if (record?.message) return record.message
   const total = Number(record?.total_items || 0)
-  if (total) return `评估 ${Number(record?.completed_items || 0)}/${total}`
-  return '评估进行中'
+  if (total) return `평가 ${Number(record?.completed_items || 0)}/${total}`
+  return '평가 진행 중'
 }
 
 const formatLatestRingValue = (record) =>
@@ -1120,8 +1120,8 @@ const renderMetricTag = (value, status, digits = 3) => {
       digits === 0 ? formatPercent(value, 0) : formatMetricValue(value)
     )
   }
-  if (status === 'running') return h('a-tag', { color: 'processing' }, '计算中')
-  if (status === 'completed') return h('a-tag', { color: 'default' }, '无数据')
+  if (status === 'running') return h('a-tag', { color: 'processing' }, '계산 중')
+  if (status === 'completed') return h('a-tag', { color: 'default' }, '데이터 없음')
   return h('span', '-')
 }
 
@@ -1156,30 +1156,30 @@ const getStatusColor = (status) => {
 
 const getStatusText = (status) => {
   const texts = {
-    running: '运行中',
-    completed: '已完成',
-    failed: '失败',
-    paused: '已暂停'
+    running: '실행 중',
+    completed: '완료',
+    failed: '실패',
+    paused: '일시 중지됨'
   }
   return texts[status] || status
 }
 
 const getMetricTitle = (key) => {
   const titles = {
-    precision: '精确率',
-    recall: '召回率',
-    map: '平均精度',
+    precision: '정밀도',
+    recall: '재현율',
+    map: '평균 정밀도',
     ndcg: 'NDCG',
-    bleu: 'BLEU分数',
-    rouge: 'ROUGE分数',
-    answer_correctness: '答案准确性',
-    score: '评分',
-    reasoning: '理由',
-    overall_score: '综合评分'
+    bleu: 'BLEU 점수',
+    rouge: 'ROUGE 점수',
+    answer_correctness: '답변 정확도',
+    score: '점수',
+    reasoning: '근거',
+    overall_score: '종합 점수'
   }
   // 处理 recall@k
-  if (key.startsWith('recall@')) return `召回率 (${key.split('@')[1]})`
-  if (key.startsWith('precision@')) return `精确率 (${key.split('@')[1]})`
+  if (key.startsWith('recall@')) return `재현율 (${key.split('@')[1]})`
+  if (key.startsWith('precision@')) return `정밀도 (${key.split('@')[1]})`
 
   return titles[key] || key
 }
@@ -1213,15 +1213,15 @@ const formatMetricValue = (val) => {
 // 格式化持续时间
 const formatDuration = (seconds) => {
   if (seconds < 60) {
-    return `${Math.round(seconds)}秒`
+    return `${Math.round(seconds)}초`
   } else if (seconds < 3600) {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = Math.round(seconds % 60)
-    return `${minutes}分${remainingSeconds}秒`
+    return `${minutes}분 ${remainingSeconds}초`
   } else {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    return `${hours}小时${minutes}分`
+    return `${hours}시간 ${minutes}분`
   }
 }
 

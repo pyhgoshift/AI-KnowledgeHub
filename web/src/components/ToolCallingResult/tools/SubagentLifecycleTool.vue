@@ -86,33 +86,33 @@ const props = defineProps({
 })
 
 const TOOL_LABELS = {
-  subagent_start: '启动子智能体',
-  subagent_status: '查询子智能体',
-  subagent_events: '读取子智能体事件',
-  subagent_cancel: '取消子智能体',
-  subagent_await: '等待子智能体'
+  subagent_start: '하위 에이전트 시작',
+  subagent_status: '하위 에이전트 조회',
+  subagent_events: '하위 에이전트 이벤트 읽기',
+  subagent_cancel: '하위 에이전트 취소',
+  subagent_await: '하위 에이전트 대기'
 }
 
 const PROGRESS_KIND_LABELS = {
-  assistant_message: '消息',
-  assistant_reasoning: '思考',
-  tool_call: '工具',
-  tool_call_delta: '工具'
+  assistant_message: '메시지',
+  assistant_reasoning: '추론',
+  tool_call: '도구',
+  tool_call_delta: '도구'
 }
 
 const STATUS_LABELS = {
-  busy: '忙碌',
-  cancelled: '已取消',
-  cancel_requested: '取消中',
-  completed: '已完成',
-  existing: '已存在',
-  failed: '失败',
-  interrupted: '已中断',
-  ok: '成功',
-  pending: '等待中',
-  running: '运行中',
-  started: '已启动',
-  success: '成功'
+  busy: '사용 중',
+  cancelled: '취소됨',
+  cancel_requested: '취소 중',
+  completed: '완료',
+  existing: '이미 있음',
+  failed: '실패',
+  interrupted: '중단됨',
+  ok: '성공',
+  pending: '대기 중',
+  running: '실행 중',
+  started: '시작됨',
+  success: '성공'
 }
 
 const terminalStatuses = new Set(['completed', 'failed', 'cancelled', 'interrupted'])
@@ -132,7 +132,7 @@ const headerTitle = computed(() => {
     parsedResult.value?.subagent_slug ||
     subagentRun.value?.subagent_slug ||
     ''
-  const label = TOOL_LABELS[toolId.value] || '子智能体'
+  const label = TOOL_LABELS[toolId.value] || '하위 에이전트'
   return name ? `${label}: ${name}` : label
 })
 
@@ -197,7 +197,7 @@ const metaItems = computed(() => {
       result.subagent_slug || args.value.subagent_slug || subagentRun.value?.subagent_slug
     ],
     ['last_seq', result.last_seq || result.progress?.last_seq],
-    ['events', Array.isArray(result.events) ? `${result.events.length} 条` : '']
+    ['events', Array.isArray(result.events) ? `${result.events.length}개` : '']
   ]
   return items
     .filter(([, value]) => value !== undefined && value !== null && value !== '')
@@ -221,7 +221,7 @@ const progressMessages = computed(() => {
     }))
 })
 
-const progressKindLabel = (kind) => PROGRESS_KIND_LABELS[kind] || '进度'
+const progressKindLabel = (kind) => PROGRESS_KIND_LABELS[kind] || '진행 상황'
 
 const progressMessageKey = (message, index) =>
   [message?.seq, message?.message_id, message?.tool_call_id, index].filter(Boolean).join(':')

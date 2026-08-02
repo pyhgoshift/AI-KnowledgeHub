@@ -19,7 +19,7 @@ export const useDatabaseStore = defineStore('database', () => {
   const kbId = ref(null)
   const fileDetailFileId = ref(null)
   const documentFiles = ref([])
-  const folderBreadcrumbs = ref([{ file_id: null, filename: '全部文件', path_prefix: '' }])
+  const folderBreadcrumbs = ref([{ file_id: null, filename: '모든 파일', path_prefix: '' }])
 
   const queryParams = ref([])
   const meta = reactive({})
@@ -64,7 +64,7 @@ export const useDatabaseStore = defineStore('database', () => {
   function resetFileBrowser() {
     fileBrowserContextId += 1
     documentFiles.value = []
-    folderBreadcrumbs.value = [{ file_id: null, filename: '全部文件', path_prefix: '' }]
+    folderBreadcrumbs.value = [{ file_id: null, filename: '모든 파일', path_prefix: '' }]
     selectedRowKeys.value = []
     Object.assign(fileBrowser, {
       loading: false,
@@ -81,7 +81,7 @@ export const useDatabaseStore = defineStore('database', () => {
   }
 
   // Actions
-  // 管理员获取所有知识库，普通用户获取有权限访问的知识库
+  // 管理员获取所有知识库，普通사용자获取有权限访问的知识库
   async function loadDatabases() {
     state.listLoading = true
     try {
@@ -100,7 +100,7 @@ export const useDatabaseStore = defineStore('database', () => {
     } catch (error) {
       console.error('加载数据库列表失败:', error)
       if (error.message.includes('权限')) {
-        message.error('没有权限访问知识库')
+        message.error('지식베이스에 접근할 권한이 없습니다')
       }
       throw error
     } finally {
@@ -111,24 +111,24 @@ export const useDatabaseStore = defineStore('database', () => {
   async function createDatabase(formData) {
     // 验证
     if (!formData.database_name?.trim()) {
-      message.error('数据库名称不能为空')
+      message.error('지식베이스 이름을 입력하세요')
       return false
     }
 
     if (!formData.kb_type) {
-      message.error('请选择知识库类型')
+      message.error('지식베이스 유형을 선택하세요')
       return false
     }
 
     state.creating = true
     try {
       const data = await databaseApi.createDatabase(formData)
-      message.success('创建成功')
+      message.success('만들었습니다')
       await loadDatabases() // 刷新列表
       return data
     } catch (error) {
       console.error('创建数据库失败:', error)
-      message.error(error.message || '创建失败')
+      message.error(error.message || '만들지 못했습니다')
       throw error
     } finally {
       state.creating = false
@@ -155,7 +155,7 @@ export const useDatabaseStore = defineStore('database', () => {
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '获取数据库信息失败')
+      message.error(error.message || '지식베이스 정보를 불러오지 못했습니다')
     } finally {
       if (!isBackground) {
         state.lock = false
@@ -168,11 +168,11 @@ export const useDatabaseStore = defineStore('database', () => {
     try {
       state.lock = true
       await databaseApi.updateDatabase(kbId.value, formData)
-      message.success('知识库信息更新成功')
+      message.success('지식베이스 정보를 업데이트했습니다')
       await getDatabaseInfo() // Load query params after updating database info
     } catch (error) {
       console.error(error)
-      message.error(error.message || '更新失败')
+      message.error(error.message || '업데이트하지 못했습니다')
     } finally {
       state.lock = false
     }
@@ -180,19 +180,19 @@ export const useDatabaseStore = defineStore('database', () => {
 
   function deleteDatabase() {
     Modal.confirm({
-      title: '删除数据库',
-      content: '确定要删除该数据库吗？',
-      okText: '确认',
-      cancelText: '取消',
+      title: '지식베이스 삭제',
+      content: '이 지식베이스를 삭제할까요?',
+      okText: '확인',
+      cancelText: '취소',
       onOk: async () => {
         state.lock = true
         try {
           const data = await databaseApi.deleteDatabase(kbId.value)
-          message.success(data.message || '删除成功')
+          message.success(data.message || '삭제했습니다')
           router.push({ path: '/extensions', query: { tab: 'knowledge' } })
         } catch (error) {
           console.error(error)
-          message.error(error.message || '删除失败')
+          message.error(error.message || '삭제하지 못했습니다')
         } finally {
           state.lock = false
         }
@@ -208,7 +208,7 @@ export const useDatabaseStore = defineStore('database', () => {
       await loadDocumentFiles({ isBackground: true })
     } catch (error) {
       console.error(error)
-      message.error(error.message || '删除失败')
+      message.error(error.message || '삭제하지 못했습니다')
       throw error
     } finally {
       state.lock = false
@@ -217,10 +217,10 @@ export const useDatabaseStore = defineStore('database', () => {
 
   function handleDeleteFile(fileId) {
     Modal.confirm({
-      title: '删除文件',
-      content: '确定要删除该文件吗？',
-      okText: '确认',
-      cancelText: '取消',
+      title: '파일 삭제',
+      content: '이 파일을 삭제할까요?',
+      okText: '확인',
+      cancelText: '취소',
       onOk: () => deleteFile(fileId)
     })
   }
@@ -233,15 +233,15 @@ export const useDatabaseStore = defineStore('database', () => {
     })
 
     if (validFileIds.length === 0) {
-      message.info('没有可删除的文件')
+      message.info('삭제할 파일이 없습니다')
       return
     }
 
     Modal.confirm({
-      title: '批量删除文件',
-      content: `确定要删除选中的 ${validFileIds.length} 个文件吗？`,
-      okText: '确认',
-      cancelText: '取消',
+      title: '批量파일 삭제',
+      content: `선택한 ${validFileIds.length} 개 파일을 삭제할까요?`,
+      okText: '확인',
+      cancelText: '취소',
       onOk: async () => {
         state.batchDeleting = true
         let successCount = 0
@@ -249,7 +249,7 @@ export const useDatabaseStore = defineStore('database', () => {
         let processedCount = 0
         const totalCount = validFileIds.length
         const progressKey = `batch-delete-${Date.now()}`
-        message.loading({ content: `正在删除文件 0/${totalCount}`, key: progressKey, duration: 0 })
+        message.loading({ content: `正在파일 삭제 0/${totalCount}`, key: progressKey, duration: 0 })
 
         try {
           const CHUNK_SIZE = 50
@@ -268,7 +268,7 @@ export const useDatabaseStore = defineStore('database', () => {
             } finally {
               processedCount += chunk.length
               message.loading({
-                content: `正在删除文件 ${processedCount}/${totalCount}`,
+                content: `正在파일 삭제 ${processedCount}/${totalCount}`,
                 key: progressKey,
                 duration: 0
               })
@@ -277,11 +277,11 @@ export const useDatabaseStore = defineStore('database', () => {
 
           message.destroy(progressKey)
           if (successCount > 0 && failureCount === 0) {
-            message.success(`成功删除 ${successCount} 个文件`)
+            message.success(`삭제 완료 ${successCount} 个파일`)
           } else if (successCount > 0 && failureCount > 0) {
-            message.warning(`成功删除 ${successCount} 个文件，${failureCount} 个文件删除失败`)
+            message.warning(`삭제 완료 ${successCount} 个파일，${failureCount} 个파일삭제하지 못했습니다`)
           } else if (failureCount > 0) {
-            message.error(`${failureCount} 个文件删除失败`)
+            message.error(`${failureCount} 个파일삭제하지 못했습니다`)
           }
 
           selectedRowKeys.value = []
@@ -290,7 +290,7 @@ export const useDatabaseStore = defineStore('database', () => {
         } catch (error) {
           message.destroy(progressKey)
           console.error('批量删除出错:', error)
-          message.error(error.message || '批量删除过程中发生错误')
+          message.error(error.message || '일괄 삭제 중 오류가 발생했습니다')
         } finally {
           state.batchDeleting = false
         }
@@ -410,7 +410,7 @@ export const useDatabaseStore = defineStore('database', () => {
     } catch (error) {
       console.error(error)
       if (!options.isBackground) {
-        message.error(error.message || '加载文件列表失败')
+        message.error(error.message || '파일 목록을 불러오지 못했습니다')
       }
     } finally {
       if (!options.isBackground && contextId === fileBrowserContextId) {
@@ -460,7 +460,7 @@ export const useDatabaseStore = defineStore('database', () => {
 
   async function addFiles({ items, contentType, params, parentId }) {
     if (items.length === 0) {
-      message.error(contentType === 'file' ? '请先上传文件' : '请输入有效的网页链接')
+      message.error(contentType === 'file' ? '먼저 파일을 업로드하세요' : '유효한 웹 링크를 입력하세요')
       return
     }
 
@@ -472,13 +472,13 @@ export const useDatabaseStore = defineStore('database', () => {
       }
       const data = await documentApi.addDocuments(kbId.value, items, requestParams)
       if (data.status === 'success' || data.status === 'queued') {
-        const itemType = contentType === 'file' ? '文件' : 'URL'
+        const itemType = contentType === 'file' ? '파일' : 'URL'
         enableAutoRefresh('auto')
-        message.success(data.message || `${itemType}已提交处理，请在任务中心查看进度`)
+        message.success(data.message || `${itemType} 처리를 제출했습니다. 작업 센터에서 진행 상황을 확인하세요`)
         if (data.task_id) {
           taskerStore.registerQueuedTask({
             task_id: data.task_id,
-            name: `知识库导入 (${kbId.value || ''})`,
+            name: `지식베이스 가져오기 (${kbId.value || ''})`,
             task_type: 'knowledge_ingest',
             message: data.message,
             payload: {
@@ -491,12 +491,12 @@ export const useDatabaseStore = defineStore('database', () => {
         await delayedRefresh() // 延迟1秒后刷新
         return true // Indicate success
       } else {
-        message.error(data.message || '处理失败')
+        message.error(data.message || '처리하지 못했습니다')
         return false
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '处理请求失败')
+      message.error(error.message || '처리 요청에 실패했습니다')
       return false
     } finally {
       state.chunkLoading = false
@@ -510,11 +510,11 @@ export const useDatabaseStore = defineStore('database', () => {
       const data = await documentApi.parseDocuments(kbId.value, fileIds)
       if (data.status === 'success' || data.status === 'queued') {
         enableAutoRefresh('auto')
-        message.success(data.message || '解析任务已提交')
+        message.success(data.message || '분석 작업을 제출했습니다')
         if (data.task_id) {
           taskerStore.registerQueuedTask({
             task_id: data.task_id,
-            name: `文档解析 (${kbId.value})`,
+            name: `문서 분석 (${kbId.value})`,
             task_type: 'knowledge_parse',
             message: data.message,
             payload: { kb_id: kbId.value, count: fileIds.length }
@@ -523,12 +523,12 @@ export const useDatabaseStore = defineStore('database', () => {
         await delayedRefresh() // 延迟1秒后刷新
         return true
       } else {
-        message.error(data.message || '提交失败')
+        message.error(data.message || '제출하지 못했습니다')
         return false
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '请求失败')
+      message.error(error.message || '요청에 실패했습니다')
       return false
     } finally {
       state.chunkLoading = false
@@ -541,11 +541,11 @@ export const useDatabaseStore = defineStore('database', () => {
       const data = await documentApi.parsePendingDocuments(kbId.value)
       if (data.status === 'success' || data.status === 'queued') {
         enableAutoRefresh('auto')
-        message.success(data.message || '解析任务已提交')
+        message.success(data.message || '분석 작업을 제출했습니다')
         if (data.task_id) {
           taskerStore.registerQueuedTask({
             task_id: data.task_id,
-            name: `文档解析 (${kbId.value})`,
+            name: `문서 분석 (${kbId.value})`,
             task_type: 'knowledge_parse',
             message: data.message,
             payload: { kb_id: kbId.value, count: data.queued_count || count, scope: 'pending' }
@@ -554,12 +554,12 @@ export const useDatabaseStore = defineStore('database', () => {
         await delayedRefresh()
         return true
       } else {
-        message.error(data.message || '提交失败')
+        message.error(data.message || '제출하지 못했습니다')
         return false
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '请求失败')
+      message.error(error.message || '요청에 실패했습니다')
       return false
     } finally {
       state.chunkLoading = false
@@ -573,11 +573,11 @@ export const useDatabaseStore = defineStore('database', () => {
       const data = await documentApi.indexDocuments(kbId.value, fileIds, params)
       if (data.status === 'success' || data.status === 'queued') {
         enableAutoRefresh('auto')
-        message.success(data.message || '入库任务已提交')
+        message.success(data.message || '색인 작업을 제출했습니다')
         if (data.task_id) {
           taskerStore.registerQueuedTask({
             task_id: data.task_id,
-            name: `文档入库 (${kbId.value})`,
+            name: `문서 색인 (${kbId.value})`,
             task_type: 'knowledge_index',
             message: data.message,
             payload: { kb_id: kbId.value, count: fileIds.length }
@@ -586,12 +586,12 @@ export const useDatabaseStore = defineStore('database', () => {
         await delayedRefresh() // 延迟1秒后刷新
         return true
       } else {
-        message.error(data.message || '提交失败')
+        message.error(data.message || '제출하지 못했습니다')
         return false
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '请求失败')
+      message.error(error.message || '요청에 실패했습니다')
       return false
     } finally {
       state.chunkLoading = false
@@ -604,11 +604,11 @@ export const useDatabaseStore = defineStore('database', () => {
       const data = await documentApi.indexPendingDocuments(kbId.value, params)
       if (data.status === 'success' || data.status === 'queued') {
         enableAutoRefresh('auto')
-        message.success(data.message || '入库任务已提交')
+        message.success(data.message || '색인 작업을 제출했습니다')
         if (data.task_id) {
           taskerStore.registerQueuedTask({
             task_id: data.task_id,
-            name: `文档入库 (${kbId.value})`,
+            name: `문서 색인 (${kbId.value})`,
             task_type: 'knowledge_index',
             message: data.message,
             payload: { kb_id: kbId.value, count: data.queued_count || count, scope: 'pending' }
@@ -617,12 +617,12 @@ export const useDatabaseStore = defineStore('database', () => {
         await delayedRefresh()
         return true
       } else {
-        message.error(data.message || '提交失败')
+        message.error(data.message || '제출하지 못했습니다')
         return false
       }
     } catch (error) {
       console.error(error)
-      message.error(error.message || '请求失败')
+      message.error(error.message || '요청에 실패했습니다')
       return false
     } finally {
       state.chunkLoading = false
@@ -632,7 +632,7 @@ export const useDatabaseStore = defineStore('database', () => {
   function openFileDetail(fileId) {
     const nextFileId = typeof fileId === 'object' ? fileId?.file_id : fileId
     if (!nextFileId) {
-      message.error('文件信息不完整')
+      message.error('파일信息不完整')
       return
     }
     fileDetailFileId.value = nextFileId
@@ -671,7 +671,7 @@ export const useDatabaseStore = defineStore('database', () => {
       })
     } catch (error) {
       console.error('Failed to load query params:', error)
-      message.error('加载查询参数失败')
+      message.error('검색 매개변수를 불러오지 못했습니다')
     } finally {
       state.queryParamsLoading = false
     }
@@ -693,7 +693,7 @@ export const useDatabaseStore = defineStore('database', () => {
     }
   }
 
-  // 延时刷新文件理解（延迟1秒后刷新）
+  // 延时刷新파일理解（延迟1秒后刷新）
   async function delayedRefresh() {
     await new Promise((resolve) => setTimeout(resolve, 1000))
     await getDatabaseInfo(undefined, true)
@@ -722,9 +722,9 @@ export const useDatabaseStore = defineStore('database', () => {
     selectedRowKeys.value = newSelectedKeys
 
     if (failedFiles.length > 0) {
-      message.success(`已选择 ${failedFiles.length} 个失败的文件`)
+      message.success(`선택됨: ${failedFiles.length} 个失败的파일`)
     } else {
-      message.info('当前没有失败的文件')
+      message.info('当前没有失败的파일')
     }
   }
 

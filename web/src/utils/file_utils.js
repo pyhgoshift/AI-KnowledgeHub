@@ -11,10 +11,10 @@ export const formatStandardTime = (value) => {
 
 export const getStatusText = (status) => {
   const statusMap = {
-    done: '处理完成',
-    failed: '处理失败',
-    processing: '处理中',
-    waiting: '等待处理'
+    done: '처리 완료',
+    failed: '처리하지 못했습니다',
+    processing: '처리 중',
+    waiting: '처리 대기'
   }
   return statusMap[status] || status
 }
@@ -28,7 +28,7 @@ export const formatFileSize = (bytes) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-export const getDisplayFileName = (pathOrName, fallback = '文件') => {
+export const getDisplayFileName = (pathOrName, fallback = '파일') => {
   const value = String(pathOrName || '').trim()
   if (!value) return fallback
   return value.split('/').pop() || value || fallback
@@ -60,12 +60,12 @@ export const inferImageMimeTypeFromBase64 = (base64Content) => {
 export const normalizeAttachmentPreview = (attachment) => {
   const name = getDisplayFileName(
     attachment?.file_name || attachment?.name || attachment?.path,
-    '附件'
+    '첨부파일'
   )
   const fileId = attachment?.file_id || attachment?.path || name
   const fileType = String(attachment?.file_type || '')
   const sizeLabel = formatFileSize(attachment?.file_size)
-  const typeLabel = getFileExtensionLabel(name) || getMimeSubtypeLabel(fileType) || '文件'
+  const typeLabel = getFileExtensionLabel(name) || getMimeSubtypeLabel(fileType) || '파일'
 
   return {
     raw: attachment,

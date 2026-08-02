@@ -163,8 +163,8 @@
                     <div class="selection-summary">
                       <div class="selection-summary-info">
                         <span class="selection-count"
-                          >已选择 {{ getSelectedCount(key) }} 项 | 共
-                          {{ getConfigOptions(value).length }} 项</span
+                          >{{ getSelectedCount(key) }}개 선택 | 전체
+                          {{ getConfigOptions(value).length }}개</span
                         >
 
                         <a-button
@@ -174,7 +174,7 @@
                           class="clear-btn"
                           @click="clearSelection(key)"
                         >
-                          清空
+                          비우기
                         </a-button>
                       </div>
 

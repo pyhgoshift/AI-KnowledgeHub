@@ -1,9 +1,9 @@
 <template>
   <a-modal
     :open="open"
-    title="添加附件"
-    ok-text="添加附件"
-    cancel-text="取消"
+    title="첨부파일 추가"
+    ok-text="첨부파일 추가"
+    cancel-text="취소"
     :confirm-loading="confirming"
     :ok-button-props="{ disabled: confirmDisabled }"
     @ok="handleConfirm"
@@ -16,8 +16,8 @@
       :disabled="confirming"
       class="attachment-dropzone"
     >
-      <p class="dropzone-title">点击或拖拽文件到此处上传</p>
-      <p class="dropzone-desc">支持任意文件格式 ≤ 5 MB；PDF 和图片可选解析为 Markdown。</p>
+      <p class="dropzone-title">파일을 클릭하거나 이곳으로 끌어 놓으세요</p>
+      <p class="dropzone-desc">모든 파일 형식을 5MB 이하로 지원합니다. PDF와 이미지는 선택적으로 Markdown으로 분석할 수 있습니다.</p>
     </a-upload-dragger>
 
     <div v-if="fileItems.length" class="attachment-list">
@@ -93,7 +93,7 @@
                       class="unavailable-toggle"
                       @click="toggleUnavailableParseMethods(item.localId)"
                     >
-                      <span>不可用选项（{{ getUnavailableParseMethods(item).length }}）</span>
+                      <span>사용할 수 없는 옵션({{ getUnavailableParseMethods(item).length }})</span>
                       <ChevronUp v-if="item.unavailableMethodsExpanded" :size="14" />
                       <ChevronDown v-else :size="14" />
                     </button>
@@ -131,7 +131,7 @@
                     :disabled="isParseDisabled(item)"
                     @click="handleStartParse(item.localId)"
                   >
-                    开始解析
+                    분석 시작
                   </a-button>
                 </div>
               </template>
@@ -142,7 +142,7 @@
                 :loading="item.status === 'parsing'"
                 :disabled="confirming"
               >
-                可解析
+                분석 가능
               </a-button>
             </a-popover>
           </div>
@@ -179,7 +179,7 @@ let localIdSeed = 0
 let consumedInitialFilesKey = 0
 
 const methodLabels = {
-  disable: 'PDF 文本提取',
+  disable: 'PDF 텍스트 추출',
   rapid_ocr: 'RapidOCR',
   mineru_ocr: 'MinerU OCR',
   mineru_official: 'MinerU Official',
@@ -206,15 +206,15 @@ const ocrHealthStatus = ref(defaultOcrHealthStatus())
 const ocrHealthChecking = ref(false)
 
 const methodStatusLabels = {
-  local: '无需 OCR',
-  healthy: '可用',
-  configured: '已配置',
-  unavailable: '不可用',
-  unhealthy: '异常',
-  timeout: '超时',
-  error: '异常',
-  checking: '检查中',
-  unknown: '状态未知'
+  local: 'OCR 불필요',
+  healthy: '사용 가능',
+  configured: '설정됨',
+  unavailable: '사용 불가',
+  unhealthy: '오류',
+  timeout: '시간 초과',
+  error: '오류',
+  checking: '확인 중',
+  unknown: '상태를 알 수 없음'
 }
 
 const busy = computed(() =>
@@ -235,7 +235,7 @@ watch(
   }
 )
 
-const getErrorMessage = (error, fallback = '操作失败') => {
+const getErrorMessage = (error, fallback = '작업에 실패했습니다') => {
   return error?.response?.data?.detail || error?.message || fallback
 }
 
@@ -328,7 +328,7 @@ const uploadFile = async (file) => {
   } catch (error) {
     updateItem(localId, {
       status: 'error',
-      error: getErrorMessage(error, '上传失败')
+      error: getErrorMessage(error, '업로드하지 못했습니다')
     })
   }
 }
@@ -365,26 +365,26 @@ const getMethodStatus = (method) => {
   return current?.status || 'unknown'
 }
 
-const getMethodStatusLabel = (method) => methodStatusLabels[getMethodStatus(method)] || '状态未知'
+const getMethodStatusLabel = (method) => methodStatusLabels[getMethodStatus(method)] || '상태를 알 수 없음'
 
 const getMethodDescription = (method) => {
-  if (method === 'disable') return '使用文件内置文本层，不调用 OCR 服务'
+  if (method === 'disable') return '파일에 포함된 텍스트 레이어를 사용하며 OCR 서비스를 호출하지 않습니다'
 
   const messageText = ocrHealthStatus.value?.[method]?.message
   if (messageText) return messageText
 
   const status = getMethodStatus(method)
   const fallbackMap = {
-    healthy: '服务正常',
-    configured: 'Token 已配置，将在解析时验证',
-    unavailable: '服务不可用',
-    unhealthy: '服务异常',
-    timeout: '服务检查超时',
-    error: '服务异常',
-    checking: '正在检查服务状态',
-    unknown: '服务状态未知'
+    healthy: '서비스 정상',
+    configured: '토큰이 설정되었습니다. 분석할 때 확인합니다',
+    unavailable: '서비스를 사용할 수 없음',
+    unhealthy: '서비스 오류',
+    timeout: '서비스 확인 시간 초과',
+    error: '서비스 오류',
+    checking: '서비스 상태 확인 중',
+    unknown: '서비스 상태를 알 수 없음'
   }
-  return fallbackMap[status] || '服务状态未知'
+  return fallbackMap[status] || '서비스 상태를 알 수 없음'
 }
 
 const isUnavailableParseMethod = (method) =>
@@ -449,12 +449,12 @@ const handleParse = async (item) => {
       truncated: response.truncated,
       parseMethod: response.parse_method
     })
-    message.success('附件解析完成')
+    message.success('첨부파일 분석을 완료했습니다')
   } catch (error) {
     updateItem(item.localId, {
       ...clearParsedState,
       status: 'uploaded',
-      parseError: getErrorMessage(error, '解析失败')
+      parseError: getErrorMessage(error, '분석하지 못했습니다')
     })
   }
 }
@@ -491,16 +491,16 @@ const handleConfirm = async () => {
   try {
     const threadId = props.threadId || (props.ensureThread ? await props.ensureThread() : '')
     if (!threadId) {
-      message.error('创建对话失败，无法添加附件')
+      message.error('대화를 만들지 못해 첨부파일을 추가할 수 없습니다')
       return
     }
 
     const response = await threadApi.confirmTmpThreadAttachments(threadId, attachments)
-    message.success('附件已添加')
+    message.success('첨부파일을 추가했습니다')
     emit('added', response)
     emit('update:open', false)
   } catch (error) {
-    message.error(getErrorMessage(error, '添加附件失败'))
+    message.error(getErrorMessage(error, '첨부파일을 추가하지 못했습니다'))
   } finally {
     confirming.value = false
   }
@@ -523,17 +523,17 @@ const getStatusColor = (status) => {
 
 const getStatusLabel = (status) => {
   const labelMap = {
-    uploading: '上传中',
-    uploaded: '已上传',
-    parsing: '解析中',
-    parsed: '已解析',
-    error: '失败'
+    uploading: '업로드 중',
+    uploaded: '업로드됨',
+    parsing: '분석 중',
+    parsed: '분석됨',
+    error: '실패'
   }
   return labelMap[status] || status
 }
 
 const formatFileSize = (size) => {
-  if (!Number.isFinite(size)) return '未知大小'
+  if (!Number.isFinite(size)) return '크기를 알 수 없음'
   if (size < 1024) return `${size} B`
   if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
   return `${(size / 1024 / 1024).toFixed(1)} MB`

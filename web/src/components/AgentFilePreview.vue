@@ -20,8 +20,8 @@
           v-if="canEdit && editMode !== 'edit'"
           class="modal-action-btn"
           @click="editMode = 'edit'"
-          title="编辑"
-          aria-label="编辑"
+          title="편집"
+          aria-label="편집"
         >
           <FilePen :size="18" />
         </button>
@@ -31,7 +31,7 @@
             class="preview-mode-btn"
             :class="{ active: htmlPreviewMode === 'render' }"
             @click="htmlPreviewMode = 'render'"
-            title="预览"
+            title="미리보기"
           >
             <Globe :size="16" />
           </button>
@@ -39,7 +39,7 @@
             class="preview-mode-btn"
             :class="{ active: htmlPreviewMode === 'source' }"
             @click="htmlPreviewMode = 'source'"
-            title="源码"
+            title="소스"
           >
             <Code2 :size="16" />
           </button>
@@ -48,7 +48,7 @@
           v-if="showDownload && file"
           class="modal-action-btn"
           @click="$emit('download', file)"
-          title="下载"
+          title="다운로드"
         >
           <Download :size="18" />
         </button>
@@ -56,7 +56,7 @@
           v-if="showFullscreen && file"
           class="modal-action-btn"
           @click="openFullscreenPreview"
-          title="全屏预览"
+          title="전체 화면 미리보기"
         >
           <Maximize :size="18" />
         </button>
@@ -80,7 +80,7 @@
         class="preview-mode-btn"
         :class="{ active: htmlPreviewMode === 'render' }"
         @click="htmlPreviewMode = 'render'"
-        title="预览"
+        title="미리보기"
       >
         <Globe :size="16" />
       </button>
@@ -88,20 +88,20 @@
         class="preview-mode-btn"
         :class="{ active: htmlPreviewMode === 'source' }"
         @click="htmlPreviewMode = 'source'"
-        title="源码"
+        title="소스"
       >
         <Code2 :size="16" />
       </button>
     </div>
 
     <div v-if="canEdit && editMode === 'edit'" class="edit-floating-actions">
-      <span v-if="draftChanged" class="edit-status-badge">未保存</span>
+      <span v-if="draftChanged" class="edit-status-badge">저장되지 않음</span>
       <button
         v-if="draftChanged"
         class="edit-floating-btn edit-floating-btn-primary"
         :disabled="saving"
         @click="requestSave"
-        :title="saving ? '保存中' : '保存'"
+        :title="saving ? '저장 중' : '저장'"
         :aria-label="saving ? '保存中' : '保存'"
       >
         <Save :size="14" />

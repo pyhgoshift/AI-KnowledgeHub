@@ -6,7 +6,7 @@
         class="item btn"
         :class="{ disabled: feedbackState.hasSubmitted }"
         @click="likeThisResponse(msg)"
-        :title="feedbackState.hasSubmitted && feedbackState.rating === 'like' ? '已点赞' : '点赞'"
+        :title="feedbackState.hasSubmitted && feedbackState.rating === 'like' ? '좋아요 표시됨' : '좋아요'"
       >
         <ThumbsUp size="12" :fill="feedbackState.rating === 'like' ? 'currentColor' : 'none'" />
       </span>
@@ -15,7 +15,7 @@
         :class="{ disabled: feedbackState.hasSubmitted }"
         @click="dislikeThisResponse(msg)"
         :title="
-          feedbackState.hasSubmitted && feedbackState.rating === 'dislike' ? '已点踩' : '点踩'
+          feedbackState.hasSubmitted && feedbackState.rating === 'dislike' ? '싫어요 표시됨' : '싫어요'
         "
       >
         <ThumbsDown
@@ -28,7 +28,7 @@
         <Bot size="12" /> {{ getModelName(msg) }}
       </span>
       <!-- 复制 -->
-      <span v-if="showKey('copy')" class="item btn" @click="copyText(msg.content)" title="复制">
+      <span v-if="showKey('copy')" class="item btn" @click="copyText(msg.content)" title="복사">
         <Check v-if="isCopied" size="12" />
         <Copy v-else size="12" />
       </span>
@@ -38,7 +38,7 @@
         v-if="showKey('regenerate')"
         class="item btn"
         @click="regenerateMessage()"
-        title="重新生成"
+        title="다시 생성"
         ><RotateCcw size="12" />
       </span>
 
@@ -49,11 +49,11 @@
         class="item btn sources-btn"
         :class="{ expanded: isSourcesExpanded }"
         @click="toggleSources"
-        :title="isSourcesExpanded ? '收起详情' : '查看来源详情'"
+        :title="isSourcesExpanded ? '상세 접기' : '출처 상세 보기'"
       >
         <BookOpen size="12" />
         <span class="sources-label">
-          来源
+          출처
           <template v-if="sourceCount > 0">
             {{ sourceCount }}
           </template>
@@ -72,17 +72,17 @@
   <!-- Dislike reason modal -->
   <a-modal
     v-model:open="dislikeModalVisible"
-    title="请告诉我们不满意的原因"
+    title="만족하지 못한 이유를 알려주세요"
     @ok="submitDislikeFeedback"
     @cancel="cancelDislike"
     :confirmLoading="submittingFeedback"
-    okText="提交"
-    cancelText="取消"
+    okText="제출"
+    cancelText="취소"
   >
     <a-textarea
       v-model:value="dislikeReason"
       :rows="4"
-      placeholder="您的反馈将帮助我们改进服务（可选）"
+      placeholder="피드백은 서비스를 개선하는 데 도움이 됩니다(선택 사항)"
       :maxlength="500"
       show-count
     />
@@ -197,18 +197,18 @@ const copyText = async (text) => {
   if (isSupported) {
     try {
       await copy(text)
-      antMessage.success('文本已复制到剪贴板')
+      antMessage.success('텍스트를 클립보드에 복사했습니다')
       isCopied.value = true
       setTimeout(() => {
         isCopied.value = false
       }, 2000)
     } catch (error) {
       console.error('复制失败:', error)
-      antMessage.error('复制失败，请手动复制')
+      antMessage.error('복사하지 못했습니다. 직접 복사하세요')
     }
   } else {
     console.warn('浏览器不支持自动复制')
-    antMessage.warning('浏览器不支持自动复制，请手动复制')
+    antMessage.warning('브라우저가 자동 복사를 지원하지 않습니다. 직접 복사하세요')
   }
 }
 
@@ -239,12 +239,12 @@ const getModelName = (msg) => {
 // Handle like action
 const likeThisResponse = async (msg) => {
   if (feedbackState.hasSubmitted) {
-    antMessage.info('您已经提交过反馈了')
+    antMessage.info('이미 피드백을 제출했습니다')
     return
   }
 
   if (!msg?.id) {
-    antMessage.error('无法提交反馈：消息ID不存在')
+    antMessage.error('피드백을 제출할 수 없습니다. 메시지 ID가 없습니다')
     console.error('Message object:', msg)
     return
   }
@@ -256,14 +256,14 @@ const likeThisResponse = async (msg) => {
     feedbackState.hasSubmitted = true
     feedbackState.rating = 'like'
 
-    antMessage.success('感谢您的反馈！')
+    antMessage.success('피드백 감사합니다!')
   } catch (error) {
     console.error('Failed to submit like feedback:', error)
     if (error.message?.includes('already submitted')) {
-      antMessage.info('您已经提交过反馈了')
+      antMessage.info('이미 피드백을 제출했습니다')
       feedbackState.hasSubmitted = true
     } else {
-      antMessage.error('提交反馈失败，请稍后重试')
+      antMessage.error('피드백을 제출하지 못했습니다. 잠시 후 다시 시도하세요')
     }
   } finally {
     submittingFeedback.value = false
@@ -273,12 +273,12 @@ const likeThisResponse = async (msg) => {
 // Handle dislike action
 const dislikeThisResponse = async (msg) => {
   if (feedbackState.hasSubmitted) {
-    antMessage.info('您已经提交过反馈了')
+    antMessage.info('이미 피드백을 제출했습니다')
     return
   }
 
   if (!msg?.id) {
-    antMessage.error('无法提交反馈：消息ID不存在')
+    antMessage.error('피드백을 제출할 수 없습니다. 메시지 ID가 없습니다')
     console.error('Message object:', msg)
     return
   }
@@ -300,15 +300,15 @@ const submitDislikeFeedback = async () => {
     dislikeModalVisible.value = false
     dislikeReason.value = ''
 
-    antMessage.success('感谢您的反馈！')
+    antMessage.success('피드백 감사합니다!')
   } catch (error) {
     console.error('Failed to submit dislike feedback:', error)
     if (error.message?.includes('already submitted')) {
-      antMessage.info('您已经提交过反馈了')
+      antMessage.info('이미 피드백을 제출했습니다')
       feedbackState.hasSubmitted = true
       dislikeModalVisible.value = false
     } else {
-      antMessage.error('提交反馈失败，请稍后重试')
+      antMessage.error('피드백을 제출하지 못했습니다. 잠시 후 다시 시도하세요')
     }
   } finally {
     submittingFeedback.value = false

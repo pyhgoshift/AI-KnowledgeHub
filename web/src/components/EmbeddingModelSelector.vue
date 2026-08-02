@@ -52,7 +52,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '请选择嵌入模型'
+    default: '임베딩 모델을 선택하세요'
   },
   size: {
     type: String,

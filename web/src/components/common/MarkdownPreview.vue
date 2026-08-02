@@ -276,9 +276,9 @@ const enhanceCodeBlocks = () => {
     const button = document.createElement('button')
     button.type = 'button'
     button.className = 'markdown-code-copy-btn'
-    button.textContent = '复制'
-    button.setAttribute('aria-label', '复制代码')
-    button.setAttribute('title', '复制代码')
+    button.textContent = '복사'
+    button.setAttribute('aria-label', '코드 복사')
+    button.setAttribute('title', '코드 복사')
     wrapper.appendChild(button)
   })
 }
@@ -297,7 +297,7 @@ const enhanceHtmlPreviews = () => {
         : `${Date.now()}-${Math.random()}`
     }`
     iframe.className = 'html-preview-frame'
-    iframe.title = 'HTML 预览'
+    iframe.title = 'HTML 미리보기'
     iframe.setAttribute('sandbox', 'allow-scripts')
     iframe.setAttribute('loading', 'lazy')
     iframe.setAttribute('referrerpolicy', 'no-referrer')
@@ -492,7 +492,7 @@ const showCopiedFeedback = (btn) => {
   const originalText = btn.dataset.originalText || btn.textContent
   btn.dataset.originalText = originalText
   btn.classList.add('is-copied')
-  btn.textContent = '已复制'
+  btn.textContent = '복사됨'
   const existingTimer = copiedTimers.get(btn)
   if (existingTimer) window.clearTimeout(existingTimer)
 

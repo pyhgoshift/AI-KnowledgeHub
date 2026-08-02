@@ -22,10 +22,10 @@ export function useModelStatus() {
 
   const getStatusTooltip = (key) => {
     const status = statusMap[key]
-    if (!status) return '状态未知'
+    if (!status) return '상태를 알 수 없음'
     const text =
-      { available: '可用', unavailable: '不可用', error: '错误' }[status.status] || '未知'
-    return `${text}: ${status.message || '无详细信息'}`
+      { available: '사용 가능', unavailable: '사용 불가', error: '오류' }[status.status] || '알 수 없음'
+    return `${text}: ${status.message || '상세 정보 없음'}`
   }
 
   const checkV2Status = async (spec) => {
@@ -35,7 +35,7 @@ export function useModelStatus() {
         statusMap[spec] = response.data
       }
     } catch {
-      statusMap[spec] = { spec, status: 'error', message: '检查失败' }
+      statusMap[spec] = { spec, status: 'error', message: '확인 실패' }
     }
   }
 

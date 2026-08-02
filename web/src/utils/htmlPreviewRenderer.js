@@ -22,9 +22,9 @@ const escapeSrcdoc = (value) => escapeHtml(value).replaceAll('\r', '').replaceAl
 const renderHtmlPreviewLoading = () =>
   renderHtmlPreviewContainer(
     [
-      `<div class="html-preview-loading-slot" aria-live="polite" aria-label="HTML 预览加载中">`,
+      `<div class="html-preview-loading-slot" aria-live="polite" aria-label="HTML 미리보기를 불러오는 중">`,
       `<div class="html-preview-loading-canvas">`,
-      `<div class="html-preview-loading-text">HTML 预览加载中...</div>`,
+      `<div class="html-preview-loading-text">HTML 미리보기를 불러오는 중...</div>`,
       `<div class="html-preview-skeleton html-preview-skeleton-title"></div>`,
       `<div class="html-preview-skeleton-grid">`,
       `<div class="html-preview-skeleton html-preview-skeleton-card"></div>`,

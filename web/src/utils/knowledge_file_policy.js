@@ -4,24 +4,24 @@ export const FILE_ACTIONS = {
 }
 
 const STATUS_VIEW = {
-  uploaded: { label: '待解析', tone: 'status-warning', icon: 'clock' },
-  parsing: { label: '解析中', tone: 'status-info', icon: 'progress' },
-  parsed: { label: '待入库', tone: 'status-primary', icon: 'file' },
-  error_parsing: { label: '重试解析', tone: 'status-error', icon: 'error' },
-  indexing: { label: '入库中', tone: 'status-info', icon: 'progress' },
-  indexed: { label: '已入库', tone: 'status-success', icon: 'success' },
-  error_indexing: { label: '重试入库', tone: 'status-error', icon: 'error' },
-  done: { label: '已入库', tone: 'status-success', icon: 'success' },
-  failed: { label: '入库失败', tone: 'status-error', icon: 'error' },
-  processing: { label: '处理中', tone: 'status-info', icon: 'progress' },
-  waiting: { label: '等待中', tone: 'status-warning', icon: 'clock' }
+  uploaded: { label: '분석 대기', tone: 'status-warning', icon: 'clock' },
+  parsing: { label: '분석 중', tone: 'status-info', icon: 'progress' },
+  parsed: { label: '색인 대기', tone: 'status-primary', icon: 'file' },
+  error_parsing: { label: '분석 재시도', tone: 'status-error', icon: 'error' },
+  indexing: { label: '색인 중', tone: 'status-info', icon: 'progress' },
+  indexed: { label: '색인됨', tone: 'status-success', icon: 'success' },
+  error_indexing: { label: '색인 재시도', tone: 'status-error', icon: 'error' },
+  done: { label: '색인됨', tone: 'status-success', icon: 'success' },
+  failed: { label: '색인 실패', tone: 'status-error', icon: 'error' },
+  processing: { label: '처리 중', tone: 'status-info', icon: 'progress' },
+  waiting: { label: '대기 중', tone: 'status-warning', icon: 'clock' }
 }
 
 const STATUS_ACTION = {
-  uploaded: { type: FILE_ACTIONS.PARSE, label: '解析文件' },
-  error_parsing: { type: FILE_ACTIONS.PARSE, label: '重试解析' },
+  uploaded: { type: FILE_ACTIONS.PARSE, label: '解析파일' },
+  error_parsing: { type: FILE_ACTIONS.PARSE, label: '분석 재시도' },
   parsed: { type: FILE_ACTIONS.INDEX, label: '入库' },
-  error_indexing: { type: FILE_ACTIONS.INDEX, label: '重试入库' }
+  error_indexing: { type: FILE_ACTIONS.INDEX, label: '색인 재시도' }
 }
 
 const PARSED_PREVIEW_STATUSES = new Set(['done', 'parsed', 'indexed', 'error_indexing'])
@@ -48,13 +48,13 @@ const STATUS_SORT_ORDER = {
 }
 
 export const FILE_STATUS_FILTER_OPTIONS = [
-  { label: '待解析', value: 'uploaded' },
-  { label: '解析中', value: 'parsing' },
-  { label: '待入库', value: 'parsed' },
-  { label: '重试解析', value: 'error_parsing' },
-  { label: '入库中', value: 'indexing' },
-  { label: '已入库', value: 'indexed' },
-  { label: '重试入库', value: 'error_indexing' }
+  { label: '분석 대기', value: 'uploaded' },
+  { label: '분석 중', value: 'parsing' },
+  { label: '색인 대기', value: 'parsed' },
+  { label: '분석 재시도', value: 'error_parsing' },
+  { label: '색인 중', value: 'indexing' },
+  { label: '색인됨', value: 'indexed' },
+  { label: '색인 재시도', value: 'error_indexing' }
 ]
 
 export const getFileStatusView = (status) =>

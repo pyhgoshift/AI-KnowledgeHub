@@ -5,18 +5,18 @@
       <div class="header-left">
         <a-button type="primary" class="lucide-icon-btn" @click="showUploadModal">
           <template #icon><Upload :size="16" /></template>
-          上传基准
+          기준 업로드
         </a-button>
         <a-button class="lucide-icon-btn" @click="showGenerateModal">
           <template #icon><Bot :size="16" /></template>
-          自动生成
+          자동 생성
         </a-button>
-        <span class="total-count">{{ benchmarks.length }} 个基准</span>
+        <span class="total-count">{{ benchmarks.length }}개 기준</span>
       </div>
       <div class="header-right">
         <a-button class="lucide-icon-btn" @click="loadBenchmarks">
           <template #icon><RefreshCw :size="16" /></template>
-          刷新
+          새로 고침
         </a-button>
       </div>
     </div>
@@ -25,19 +25,19 @@
     <div class="benchmarks-list">
       <ResourceEmptyState
         v-if="!loading && benchmarks.length === 0"
-        title="暂无评估基准"
-        description="上传数据集，或从当前知识库自动生成评估问题。"
+        title="평가 기준이 없습니다"
+        description="데이터 세트를 업로드하거나 현재 지식베이스에서 평가 질문을 자동 생성하세요."
         :icon="ClipboardList"
         size="compact"
       >
         <template #actions>
           <a-button type="primary" class="lucide-icon-btn" @click="showUploadModal">
             <template #icon><Upload :size="16" /></template>
-            上传基准
+            기준 업로드
           </a-button>
           <a-button class="lucide-icon-btn" @click="showGenerateModal">
             <template #icon><Bot :size="16" /></template>
-            自动生成
+            자동 생성
           </a-button>
         </template>
       </ResourceEmptyState>
@@ -63,7 +63,7 @@
                   <button
                     type="button"
                     class="benchmark-more-action"
-                    aria-label="更多操作"
+                  aria-label="추가 작업"
                     @click.stop
                   >
                     <MoreVertical :size="16" />
@@ -80,7 +80,7 @@
                       >
                         <span class="benchmark-menu-item">
                           <Download :size="14" />
-                          <span>下载</span>
+                          <span>다운로드</span>
                         </span>
                       </a-menu-item>
                       <a-menu-item
@@ -91,7 +91,7 @@
                       >
                         <span class="benchmark-menu-item">
                           <Trash2 :size="14" />
-                          <span>删除</span>
+                          <span>삭제</span>
                         </span>
                       </a-menu-item>
                     </a-menu>
@@ -100,7 +100,7 @@
               </div>
             </div>
 
-            <p class="benchmark-desc">{{ benchmark.description || '暂无描述' }}</p>
+            <p class="benchmark-desc">{{ benchmark.description || '설명 없음' }}</p>
 
             <!-- 标签区域 -->
             <div class="benchmark-meta">
@@ -109,19 +109,19 @@
                   v-if="benchmark.has_gold_chunks && !benchmark.has_gold_answers"
                   class="card-tag benchmark-tag tag-blue"
                 >
-                  检索评估
+                  검색 평가
                 </span>
                 <span
                   v-if="benchmark.has_gold_answers && !benchmark.has_gold_chunks"
                   class="card-tag benchmark-tag tag-gold"
                 >
-                  问答评估
+                  질의응답 평가
                 </span>
                 <span
                   v-if="!benchmark.has_gold_chunks && !benchmark.has_gold_answers"
                   class="card-tag benchmark-tag"
                 >
-                  仅查询
+                  검색만
                 </span>
 
                 <span v-if="benchmark.has_gold_chunks" class="card-tag benchmark-tag tag-green">
@@ -158,7 +158,7 @@
                 {{ getDatasetBuildMessage(benchmark) }}
               </span>
             </div>
-            <span v-else class="benchmark-count">{{ benchmark.item_count }} 个问题</span>
+            <span v-else class="benchmark-count">{{ benchmark.item_count }}개 질문</span>
           </div>
         </div>
       </div>
@@ -182,12 +182,12 @@
       <div v-if="previewModalVisible" class="evaluation-detail-overlay">
         <div class="evaluation-detail-panel">
           <div class="evaluation-detail-titlebar">
-            <div class="evaluation-detail-title">评估基准详情</div>
+            <div class="evaluation-detail-title">평가 기준 상세</div>
             <a-button
               type="text"
               size="small"
               class="lucide-icon-btn"
-              title="关闭"
+              title="닫기"
               @click="previewModalVisible = false"
             >
               <X :size="16" />
@@ -199,19 +199,19 @@
               <h3>{{ previewData.name }}</h3>
               <div class="preview-meta">
                 <span class="meta-item">
-                  <span class="meta-label">问题数:</span>
+                  <span class="meta-label">질문 수:</span>
                   {{ previewData.item_count }}
                 </span>
                 <span class="meta-item">
                   <span class="meta-label">Gold Chunks:</span>
                   <span :class="previewData.has_gold_chunks ? 'status-yes' : 'status-no'">
-                    {{ previewData.has_gold_chunks ? '有' : '无' }}
+                    {{ previewData.has_gold_chunks ? '있음' : '없음' }}
                   </span>
                 </span>
                 <span class="meta-item">
                   <span class="meta-label">Gold Answer:</span>
                   <span :class="previewData.has_gold_answers ? 'status-yes' : 'status-no'">
-                    {{ previewData.has_gold_answers ? '有' : '无' }}
+                    {{ previewData.has_gold_answers ? '있음' : '없음' }}
                   </span>
                 </span>
               </div>
@@ -220,13 +220,13 @@
             <div class="preview-questions" v-if="previewQuestions && previewQuestions.length > 0">
               <div class="table-section-header">
                 <div class="table-title-group">
-                  <h4>问题列表</h4>
-                  <span>共 {{ previewPagination.total }} 条</span>
+                  <h4>질문 목록</h4>
+                  <span>총 {{ previewPagination.total }}개</span>
                 </div>
                 <a-switch
                   v-model:checked="previewAutoWrap"
-                  checked-children="换行"
-                  un-checked-children="不换行"
+              checked-children="줄바꿈"
+              un-checked-children="줄바꿈 안 함"
                 />
               </div>
               <a-table
@@ -391,7 +391,7 @@ const questionColumns = [
     align: 'center'
   },
   {
-    title: '问题',
+    title: '질문',
     dataIndex: 'query',
     key: 'query',
     width: 280,
@@ -434,7 +434,7 @@ const paginationConfig = computed(() => ({
   current: previewPagination.value.current,
   pageSize: previewPagination.value.pageSize,
   total: previewPagination.value.total,
-  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+  showTotal: (total, range) => `${range[0]}-${range[1]} / 총 ${total}개`,
   showSizeChanger: true,
   pageSizeOptions: ['10', '20', '50', '100'],
   showQuickJumper: true,
@@ -468,15 +468,15 @@ const getDatasetProgress = (benchmark) => {
 
 const getDatasetSourceText = (benchmark) => {
   const source = getBuildMetadata(benchmark).source
-  return source === 'generated' ? '自动生成' : '上传'
+  return source === 'generated' ? '자동 생성' : '업로드'
 }
 
 const getDatasetStatusText = (benchmark) => {
   const statusTextMap = {
-    pending: '等待生成',
-    running: '生成中',
-    completed: '已完成',
-    failed: '生成失败'
+    pending: '생성 대기',
+    running: '생성 중',
+    completed: '완료',
+    failed: '생성 실패'
   }
   return statusTextMap[getDatasetBuildStatus(benchmark)] || getDatasetBuildStatus(benchmark)
 }
@@ -527,11 +527,11 @@ const loadBenchmarks = async (silent = false) => {
       benchmarks.value = response.data
     } else {
       console.error('响应格式不符合预期:', response)
-      message.error('基准数据格式错误')
+      message.error('평가 기준 데이터 형식이 올바르지 않습니다')
     }
   } catch (error) {
     console.error('加载评估基准失败:', error)
-    if (!silent) message.error('加载评估基准失败')
+    if (!silent) message.error('평가 기준을 불러오지 못했습니다')
   } finally {
     if (!silent) loading.value = false
     syncBuildRefresh()
@@ -551,7 +551,7 @@ const showGenerateModal = () => {
 // 上传成功回调
 const onUploadSuccess = () => {
   loadBenchmarks()
-  message.success('基准上传成功')
+  message.success('평가 기준을 업로드했습니다')
   taskerStore.loadTasks() // 刷新任务列表
   // 通知父组件刷新基准列表
   emit('refresh')
@@ -598,7 +598,7 @@ const loadPreviewQuestions = async () => {
     }
   } catch (error) {
     console.error('加载预览问题失败:', error)
-    message.error('加载预览问题失败')
+    message.error('미리보기 질문을 불러오지 못했습니다')
   } finally {
     previewPagination.value.loading = false
   }
@@ -607,7 +607,7 @@ const loadPreviewQuestions = async () => {
 // 预览基准
 const previewDataset = async (benchmark) => {
   if (!isDatasetCompleted(benchmark)) {
-    message.warning('评估基准生成完成后才能预览')
+    message.warning('평가 기준 생성이 완료된 후에 미리 볼 수 있습니다')
     return
   }
 
@@ -639,7 +639,7 @@ const previewDataset = async (benchmark) => {
     }
   } catch (error) {
     console.error('获取基准详情失败:', error)
-    message.error('获取基准详情失败')
+    message.error('평가 기준 상세 정보를 불러오지 못했습니다')
   }
 }
 
@@ -668,7 +668,7 @@ const downloadDataset = async (benchmark) => {
   const benchmarkId = benchmark?.dataset_id
   if (!benchmarkId) return
   if (!isDatasetCompleted(benchmark)) {
-    message.warning('评估基准生成完成后才能下载')
+    message.warning('평가 기준 생성이 완료된 후에 다운로드할 수 있습니다')
     return
   }
   if (downloadingDatasetMap[benchmarkId]) return
@@ -692,10 +692,10 @@ const downloadDataset = async (benchmark) => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
 
-    message.success('下载成功')
+    message.success('다운로드했습니다')
   } catch (error) {
     console.error('下载基准失败:', error)
-    message.error(`下载失败: ${error.message || '未知错误'}`)
+    message.error(`다운로드하지 못했습니다: ${error.message || '알 수 없는 오류'}`)
   } finally {
     delete downloadingDatasetMap[benchmarkId]
   }
@@ -704,25 +704,25 @@ const downloadDataset = async (benchmark) => {
 // 删除基准
 const deleteDataset = (benchmark) => {
   if (shouldShowBuildProgress(benchmark)) {
-    message.warning('评估基准生成中，暂不能删除')
+    message.warning('평가 기준을 생성하는 중에는 삭제할 수 없습니다')
     return
   }
 
   Modal.confirm({
-    title: '确认删除',
-    content: `确定要删除评估基准"${benchmark.name}"吗？此操作不可恢复。`,
-    okText: '确定',
-    cancelText: '取消',
+    title: '삭제 확인',
+    content: `평가 기준 "${benchmark.name}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`,
+    okText: '확인',
+    cancelText: '취소',
     onOk: async () => {
       try {
         const response = await evaluationApi.deleteDataset(benchmark.dataset_id)
         if (response.message === 'success') {
-          message.success('删除成功')
+          message.success('삭제했습니다')
           loadBenchmarks()
         }
       } catch (error) {
         console.error('删除基准失败:', error)
-        message.error('删除基准失败')
+        message.error('평가 기준을 삭제하지 못했습니다')
       }
     }
   })

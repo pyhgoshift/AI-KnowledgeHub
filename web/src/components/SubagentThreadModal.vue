@@ -25,7 +25,7 @@
     <div ref="modalBodyRef" class="subagent-thread-modal-body">
       <div ref="modalContentRef" class="subagent-thread-modal-content">
         <div v-if="loading && !hasRenderableMessages" class="subagent-thread-modal-state">
-          正在加载子智能体消息...
+          하위 에이전트 메시지를 불러오는 중...
         </div>
         <div v-else-if="error" class="subagent-thread-modal-state is-error">{{ error }}</div>
         <ThreadMessageList
@@ -112,7 +112,7 @@ const RUN_TERMINAL_STATUSES = new Set(['completed', 'failed', 'cancelled', 'inte
 const normalizeRunStatus = (status) => String(status || '').trim()
 const isTerminalRunStatus = (status) => RUN_TERMINAL_STATUSES.has(normalizeRunStatus(status))
 
-const modalTitleName = computed(() => props.subagentName || '子智能体')
+const modalTitleName = computed(() => props.subagentName || '하위 에이전트')
 const effectiveRunStatus = computed(() =>
   normalizeRunStatus(historyRunStatus.value || props.runStatus)
 )
@@ -308,7 +308,7 @@ const loadHistory = async (threadId) => {
       scheduleScrollToBottom(true, true)
     }
   } catch (e) {
-    error.value = '加载子智能体消息失败'
+    error.value = '하위 에이전트 메시지를 불러오지 못했습니다'
     console.error('Failed to load subagent thread messages:', e)
   } finally {
     loading.value = false

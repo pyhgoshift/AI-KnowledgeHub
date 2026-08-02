@@ -3,19 +3,19 @@
     <div class="callback-container">
       <div v-if="loading" class="loading-section">
         <a-spin size="large" />
-        <p class="loading-text">正在处理登录...</p>
+        <p class="loading-text">로그인을 처리하는 중...</p>
       </div>
 
       <div v-else-if="error" class="error-section">
         <a-result status="error" :title="errorTitle" :sub-title="errorMessage">
           <template #extra>
-            <a-button type="primary" @click="goToLogin"> 返回登录页 </a-button>
+            <a-button type="primary" @click="goToLogin"> 로그인 화면으로 돌아가기 </a-button>
           </template>
         </a-result>
       </div>
 
       <div v-else class="success-section">
-        <a-result status="success" title="登录成功" sub-title="正在跳转...">
+        <a-result status="success" title="로그인 성공" sub-title="이동하는 중...">
           <template #icon>
             <a-spin />
           </template>
@@ -42,8 +42,8 @@ const agentStore = useAgentStore()
 // 状态
 const loading = ref(true)
 const error = ref(false)
-const errorTitle = ref('登录失败')
-const errorMessage = ref('处理登录请求时发生错误')
+const errorTitle = ref('로그인 실패')
+const errorMessage = ref('로그인 요청을 처리하는 중 오류가 발생했습니다')
 
 // 返回登录页
 const goToLogin = () => {
@@ -59,8 +59,8 @@ const handleCallback = async () => {
     if (!code || typeof code !== 'string') {
       loading.value = false
       error.value = true
-      errorTitle.value = '参数错误'
-      errorMessage.value = '缺少有效的登录 code，请重新登录'
+      errorTitle.value = '매개변수 오류'
+      errorMessage.value = '유효한 로그인 코드가 없습니다. 다시 로그인하세요'
       return
     }
 
@@ -83,7 +83,7 @@ const handleCallback = async () => {
     localStorage.setItem('user_token', tokenData.access_token)
 
     // 显示成功消息
-    message.success('登录成功')
+    message.success('로그인했습니다')
 
     // 获取重定向路径并清理 OIDC 相关标记
     const redirectPath = sessionStorage.getItem('oidc_redirect') || '/'
@@ -111,8 +111,8 @@ const handleCallback = async () => {
     console.error('OIDC 回调处理失败:', err)
     loading.value = false
     error.value = true
-    errorTitle.value = '登录失败'
-    errorMessage.value = err?.message || '处理登录请求时发生错误，请重试'
+    errorTitle.value = '로그인 실패'
+    errorMessage.value = err?.message || '로그인 요청을 처리하는 중 오류가 발생했습니다. 다시 시도하세요'
   }
 }
 
