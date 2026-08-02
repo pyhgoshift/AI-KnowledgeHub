@@ -166,6 +166,9 @@ def user_can_manage_agent(user: User, agent: Agent) -> bool:
     return user.role in ADMIN_ROLES or agent.created_by == str(user.uid)
 
 
+KOREAN_OUTPUT_REQUIREMENT = "\n\n사용자에게 제공하는 모든 최종 답변과 요약은 자연스러운 한국어로 작성하세요."
+
+
 def _slugify(value: str | None) -> str:
     base = re.sub(r"[^a-zA-Z0-9_-]+", "-", (value or "").strip().lower()).strip("-")
     return base[:56] or f"agent-{uuid.uuid4().hex[:12]}"
@@ -233,6 +236,12 @@ class AgentRepository:
             if agent.description != WEB_SEARCH_AGENT_DESCRIPTION:
                 agent.description = WEB_SEARCH_AGENT_DESCRIPTION
                 needs_update = True
+            context = dict(agent.config_json or {}).get("context") or {}
+            existing_prompt = str(context.get("system_prompt") or "")
+            if KOREAN_OUTPUT_REQUIREMENT.strip() not in existing_prompt:
+                context["system_prompt"] = existing_prompt + KOREAN_OUTPUT_REQUIREMENT
+                agent.config_json = {**dict(agent.config_json or {}), "context": context}
+                needs_update = True
             if needs_update:
                 agent.updated_by = created_by
                 agent.updated_at = utc_now_naive()
@@ -247,7 +256,7 @@ class AgentRepository:
             description=WEB_SEARCH_AGENT_DESCRIPTION,
             icon=None,
             pics=[],
-            config_json={"context": {"system_prompt": WEB_SEARCH_SYSTEM_PROMPT}},
+            config_json={"context": {"system_prompt": WEB_SEARCH_SYSTEM_PROMPT + KOREAN_OUTPUT_REQUIREMENT}},
             share_config=DEFAULT_SHARE_CONFIG.copy(),
             is_default=False,
             is_subagent=True,
@@ -293,6 +302,12 @@ class AgentRepository:
             if agent.description != description:
                 agent.description = description
                 needs_update = True
+            context = dict(agent.config_json or {}).get("context") or {}
+            existing_prompt = str(context.get("system_prompt") or "")
+            if existing_prompt and KOREAN_OUTPUT_REQUIREMENT.strip() not in existing_prompt:
+                context["system_prompt"] = existing_prompt + KOREAN_OUTPUT_REQUIREMENT
+                agent.config_json = {**dict(agent.config_json or {}), "context": context}
+                needs_update = True
             if needs_update:
                 agent.updated_by = created_by
                 agent.updated_at = utc_now_naive()
@@ -328,7 +343,7 @@ class AgentRepository:
             backend_id=SUB_AGENT_BACKEND_ID,
             name=RESEARCH_EXPLORER_AGENT_NAME,
             description=RESEARCH_EXPLORER_AGENT_DESCRIPTION,
-            config_context={"system_prompt": RESEARCH_EXPLORER_SYSTEM_PROMPT},
+            config_context={"system_prompt": RESEARCH_EXPLORER_SYSTEM_PROMPT + KOREAN_OUTPUT_REQUIREMENT},
             is_subagent=True,
             created_by=created_by,
         )
@@ -337,7 +352,7 @@ class AgentRepository:
             backend_id=SUB_AGENT_BACKEND_ID,
             name=FACT_VERIFIER_AGENT_NAME,
             description=FACT_VERIFIER_AGENT_DESCRIPTION,
-            config_context={"system_prompt": FACT_VERIFIER_SYSTEM_PROMPT},
+            config_context={"system_prompt": FACT_VERIFIER_SYSTEM_PROMPT + KOREAN_OUTPUT_REQUIREMENT},
             is_subagent=True,
             created_by=created_by,
         )
@@ -347,7 +362,7 @@ class AgentRepository:
             name=DEEP_RESEARCH_AGENT_NAME,
             description=DEEP_RESEARCH_AGENT_DESCRIPTION,
             config_context={
-                "system_prompt": DEEP_RESEARCH_SYSTEM_PROMPT,
+                "system_prompt": DEEP_RESEARCH_SYSTEM_PROMPT + KOREAN_OUTPUT_REQUIREMENT,
                 "subagents": [RESEARCH_EXPLORER_AGENT_SLUG, FACT_VERIFIER_AGENT_SLUG],
                 "skills": [DEEP_RESEARCH_AGENT_SLUG],
             },
