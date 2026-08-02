@@ -169,6 +169,21 @@ BUILTIN_PROVIDERS: list[dict[str, Any]] = [
         "models_endpoint": "https://opencode.ai/zen/v1/models",
     },
     {
+        "provider_id": "nvidia-nim",
+        "display_name": "NVIDIA NIM",
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "api_key_env": "NVIDIA_API_KEY",
+        "capabilities": ["chat"],
+        "models_endpoint": "https://integrate.api.nvidia.com/v1/models",
+        "enabled_models": [
+            {
+                "id": "meta/llama-3.1-8b-instruct",
+                "type": "chat",
+                "display_name": "Llama 3.1 8B Instruct",
+            },
+        ],
+    },
+    {
         "provider_id": "siliconflow-cn",
         "display_name": "SiliconFlow",
         "base_url": "https://api.siliconflow.cn/v1",
