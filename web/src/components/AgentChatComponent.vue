@@ -1856,7 +1856,7 @@ const rollbackAttachments = (threadId, previousAttachments) => {
 }
 
 const CONFIG_CHANGE_NOTICE_MESSAGE =
-  '在运行过程中切换或修改配置可能会影响最终效果，建议新建一个对话。'
+  '실행 중 설정을 바꾸면 결과에 영향을 줄 수 있습니다. 새 대화를 만드는 것을 권장합니다.'
 
 const withConfigNoticeSync = async (task) => {
   configNoticeSyncDepth.value += 1
@@ -2348,11 +2348,11 @@ const selectChat = async (chatId) => {
   const previousThreadId = chatState.currentThreadId
 
   if (!targetAgentId) {
-    handleValidationError('选择对话失败：缺少智能体信息')
+    handleValidationError('대화 선택에 실패했습니다: 에이전트 정보가 없습니다')
     return
   }
 
-  if (!AgentValidator.validateAgentIdWithError(targetAgentId, '选择对话', handleValidationError))
+  if (!AgentValidator.validateAgentIdWithError(targetAgentId, '대화 선택', handleValidationError))
     return
 
   // 中断之前线程的流式输出（如果存在）

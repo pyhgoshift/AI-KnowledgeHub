@@ -125,7 +125,7 @@ const organizationName = computed(() => {
 const mainList = computed(() => {
   const items = [
     {
-      name: '创建新对话',
+      name: '새 대화',
       path: '/agent',
       icon: MessageCirclePlus,
       activeIcon: MessageCirclePlus,
@@ -135,14 +135,14 @@ const mainList = computed(() => {
   ]
 
   items.push({
-    name: '工作区',
+    name: '작업공간',
     path: '/workspace',
     icon: FolderKanban,
     activeIcon: FolderKanban
   })
 
   items.push({
-    name: '智能体扩展',
+    name: '에이전트 확장',
     path: '/extensions',
     activePaths: ['/extensions'],
     icon: LibraryBig,
@@ -150,7 +150,7 @@ const mainList = computed(() => {
   })
 
   items.push({
-    name: '智能体管理',
+    name: '에이전트 관리',
     path: '/model-manage',
     icon: Box,
     activeIcon: Box
@@ -158,7 +158,7 @@ const mainList = computed(() => {
 
   if (userStore.isSuperAdmin) {
     items.push({
-      name: '数据总览',
+      name: '데이터 개요',
       path: '/dashboard',
       icon: BarChart3,
       activeIcon: BarChart3
@@ -285,7 +285,7 @@ provide('settingsModal', {
           v-else
           type="button"
           class="brand-link brand-expand-button"
-          aria-label="展开侧边栏"
+          aria-label="사이드바 펼치기"
           @click="setSidebarCollapsed(false)"
         >
           <img :src="infoStore.organization.avatar" class="brand-avatar brand-avatar-image" />
@@ -295,7 +295,7 @@ provide('settingsModal', {
           v-if="!sidebarCollapsed"
           type="button"
           class="sidebar-toggle"
-          aria-label="折叠侧边栏"
+          aria-label="사이드바 접기"
           @click="toggleSidebar"
         >
           <PanelLeftClose size="18" />
@@ -330,10 +330,10 @@ provide('settingsModal', {
           @click.stop="openConversationSearch"
         >
           <a-tooltip placement="right" :open="sidebarCollapsed ? undefined : false">
-            <template #title>搜索对话</template>
+            <template #title>대화 검색</template>
             <Search class="icon" size="18" />
           </a-tooltip>
-          <span class="nav-text">搜索对话</span>
+          <span class="nav-text">대화 검색</span>
         </button>
 
         <RouterLink
@@ -375,7 +375,7 @@ provide('settingsModal', {
       <div class="foo">
         <div class="github nav-item" @click.stop>
           <a-tooltip placement="right" :open="sidebarCollapsed ? undefined : false">
-            <template #title>欢迎 Star</template>
+            <template #title>Star로 응원하기</template>
             <a href="https://github.com/pyhgoshift/AI-KnowledgeHub" target="_blank" class="github-link">
               <GithubOutlined class="icon" />
               <span class="nav-text">GitHub</span>
