@@ -37,13 +37,13 @@ export const useUserStore = defineStore('user', () => {
 
         // 如果是423锁定状态码，抛出包含状态码的错误
         if (response.status === 423) {
-          const lockError = new Error(error.detail || '账户被锁定')
+          const lockError = new Error(error.detail || '계정이 잠겼습니다')
           lockError.status = 423
           lockError.headers = response.headers
           throw lockError
         }
 
-        throw new Error(error.detail || '登录失败')
+        throw new Error(error.detail || '로그인에 실패했습니다')
       }
 
       const data = await response.json()
@@ -101,7 +101,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '初始化管理员失败')
+        throw new Error(error.detail || '관리자 초기화에 실패했습니다')
       }
 
       const data = await response.json()
@@ -163,7 +163,7 @@ export const useUserStore = defineStore('user', () => {
         })
 
         if (!response.ok) {
-          throw new Error('获取用户列表失败')
+          throw new Error('사용자 목록을 불러오지 못했습니다')
         }
 
         const batch = await response.json()
@@ -196,7 +196,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '创建用户失败')
+        throw new Error(error.detail || '사용자를 만들지 못했습니다')
       }
 
       return await response.json()
@@ -219,7 +219,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '更新用户失败')
+        throw new Error(error.detail || '사용자를 업데이트하지 못했습니다')
       }
 
       return await response.json()
@@ -240,7 +240,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '删除用户失败')
+        throw new Error(error.detail || '사용자를 삭제하지 못했습니다')
       }
 
       return await response.json()
@@ -264,7 +264,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '用户名验证失败')
+        throw new Error(error.detail || '사용자 이름을 검증하지 못했습니다')
       }
 
       return await response.json()
@@ -290,7 +290,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '头像上传失败')
+        throw new Error(error.detail || '아바타를 업로드하지 못했습니다')
       }
 
       const data = await response.json()
@@ -315,7 +315,7 @@ export const useUserStore = defineStore('user', () => {
       })
 
       if (!response.ok) {
-        throw new Error('获取用户信息失败')
+        throw new Error('사용자 정보를 불러오지 못했습니다')
       }
 
       const userData = await response.json()
@@ -351,7 +351,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.detail || '更新个人资料失败')
+        throw new Error(error.detail || '프로필을 업데이트하지 못했습니다')
       }
 
       const userData = await response.json()
@@ -409,7 +409,7 @@ export const useUserStore = defineStore('user', () => {
 export const checkAdminPermission = () => {
   const userStore = useUserStore()
   if (!userStore.isAdmin) {
-    throw new Error('需要管理员权限')
+    throw new Error('관리자 권한이 필요합니다')
   }
   return true
 }

@@ -83,7 +83,7 @@ const avatarSizeStyle = computed(() => {
 })
 
 const resolvedAlt = computed(
-  () => props.alt || props.name || (props.kind === 'agent' ? '智能体头像' : '用户头像')
+  () => props.alt || props.name || (props.kind === 'agent' ? '에이전트 아바타' : '사용자 아바타')
 )
 
 const handleImageError = () => {

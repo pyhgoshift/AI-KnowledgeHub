@@ -1459,7 +1459,7 @@ const runningSubagentRunsFromStream = computed(() => {
       return {
         id: call.id,
         subagent_slug: call.subagentSlug,
-        subagent_name: option?.name || call.subagentSlug || '子智能体',
+        subagent_name: option?.name || call.subagentSlug || '하위 에이전트',
         description: call.description,
         child_thread_id: call.childThreadId || '',
         status: 'running'

@@ -10,7 +10,7 @@ export class ErrorHandler {
    * @param {string} context - 错误上下文
    * @param {Object} options - 配置选项
    */
-  static handleError(error, context = '操作', options = {}) {
+  static handleError(error, context = '작업', options = {}) {
     const {
       showMessage = true,
       logToConsole = true,
@@ -52,9 +52,9 @@ export class ErrorHandler {
    */
   static getErrorMessage(error, context) {
     if (error?.message) {
-      return `${context}失败: ${error.message}`
+      return `${context} 실패: ${error.message}`
     }
-    return `${context}失败`
+    return `${context} 실패`
   }
 
   /**
@@ -62,19 +62,19 @@ export class ErrorHandler {
    * @param {Error} error - 错误对象
    * @param {string} context - 错误上下文
    */
-  static handleNetworkError(error, context = '网络请求') {
+  static handleNetworkError(error, context = '네트워크 요청') {
     let customMessage = null
 
     if (error?.code === 'NETWORK_ERROR') {
-      customMessage = '网络连接失败，请检查网络设置'
+      customMessage = '네트워크 연결에 실패했습니다. 네트워크 설정을 확인하세요'
     } else if (error?.status === 401) {
-      customMessage = '认证失败，请重新登录'
+      customMessage = '인증에 실패했습니다. 다시 로그인하세요'
     } else if (error?.status === 403) {
-      customMessage = '权限不足，无法执行此操作'
+      customMessage = '권한이 부족해 이 작업을 수행할 수 없습니다'
     } else if (error?.status === 404) {
-      customMessage = '请求的资源不存在'
+      customMessage = '요청한 리소스가 없습니다'
     } else if (error?.status >= 500) {
-      customMessage = '服务器错误，请稍后重试'
+      customMessage = '서버 오류입니다. 잠시 후 다시 시도하세요'
     }
 
     return this.handleError(error, context, { customMessage })
@@ -87,13 +87,13 @@ export class ErrorHandler {
    */
   static handleChatError(error, operation) {
     const contextMap = {
-      send: '发送消息',
-      create: '创建对话',
-      delete: '删除对话',
-      rename: '重命名对话',
-      load: '加载对话',
-      export: '导出对话',
-      stream: '流式处理'
+      send: '메시지 전송',
+      create: '대화 만들기',
+      delete: '대화 삭제',
+      rename: '대화 이름 변경',
+      load: '대화 불러오기',
+      export: '대화 내보내기',
+      stream: '스트리밍 처리'
     }
 
     const context = contextMap[operation] || operation
@@ -105,7 +105,7 @@ export class ErrorHandler {
    * @param {string} message - 验证错误消息
    */
   static handleValidationError(message) {
-    return this.handleError(new Error(message), '输入验证', {
+    return this.handleError(new Error(message), '입력 검증', {
       severity: 'warning',
       customMessage: message
     })

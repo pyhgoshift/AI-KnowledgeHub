@@ -102,7 +102,7 @@
         :disabled="saving"
         @click="requestSave"
         :title="saving ? '저장 중' : '저장'"
-        :aria-label="saving ? '保存中' : '保存'"
+        :aria-label="saving ? '저장 중' : '저장'"
       >
         <Save :size="14" />
       </button>
@@ -111,8 +111,8 @@
         :class="{ 'edit-floating-btn-danger': draftChanged }"
         :disabled="saving"
         @click="cancelEdit"
-        title="取消"
-        aria-label="取消"
+        title="취소"
+        aria-label="취소"
       >
         <X :size="14" />
       </button>
@@ -159,7 +159,7 @@
       </template>
       <template v-else-if="file?.supported === false">
         <div class="unsupported-preview">
-          {{ file?.message || '当前文件暂不支持预览，请下载后查看' }}
+          {{ file?.message || '현재 파일은 미리보기를 지원하지 않습니다. 다운로드한 후 확인하세요' }}
         </div>
       </template>
       <template v-else>
@@ -185,7 +185,7 @@
               class="preview-mode-btn"
               :class="{ active: htmlPreviewMode === 'render' }"
               @click="htmlPreviewMode = 'render'"
-              title="预览"
+              title="미리보기"
             >
               <Globe :size="16" />
             </button>
@@ -193,7 +193,7 @@
               class="preview-mode-btn"
               :class="{ active: htmlPreviewMode === 'source' }"
               @click="htmlPreviewMode = 'source'"
-              title="源码"
+              title="소스"
             >
               <Code2 :size="16" />
             </button>
@@ -202,14 +202,14 @@
             v-if="showDownload && file"
             class="modal-action-btn fullscreen-action-btn"
             @click="$emit('download', file)"
-            title="下载"
+            title="다운로드"
           >
             <Download :size="18" />
           </button>
           <button
             class="modal-action-btn fullscreen-action-btn"
             @click="closeFullscreenPreview"
-            title="关闭"
+            title="닫기"
           >
             <X :size="18" />
           </button>
@@ -242,7 +242,7 @@
             </template>
             <template v-else-if="file?.supported === false">
               <div class="unsupported-preview fullscreen-unsupported-preview">
-                {{ file?.message || '当前文件暂不支持预览，请下载后查看' }}
+                {{ file?.message || '현재 파일은 미리보기를 지원하지 않습니다. 다운로드한 후 확인하세요' }}
               </div>
             </template>
             <template v-else>
@@ -365,7 +365,7 @@ const emit = defineEmits(['close', 'download', 'save'])
 
 const themeStore = useThemeStore()
 const closeTitle = computed(() =>
-  props.closeVariant === 'collapse-right' ? '收起预览面板' : '关闭预览'
+  props.closeVariant === 'collapse-right' ? '미리보기 패널 접기' : '미리보기 닫기'
 )
 const closeIconComponent = computed(() =>
   props.closeVariant === 'collapse-right' ? PanelRightClose : X

@@ -6,7 +6,7 @@ export const formatRelativeTime = (value) => formatRelative(value)
 export const formatStandardTime = (value) => {
   const parsed = parseToShanghai(value)
   if (!parsed) return '-'
-  return parsed.format('YYYY年MM月DD日 HH:mm:ss')
+  return parsed.format('YYYY년 MM월 DD일 HH:mm:ss')
 }
 
 export const getStatusText = (status) => {

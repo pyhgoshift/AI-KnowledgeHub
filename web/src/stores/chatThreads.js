@@ -72,7 +72,7 @@ export const useChatThreadsStore = defineStore('chatThreads', () => {
     }
   }
 
-  const createThread = async (agentId, title = '新的对话') => {
+  const createThread = async (agentId, title = '새 대화') => {
     if (!agentId) return null
 
     try {

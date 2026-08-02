@@ -27,7 +27,7 @@ export const agentApi = {
    */
   generateTitle: async (query, modelSpec) => {
     const response = await apiPost('/api/chat/call', {
-      query: `根据以下对话内容生成一个简短的标题（最多30个字符，中英文均可），不要包含 markdown 标记：\n\n${query.slice(0, 2000)}`,
+      query: `다음 대화 내용을 바탕으로 짧은 제목을 생성하세요(최대 30자, 한국어·영어 가능). Markdown 표시는 포함하지 마세요:\n\n${query.slice(0, 2000)}`,
       meta: { model_spec: modelSpec }
     })
     return response.response
@@ -236,7 +236,7 @@ export const threadApi = {
   createThread: (agentId, title, metadata) =>
     apiPost('/api/chat/thread', {
       agent_id: agentId,
-      title: title || '新的对话',
+      title: title || '새 대화',
       metadata: metadata || {}
     }),
 

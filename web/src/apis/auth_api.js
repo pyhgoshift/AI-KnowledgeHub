@@ -23,7 +23,7 @@ async function parseErrorDetail(response, fallbackMessage) {
 async function getOIDCConfig() {
   const response = await fetch('/api/auth/oidc/config')
   if (!response.ok) {
-    throw new Error('获取 OIDC 配置失败')
+    throw new Error('OIDC 설정을 불러오지 못했습니다')
   }
   return response.json()
 }
@@ -37,7 +37,7 @@ async function getOIDCLoginUrl(redirectPath = '/') {
   const params = new URLSearchParams({ redirect_path: redirectPath })
   const response = await fetch(`/api/auth/oidc/login-url?${params}`)
   if (!response.ok) {
-    const detail = await parseErrorDetail(response, '获取 OIDC 登录地址失败')
+    const detail = await parseErrorDetail(response, 'OIDC 로그인 주소를 가져오지 못했습니다')
     throw new Error(detail)
   }
   return response.json()
@@ -73,7 +73,7 @@ async function exchangeOIDCCode(code) {
   })
 
   if (!response.ok) {
-    const detail = await parseErrorDetail(response, 'OIDC 登录失败')
+    const detail = await parseErrorDetail(response, 'OIDC 로그인에 실패했습니다')
     throw new Error(detail)
   }
 

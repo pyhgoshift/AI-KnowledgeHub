@@ -181,7 +181,7 @@ export const normalizePreviewResponse = async (response, baseFile = {}) => {
     content: null,
     previewType,
     supported: previewType !== 'unsupported',
-    message: previewType === 'unsupported' ? '当前파일暂不支持预览，请下载后查看' : '',
+    message: previewType === 'unsupported' ? '현재 파일은 미리보기를 지원하지 않습니다. 다운로드한 후 확인하세요' : '',
     previewUrl: window.URL.createObjectURL(blob)
   }
 }

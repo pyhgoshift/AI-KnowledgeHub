@@ -9,7 +9,7 @@
       <button
         class="remove-button"
         type="button"
-        :aria-label="`移除图片 ${imageData.originalName || ''}`"
+        :aria-label="`이미지 제거 ${imageData.originalName || ''}`"
         @click="handleRemove"
       >
         <X :size="14" />
