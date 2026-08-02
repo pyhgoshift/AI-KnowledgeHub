@@ -24,7 +24,7 @@
             <span
               v-if="isNodeLoading(data.key)"
               class="folder-loading-icon"
-              aria-label="正在加载"
+              aria-label="불러오는 중"
             ></span>
             <FileTypeIcon v-else is-dir :size="18" />
           </template>

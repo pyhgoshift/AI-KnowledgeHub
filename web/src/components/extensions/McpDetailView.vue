@@ -176,28 +176,28 @@
                           editForm.transport === 'streamable_http' || editForm.transport === 'sse'
                         "
                       >
-                        <a-form-item label="HTTP 请求头" class="form-item form-item-full">
+                        <a-form-item label="HTTP 요청 헤더" class="form-item form-item-full">
                           <a-textarea
                             v-model:value="editForm.headersText"
-                            placeholder='JSON 格式，如：{"Authorization": "Bearer xxx"}'
+                            placeholder='JSON 형식(예: {"Authorization": "Bearer xxx"})'
                             :rows="4"
                             class="config-textarea"
                           />
                           <div class="form-helper">
-                            请输入合法 JSON 对象，留空表示不发送额外请求头。
+                            올바른 JSON 객체를 입력하세요. 비워 두면 추가 요청 헤더를 보내지 않습니다.
                           </div>
                         </a-form-item>
                       </template>
                       <template v-if="isStdioTransport">
-                        <a-form-item label="参数" class="form-item form-item-full">
+                        <a-form-item label="매개변수" class="form-item form-item-full">
                           <a-select
                             v-model:value="editForm.args"
                             mode="tags"
-                            placeholder="输入参数后回车添加，如：-m"
+                            placeholder="매개변수를 입력한 뒤 Enter로 추가(예: -m)"
                             style="width: 100%"
                           />
                         </a-form-item>
-                        <a-form-item label="环境变量" class="form-item form-item-full">
+                        <a-form-item label="환경 변수" class="form-item form-item-full">
                           <div class="env-editor-shell">
                             <McpEnvEditor v-model="editForm.env" />
                           </div>
@@ -696,10 +696,10 @@ const handleSetServerEnabled = async (srv, enabled) => {
       message.success(result.message || `MCP를 ${enabled ? '추가' : '제거'}했습니다`)
       await fetchServer()
     } else {
-      message.error(result.message || '操作失败')
+      message.error(result.message || '작업에 실패했습니다')
     }
   } catch (err) {
-    message.error(err.message || '操作失败')
+    message.error(err.message || '작업에 실패했습니다')
   }
 }
 

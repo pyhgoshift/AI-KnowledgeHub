@@ -1,6 +1,6 @@
 <template>
   <!-- 反馈列表模态框 -->
-  <a-modal v-model:open="modalVisible" title="用户反馈详情" width="1200px" :footer="null">
+  <a-modal v-model:open="modalVisible" title="사용자 피드백 상세" width="1200px" :footer="null">
     <a-space style="margin-bottom: 16px">
       <a-segmented
         v-model:value="feedbackFilter"
@@ -31,7 +31,7 @@
               class="user-avatar"
             />
             <div class="user-details">
-              <div class="username">{{ feedback.username || '未知用户' }}</div>
+              <div class="username">{{ feedback.username || '알 수 없는 사용자' }}</div>
             </div>
           </div>
           <a-tag
@@ -43,7 +43,7 @@
               <LikeOutlined v-if="feedback.rating === 'like'" />
               <DislikeOutlined v-else />
             </template>
-            {{ feedback.rating === 'like' ? '点赞' : '点踩' }}
+            {{ feedback.rating === 'like' ? '도움됨' : '도움 안 됨' }}
           </a-tag>
         </div>
 
@@ -57,7 +57,7 @@
                   class="conversation-title"
                   :class="{ collapsed: !expandedStates.get(`${feedback.id}-conversation`) }"
                 >
-                  标题：{{ feedback.conversation_title }}
+                  제목: {{ feedback.conversation_title }}
                 </span>
                 <a-button
                   v-if="shouldShowConversationExpandButton(feedback.conversation_title)"
@@ -66,11 +66,11 @@
                   @click="toggleConversationExpand(feedback.id)"
                   class="expand-button-inline"
                 >
-                  {{ expandedStates.get(`${feedback.id}-conversation`) ? '收起' : '展开' }}
+                  {{ expandedStates.get(`${feedback.id}-conversation`) ? '접기' : '펼치기' }}
                 </a-button>
               </div>
               <div class="info-item" v-if="!props.agentId">
-                <span class="label">智能体:</span>
+                <span class="label">에이전트:</span>
                 <span class="value">{{ feedback.agent_id }}</span>
               </div>
             </div>
@@ -91,7 +91,7 @@
               @click="toggleExpand(feedback.id)"
               class="expand-button"
             >
-              {{ expandedStates.get(`${feedback.id}-message`) ? '收起' : '展开全部' }}
+              {{ expandedStates.get(`${feedback.id}-message`) ? '접기' : '모두 펼치기' }}
             </a-button>
           </div>
 
@@ -112,7 +112,7 @@
 
       <!-- 空状态 -->
       <div v-if="feedbacks.length === 0" class="empty-state">
-        <a-empty description="暂无反馈数据" />
+        <a-empty description="피드백 데이터가 없습니다" />
       </div>
     </div>
   </a-modal>
@@ -151,9 +151,9 @@ const feedbacks = ref([])
 const loadingFeedbacks = ref(false)
 const feedbackFilter = ref('all')
 const feedbackOptions = [
-  { label: '全部', value: 'all' },
-  { label: '点赞', value: 'like' },
-  { label: '点踩', value: 'dislike' }
+  { label: '전체', value: 'all' },
+  { label: '도움됨', value: 'like' },
+  { label: '도움 안 됨', value: 'dislike' }
 ]
 
 // 展开状态映射（使用 Map 避免直接修改对象）
@@ -213,8 +213,8 @@ const loadFeedbacks = async () => {
     // 重置展开状态
     expandedStates.value.clear()
   } catch (error) {
-    console.error('加载反馈列表失败:', error)
-    message.error('加载反馈列表失败，请稍后重试')
+    console.error('피드백 목록 불러오기 실패:', error)
+    message.error('피드백 목록을 불러오지 못했습니다. 잠시 후 다시 시도하세요')
     feedbacks.value = []
   } finally {
     loadingFeedbacks.value = false

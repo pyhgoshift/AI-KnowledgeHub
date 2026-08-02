@@ -230,11 +230,11 @@ const formState = reactive({
 // 表单验证规则
 const rules = {
   name: [
-    { required: true, message: '请输入基准名称', trigger: 'blur' },
-    { min: 2, max: 100, message: '基准名称长度应在2-100个字符之间', trigger: 'blur' }
+    { required: true, message: '벤치마크 이름을 입력하세요', trigger: 'blur' },
+    { min: 2, max: 100, message: '벤치마크 이름은 2~100자여야 합니다', trigger: 'blur' }
   ],
-  count: [{ required: true, message: '请输入生成问题数量', trigger: 'blur' }],
-  concurrency_count: [{ required: true, message: '请输入构建并发数', trigger: 'blur' }]
+  count: [{ required: true, message: '생성할 질문 수를 입력하세요', trigger: 'blur' }],
+  concurrency_count: [{ required: true, message: '생성 동시 실행 수를 입력하세요', trigger: 'blur' }]
 }
 
 // 双向绑定visible
@@ -248,21 +248,21 @@ const graphEnhancedDisabled = computed(() => graphIndexedChunks.value <= 0)
 const generationModeOptions = computed(() => [
   {
     value: 'vector',
-    label: '向量构建',
-    tag: '默认',
-    description: '基于向量相似度召回 chunks，稳定适用于所有知识库。',
-    helper: '适合快速生成通用评估基准。',
+    label: '벡터 생성',
+    tag: '기본',
+    description: '벡터 유사도로 조각을 검색하며, 모든 지식베이스에 안정적으로 적용됩니다.',
+    helper: '일반 평가 기준을 빠르게 만들기에 적합합니다.',
     icon: Database,
     disabled: false
   },
   {
     value: 'graph_enhanced',
-    label: '图增强构建',
-    tag: '图谱',
-    description: '在向量召回基础上结合知识图谱扩展相关 chunks。',
+    label: '그래프 강화 생성',
+    tag: '그래프',
+    description: '벡터 검색에 지식 그래프를 결합해 관련 조각을 확장합니다.',
     helper: graphEnhancedDisabled.value
-      ? '当前知识库尚未完成图谱构建，暂不能使用图增强构建'
-      : `已构建图谱的 chunks：${graphIndexedChunks.value}`,
+      ? '현재 지식베이스는 그래프 생성을 완료하지 않아 그래프 강화 생성을 사용할 수 없습니다'
+      : `그래프가 생성된 조각: ${graphIndexedChunks.value}`,
     icon: Network,
     disabled: graphEnhancedDisabled.value
   }
@@ -314,18 +314,18 @@ const handleGenerate = async () => {
     const response = await evaluationApi.generateDataset(props.kbId, params)
 
     if (response.message === 'success') {
-      message.success('生成任务已提交')
+      message.success('생성 작업을 제출했습니다')
       visible.value = false
       resetForm()
       emit('success')
     } else {
       generating.value = false
-      message.error(response.message || '生成失败')
+      message.error(response.message || '생성에 실패했습니다')
     }
   } catch (error) {
     console.error('生成失败:', error)
     generating.value = false
-    message.error(error?.response?.data?.detail || '生成失败')
+    message.error(error?.response?.data?.detail || '생성에 실패했습니다')
   }
 }
 

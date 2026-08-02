@@ -65,7 +65,7 @@
               title="화면에 맞추기"
             >
               <Maximize2 :size="14" />
-              <span class="toolbar-text">适应视图</span>
+              <span class="toolbar-text">화면에 맞추기</span>
             </button>
           </a-space>
         </div>
@@ -168,7 +168,7 @@ const loadMindmap = async () => {
     } else {
       console.error('加载思维导图失败:', error)
       const errorMsg = error?.message || String(error)
-      message.error('加载思维导图失败: ' + errorMsg)
+      message.error('마인드맵을 불러오지 못했습니다: ' + errorMsg)
     }
   } finally {
     loading.value = false
@@ -198,14 +198,14 @@ const generateMindmap = async () => {
     // 再延迟一点，确保SVG元素完全渲染
     setTimeout(() => {
       renderMindmap(response.mindmap)
-      message.success('思维导图生成成功！')
+      message.success('마인드맵을 생성했습니다!')
     }, 100)
 
     await checkMindmapDiff()
   } catch (error) {
     console.error('生成思维导图失败:', error)
     const errorMsg = error?.message || String(error)
-    message.error('生成失败: ' + errorMsg)
+    message.error('생성 실패: ' + errorMsg)
   } finally {
     generating.value = false
   }
@@ -255,9 +255,9 @@ const incrementalUpdate = async () => {
     setTimeout(() => {
       renderMindmap(response.mindmap)
       if (response.no_ai_needed) {
-        message.success('思维导图已更新（自动清理已删除文件）')
+        message.success('마인드맵을 업데이트했습니다(삭제된 파일 자동 정리)')
       } else {
-        message.success('增量更新完成！')
+        message.success('증분 업데이트를 완료했습니다!')
       }
     }, 100)
 
@@ -265,7 +265,7 @@ const incrementalUpdate = async () => {
   } catch (error) {
     console.error('增量更新失败:', error)
     const errorMsg = error?.message || String(error)
-    message.error('增量更新失败: ' + errorMsg)
+    message.error('증분 업데이트 실패: ' + errorMsg)
   } finally {
     generating.value = false
   }
@@ -464,7 +464,7 @@ const renderMindmap = async (data, retryCount = 0) => {
       return
     } else {
       console.error('无法获取SVG容器，渲染失败')
-      message.error('渲染失败：无法找到SVG容器')
+      message.error('렌더링 실패: SVG 컨테이너를 찾을 수 없습니다')
       return
     }
   }
@@ -506,7 +506,7 @@ const renderMindmap = async (data, retryCount = 0) => {
     }, 300)
   } catch (error) {
     console.error('渲染思维导图失败:', error)
-    message.error('渲染失败: ' + error.message)
+    message.error('렌더링 실패: ' + error.message)
   }
 }
 

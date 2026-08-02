@@ -238,7 +238,7 @@ export const useDatabaseStore = defineStore('database', () => {
     }
 
     Modal.confirm({
-      title: '批量파일 삭제',
+      title: '파일 일괄 삭제',
       content: `선택한 ${validFileIds.length} 개 파일을 삭제할까요?`,
       okText: '확인',
       cancelText: '취소',
@@ -249,7 +249,7 @@ export const useDatabaseStore = defineStore('database', () => {
         let processedCount = 0
         const totalCount = validFileIds.length
         const progressKey = `batch-delete-${Date.now()}`
-        message.loading({ content: `正在파일 삭제 0/${totalCount}`, key: progressKey, duration: 0 })
+        message.loading({ content: `파일 삭제 중 0/${totalCount}`, key: progressKey, duration: 0 })
 
         try {
           const CHUNK_SIZE = 50
@@ -263,12 +263,12 @@ export const useDatabaseStore = defineStore('database', () => {
                 failureCount += res.failed_items.length
               }
             } catch (err) {
-              console.error(`删除批次 ${i / CHUNK_SIZE + 1} 失败:`, err)
+              console.error(`삭제 묶음 ${i / CHUNK_SIZE + 1} 실패:`, err)
               failureCount += chunk.length
             } finally {
               processedCount += chunk.length
               message.loading({
-                content: `正在파일 삭제 ${processedCount}/${totalCount}`,
+                content: `파일 삭제 중 ${processedCount}/${totalCount}`,
                 key: progressKey,
                 duration: 0
               })
@@ -277,11 +277,11 @@ export const useDatabaseStore = defineStore('database', () => {
 
           message.destroy(progressKey)
           if (successCount > 0 && failureCount === 0) {
-            message.success(`삭제 완료 ${successCount} 个파일`)
+            message.success(`파일 ${successCount}개를 삭제했습니다`)
           } else if (successCount > 0 && failureCount > 0) {
-            message.warning(`삭제 완료 ${successCount} 个파일，${failureCount} 个파일삭제하지 못했습니다`)
+            message.warning(`파일 ${successCount}개 삭제 완료, ${failureCount}개 삭제 실패`)
           } else if (failureCount > 0) {
-            message.error(`${failureCount} 个파일삭제하지 못했습니다`)
+            message.error(`파일 ${failureCount}개를 삭제하지 못했습니다`)
           }
 
           selectedRowKeys.value = []
@@ -632,7 +632,7 @@ export const useDatabaseStore = defineStore('database', () => {
   function openFileDetail(fileId) {
     const nextFileId = typeof fileId === 'object' ? fileId?.file_id : fileId
     if (!nextFileId) {
-      message.error('파일信息不完整')
+      message.error('파일 정보가 완전하지 않습니다')
       return
     }
     fileDetailFileId.value = nextFileId
@@ -722,9 +722,9 @@ export const useDatabaseStore = defineStore('database', () => {
     selectedRowKeys.value = newSelectedKeys
 
     if (failedFiles.length > 0) {
-      message.success(`선택됨: ${failedFiles.length} 个失败的파일`)
+      message.success(`실패한 파일 ${failedFiles.length}개를 선택했습니다`)
     } else {
-      message.info('当前没有失败的파일')
+      message.info('실패한 파일이 없습니다')
     }
   }
 
