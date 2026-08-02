@@ -129,6 +129,30 @@ async def generate_database_sample_questions(kb_id: str, count: int = 10) -> dic
     }
 
 
+# 기존 배포본의 중국어·인코딩 손상 프롬프트를 대체한다.
+SAMPLE_QUESTIONS_SYSTEM_PROMPT = """
+당신은 지식베이스 질의응답 테스트 전문가입니다. 제공된 파일 정보를 바탕으로 다양하고 구체적인 질문을 만드세요.
+질문은 반드시 자연스러운 한국어로 작성하고, 파일 이름이나 고유명사는 원문을 유지하세요.
+질문만 포함한 다음 형식의 올바른 JSON 객체를 반환하세요. 설명이나 Markdown 코드 블록은 추가하지 마세요.
+{"questions":["질문 1","질문 2","질문 3"]}
+"""
+
+
+def build_sample_questions_user_message(db_name: str, files_info: list[dict[str, str]], count: int) -> str:
+    files_text = "\n".join(
+        [f"- {file_info['filename']} ({file_info['type']})" for file_info in files_info[:20]]
+    )
+    omitted = f"\n추가 파일 {len(files_info) - 20}개" if len(files_info) > 20 else ""
+    return textwrap.dedent(
+        f"""지식베이스 \"{db_name}\"에 대한 테스트 질문 {count}개를 생성하세요.
+
+        파일 목록:{omitted}
+        {files_text}
+
+        파일 내용을 잘 확인할 수 있는 질문을 반드시 한국어 JSON 형식으로 반환하세요."""
+    )
+
+
 async def get_database_sample_questions(kb_id: str) -> dict[str, Any]:
     kb = await KnowledgeBaseRepository().get_by_kb_id(kb_id)
     if kb is None:

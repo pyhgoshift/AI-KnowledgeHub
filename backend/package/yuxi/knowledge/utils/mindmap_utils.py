@@ -86,6 +86,22 @@ MINDMAP_INCREMENTAL_SYSTEM_PROMPT = """你是一个专业的知识整理助手�
 """
 
 
+# 사용자에게 표시되는 AI 생성 결과는 항상 한국어로 만들도록 기존 프롬프트를 재정의한다.
+MINDMAP_SYSTEM_PROMPT = """
+당신은 전문 지식 정리 도우미입니다. 제공된 지식베이스 파일 목록을 바탕으로 마인드맵을 만드세요.
+모든 분류명과 설명은 한국어로 작성하되, 원본 파일 이름은 바꾸지 마세요.
+파일을 주제별로 2~4단계의 계층 구조로 정리하고, 중복되는 분류를 피하세요.
+설명 없이 다음 구조의 올바른 JSON 객체만 반환하세요.
+{"content":"지식베이스 제목","children":[{"content":"주제","children":[{"content":"세부 주제","children":[{"content":"원본파일.pdf","children":[]}]}]}]}
+"""
+
+MINDMAP_INCREMENTAL_SYSTEM_PROMPT = """
+당신은 전문 지식 정리 도우미입니다. 기존 마인드맵과 새 파일 정보를 비교하여 마인드맵을 업데이트하세요.
+기존 구조는 가능한 한 유지하고 새 파일에 필요한 분류만 추가하세요. 모든 새 분류명과 설명은 한국어로 작성하되,
+원본 파일 이름은 바꾸지 마세요. 설명 없이 올바른 JSON 객체만 반환하세요.
+"""
+
+
 def build_database_file_list(files: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
