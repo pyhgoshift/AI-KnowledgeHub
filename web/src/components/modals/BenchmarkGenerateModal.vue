@@ -1,27 +1,27 @@
 <template>
   <a-modal
     v-model:open="visible"
-    title="自动生成评估基准"
+    title="평가 기준 자동 생성"
     width="600px"
     :mask-closable="!generating"
     :closable="!generating"
     @cancel="handleCancel"
   >
     <a-form ref="formRef" :model="formState" :rules="rules" layout="vertical">
-      <a-form-item label="基准名称" name="name">
-        <a-input v-model:value="formState.name" placeholder="请输入评估基准名称" />
+      <a-form-item label="기준 이름" name="name">
+        <a-input v-model:value="formState.name" placeholder="평가 기준 이름을 입력하세요" />
       </a-form-item>
 
-      <a-form-item label="描述" name="description">
+      <a-form-item label="설명" name="description">
         <a-textarea
           v-model:value="formState.description"
-          placeholder="请输入评估基准描述（可选）"
+          placeholder="평가 기준 설명을 입력하세요(선택 사항)"
           :rows="3"
         />
       </a-form-item>
 
-      <a-form-item label="构建方式" name="generation_mode">
-        <div class="generation-mode-cards" role="radiogroup" aria-label="构建方式">
+      <a-form-item label="구축 방식" name="generation_mode">
+        <div class="generation-mode-cards" role="radiogroup" aria-label="구축 방식">
           <div
             v-for="option in generationModeOptions"
             :key="option.value"
@@ -52,22 +52,22 @@
       </a-form-item>
 
       <a-form-item
-        label="LLM模型配置"
+        label="LLM 모델 설정"
         name="llm_model_spec"
-        :rules="[{ required: true, message: '请选择LLM模型' }]"
+        :rules="[{ required: true, message: 'LLM 모델을 선택하세요' }]"
       >
         <ModelSelectorComponent
           :model_spec="formState.llm_model_spec"
-          placeholder="选择用于生成问题的LLM模型"
+          placeholder="질문 생성에 사용할 LLM 모델을 선택하세요"
           @select-model="handleSelectLLMModel"
         />
       </a-form-item>
 
-      <a-form-item label="生成参数" name="params">
+      <a-form-item label="생성 매개변수" name="params">
         <a-row :gutter="16">
           <a-col :span="12">
             <a-form-item
-              label="问题数量"
+              label="질문 수"
               name="count"
               :labelCol="{ span: 24 }"
               :wrapperCol="{ span: 24 }"
@@ -77,7 +77,7 @@
                 :min="1"
                 :max="100"
                 style="width: 100%"
-                placeholder="生成问题数量"
+                placeholder="생성할 질문 수"
               />
             </a-form-item>
           </a-col>
@@ -85,8 +85,8 @@
             <a-form-item name="neighbors_count" :labelCol="{ span: 24 }" :wrapperCol="{ span: 24 }">
               <template #label>
                 <span class="field-label-with-help">
-                  候选 Chunk 数量
-                  <a-tooltip title="每次生成问题时参考的候选 Chunk 总数">
+                  후보 청크 수
+                  <a-tooltip title="질문을 생성할 때 참고하는 후보 청크의 전체 수입니다">
                     <CircleHelp class="help-icon" />
                   </a-tooltip>
                 </span>
@@ -96,7 +96,7 @@
                 :min="0"
                 :max="10"
                 style="width: 100%"
-                placeholder="默认 1"
+                placeholder="기본값 1"
               />
             </a-form-item>
           </a-col>
@@ -108,8 +108,8 @@
             >
               <template #label>
                 <span class="field-label-with-help">
-                  构建并发数
-                  <a-tooltip title="同时生成评估题目的 worker 数，过高可能触发模型服务限流">
+                  구축 동시 실행 수
+                  <a-tooltip title="평가 질문을 동시에 생성하는 워커 수입니다. 너무 높으면 모델 서비스의 속도 제한이 걸릴 수 있습니다">
                     <CircleHelp class="help-icon" />
                   </a-tooltip>
                 </span>
@@ -119,7 +119,7 @@
                 :min="1"
                 :max="20"
                 style="width: 100%"
-                placeholder="默认 10"
+                placeholder="기본값 10"
               />
             </a-form-item>
           </a-col>
@@ -131,8 +131,8 @@
             >
               <template #label>
                 <span class="field-label-with-help">
-                  每轮扩展 Chunk 数
-                  <a-tooltip title="PPR 扩散后每轮加入的最高分 Chunk 数">
+                  라운드별 확장 청크 수
+                  <a-tooltip title="PPR 확산 후 각 라운드에 추가할 최고 점수 청크 수입니다">
                     <CircleHelp class="help-icon" />
                   </a-tooltip>
                 </span>
@@ -152,25 +152,25 @@
     <template #footer>
       <div class="benchmark-modal-footer">
         <div class="benchmark-help-text">
-          需要了解评估基准生成原理？查看
+          평가 기준 생성 원리를 알고 싶으신가요? 다음을 확인하세요
           <a
             class="benchmark-help-link"
             href="https://xerrors.github.io/Yuxi/intro/evaluation.html"
             target="_blank"
             rel="noopener noreferrer"
           >
-            使用说明
+            사용 안내
           </a>
         </div>
         <div class="footer-actions">
-          <a-button :disabled="generating" @click="handleCancel">取消</a-button>
+          <a-button :disabled="generating" @click="handleCancel">취소</a-button>
           <a-button
             type="primary"
             :loading="generating"
             :disabled="generating"
             @click="handleGenerate"
           >
-            确定
+            확인
           </a-button>
         </div>
       </div>

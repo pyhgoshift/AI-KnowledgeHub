@@ -242,7 +242,7 @@ const fetchDepartments = async () => {
     departmentManagement.departments = departments
   } catch (error) {
     console.error('获取部门列表失败:', error)
-    departmentManagement.error = '获取部门列表失败'
+    departmentManagement.error = '부서 목록을 불러오지 못했습니다'
   } finally {
     departmentManagement.loading = false
   }
@@ -254,10 +254,10 @@ const handleRefresh = async () => {
   departmentManagement.refreshing = true
   try {
     await fetchDepartments()
-    message.success('刷新成功')
+    message.success('새로 고쳤습니다')
   } catch (error) {
     console.error('刷新失败:', error)
-    message.error('刷新失败')
+    message.error('새로 고치지 못했습니다')
   } finally {
     departmentManagement.refreshing = false
   }
@@ -314,7 +314,7 @@ watch(
   (newPhone) => {
     departmentManagement.form.phoneError = ''
     if (newPhone && !validatePhoneNumber(newPhone)) {
-      departmentManagement.form.phoneError = '请输入正确的手机号格式'
+      departmentManagement.form.phoneError = '올바른 휴대폰 번호 형식을 입력하세요'
     }
   }
 )
@@ -330,12 +330,12 @@ const checkAdminUid = async () => {
 
   // 验证格式
   if (!/^[a-zA-Z0-9_]+$/.test(uid)) {
-    departmentManagement.form.uidError = 'UID只能包含字母、数字和下划线'
+    departmentManagement.form.uidError = 'UID에는 영문, 숫자, 밑줄만 사용할 수 있습니다'
     return
   }
 
   if (uid.length < 3 || uid.length > 20) {
-    departmentManagement.form.uidError = 'UID长度必须在3-20个字符之间'
+    departmentManagement.form.uidError = 'UID는 3~20자여야 합니다'
     return
   }
 
@@ -343,7 +343,7 @@ const checkAdminUid = async () => {
   try {
     const result = await apiSuperAdminGet(`/api/auth/check-uid/${uid}`)
     if (!result.is_available) {
-      departmentManagement.form.uidError = '该UID已被使用'
+      departmentManagement.form.uidError = '이미 사용 중인 UID입니다'
     }
   } catch (error) {
     console.error('检查UID失败:', error)
@@ -355,52 +355,52 @@ const handleDepartmentFormSubmit = async () => {
   try {
     // 验证部门名称
     if (!departmentManagement.form.name.trim()) {
-      notification.error({ message: '部门名称不能为空' })
+      notification.error({ message: '부서 이름을 입력하세요' })
       return
     }
 
     if (departmentManagement.form.name.trim().length < 2) {
-      notification.error({ message: '部门名称至少2个字符' })
+      notification.error({ message: '부서 이름은 2자 이상이어야 합니다' })
       return
     }
 
     // 验证管理员UID
     const adminUid = departmentManagement.form.adminUid.trim()
     if (!adminUid) {
-      notification.error({ message: '请输入管理员UID' })
+      notification.error({ message: '관리자 UID를 입력하세요' })
       return
     }
 
     if (!/^[a-zA-Z0-9_]+$/.test(adminUid)) {
-      notification.error({ message: 'UID只能包含字母、数字和下划线' })
+      notification.error({ message: 'UID에는 영문, 숫자, 밑줄만 사용할 수 있습니다' })
       return
     }
 
     if (adminUid.length < 3 || adminUid.length > 20) {
-      notification.error({ message: 'UID长度必须在3-20个字符之间' })
+      notification.error({ message: 'UID는 3~20자여야 합니다' })
       return
     }
 
     if (departmentManagement.form.uidError) {
-      notification.error({ message: '管理员UID已存在或格式错误' })
+      notification.error({ message: '관리자 UID가 이미 존재하거나 형식이 올바르지 않습니다' })
       return
     }
 
     // 验证密码
     if (!departmentManagement.form.adminPassword) {
-      notification.error({ message: '请输入管理员密码' })
+      notification.error({ message: '관리자 비밀번호를 입력하세요' })
       return
     }
 
     if (!isPasswordLongEnough(departmentManagement.form.adminPassword)) {
-      notification.error({ message: `密码至少需要 ${MIN_PASSWORD_LENGTH} 个字符` })
+      notification.error({ message: `비밀번호는 최소 ${MIN_PASSWORD_LENGTH}자여야 합니다` })
       return
     }
 
     if (
       departmentManagement.form.adminPassword !== departmentManagement.form.adminConfirmPassword
     ) {
-      notification.error({ message: '两次输入的密码不一致' })
+      notification.error({ message: '입력한 비밀번호가 일치하지 않습니다' })
       return
     }
 
@@ -409,7 +409,7 @@ const handleDepartmentFormSubmit = async () => {
       departmentManagement.form.adminPhone &&
       !validatePhoneNumber(departmentManagement.form.adminPhone)
     ) {
-      notification.error({ message: '请输入正确的手机号格式' })
+      notification.error({ message: '올바른 휴대폰 번호 형식을 입력하세요' })
       return
     }
 
@@ -421,7 +421,7 @@ const handleDepartmentFormSubmit = async () => {
         name: departmentManagement.form.name.trim(),
         description: departmentManagement.form.description.trim() || undefined
       })
-      notification.success({ message: '部门更新成功' })
+      notification.success({ message: '부서를 업데이트했습니다' })
     } else {
       // 创建部门，同时创建管理员
       await departmentApi.createDepartment({
@@ -432,7 +432,7 @@ const handleDepartmentFormSubmit = async () => {
         admin_phone: departmentManagement.form.adminPhone || undefined
       })
 
-      message.success(`部门创建成功，管理员 "${adminUid}" 已创建`)
+      message.success(`부서를 만들고 관리자 "${adminUid}"를 생성했습니다`)
     }
 
     // 重新获取部门列表
@@ -441,8 +441,8 @@ const handleDepartmentFormSubmit = async () => {
   } catch (error) {
     console.error('部门操作失败:', error)
     notification.error({
-      message: '操作失败',
-      description: error.message || '请稍后重试'
+      message: '작업에 실패했습니다',
+      description: error.message || '잠시 후 다시 시도하세요'
     })
   } finally {
     departmentManagement.loading = false
@@ -452,23 +452,23 @@ const handleDepartmentFormSubmit = async () => {
 // 删除部门
 const confirmDeleteDepartment = (department) => {
   Modal.confirm({
-    title: '确认删除部门',
-    content: `确定要删除部门 "${department.name}" 吗？此操作不可撤销。该部门下的用户会被迁移到默认部门，部门级配置和部门 API Key 会一并清理。`,
-    okText: '删除',
+    title: '부서 삭제 확인',
+    content: `부서 "${department.name}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다. 해당 부서의 사용자는 기본 부서로 이동하며, 부서 설정과 API 키도 정리됩니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     async onOk() {
       try {
         departmentManagement.loading = true
         await departmentApi.deleteDepartment(department.id)
-        notification.success({ message: '部门删除成功' })
+        notification.success({ message: '부서를 삭제했습니다' })
         // 重新获取部门列表
         await fetchDepartments()
       } catch (error) {
         console.error('删除部门失败:', error)
         notification.error({
-          message: '删除失败',
-          description: error.message || '请稍后重试'
+          message: '삭제하지 못했습니다',
+          description: error.message || '잠시 후 다시 시도하세요'
         })
       } finally {
         departmentManagement.loading = false
