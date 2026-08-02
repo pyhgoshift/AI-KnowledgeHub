@@ -139,7 +139,7 @@ def _read_file_image_paths(messages: list[Any]) -> list[str]:
 
 def _ocr_fallback_response(image_paths: list[str]) -> ModelResponse:
     if not image_paths:
-        return ModelResponse(result=[AIMessage(content="当前模型无法读取图片，且没有可供 OCR 工具解析的文件路径。")])
+        return ModelResponse(result=[AIMessage(content="현재 모델은 이미지를 읽을 수 없으며 OCR 도구가 분석할 파일 경로도 없습니다.")])
 
     tool_calls = [
         {

@@ -172,11 +172,11 @@ async def _run_install_task(
 
     if not uid or not thread_id:
         return Command(
-            update={"messages": [ToolMessage(content="错误：无法获取当前会话信息", tool_call_id=tool_call_id)]}
+            update={"messages": [ToolMessage(content="오류: 현재 대화 정보를 가져올 수 없습니다", tool_call_id=tool_call_id)]}
         )
     if not source:
         return Command(
-            update={"messages": [ToolMessage(content="错误：Skill 来源不能为空", tool_call_id=tool_call_id)]}
+            update={"messages": [ToolMessage(content="오류: 스킬 출처는 비워 둘 수 없습니다", tool_call_id=tool_call_id)]}
         )
 
     personal_share_config = _personal_skill_share_config(uid)

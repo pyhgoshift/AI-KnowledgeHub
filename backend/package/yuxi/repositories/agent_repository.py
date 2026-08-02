@@ -25,8 +25,8 @@ GENERAL_PURPOSE_AGENT_DESCRIPTION = (
 )
 
 WEB_SEARCH_AGENT_SLUG = "web-search"
-WEB_SEARCH_AGENT_NAME = "网页检索"
-WEB_SEARCH_AGENT_DESCRIPTION = "围绕检索目标持续搜索网页，返回带引用来源的摘要资料。"
+WEB_SEARCH_AGENT_NAME = "웹 검색"
+WEB_SEARCH_AGENT_DESCRIPTION = "검색 목표에 맞춰 웹을 탐색하고 출처가 포함된 요약 정보를 제공합니다."
 WEB_SEARCH_SYSTEM_PROMPT = """你是「网页检索」子智能体，专注于面向目标的网页信息检索。
 
 你的职责：围绕调用方给定的检索目标，使用网页搜索工具持续检索，直到收集到足以回答目标的信息。
@@ -44,7 +44,7 @@ WEB_SEARCH_SYSTEM_PROMPT = """你是「网页检索」子智能体，专注于�
 - 不要编造来源或链接；无法验证的信息要明确标注。"""
 
 DEEP_RESEARCH_AGENT_SLUG = "deep-research"
-DEEP_RESEARCH_AGENT_NAME = "深度研究"
+DEEP_RESEARCH_AGENT_NAME = "심층 조사"
 DEEP_RESEARCH_AGENT_DESCRIPTION = (
     "面向多来源、需事实核查的深度研究任务：规划拆解、并行调度调研子智能体、核验并综合成带引用的结构化报告。"
 )
@@ -62,8 +62,8 @@ DEEP_RESEARCH_SYSTEM_PROMPT = """你是「深度研究」智能体，负责一�
 始终全程跟踪进度，最终交付一份可直接使用、围绕论证组织、来源可追溯的报告。"""
 
 RESEARCH_EXPLORER_AGENT_SLUG = "research-explorer"
-RESEARCH_EXPLORER_AGENT_NAME = "调研探索员"
-RESEARCH_EXPLORER_AGENT_DESCRIPTION = "围绕单个子问题多轮检索网页与知识库，交叉验证后返回带引用的结构化发现。"
+RESEARCH_EXPLORER_AGENT_NAME = "조사 탐색가"
+RESEARCH_EXPLORER_AGENT_DESCRIPTION = "하나의 하위 질문을 대상으로 웹과 지식베이스를 여러 번 검색하고 교차 검증한 결과를 출처와 함께 제공합니다."
 RESEARCH_EXPLORER_SYSTEM_PROMPT = """你是「调研探索员」子智能体。
 专注于围绕调用方给定的**单个子问题**收集充分、可追溯的证据。
 
@@ -82,8 +82,8 @@ RESEARCH_EXPLORER_SYSTEM_PROMPT = """你是「调研探索员」子智能体。
 - 不要编造来源或链接；无法验证的信息要明确标注证据缺口。"""
 
 FACT_VERIFIER_AGENT_SLUG = "fact-verifier"
-FACT_VERIFIER_AGENT_NAME = "事实核查员"
-FACT_VERIFIER_AGENT_DESCRIPTION = "对给定论断做对抗式核验，逐条给出支持/存疑/反驳判定、依据来源与置信度，并标注冲突。"
+FACT_VERIFIER_AGENT_NAME = "사실 검증가"
+FACT_VERIFIER_AGENT_DESCRIPTION = "주어진 주장에 대해 지지·불확실·반박 여부, 근거 출처와 신뢰도를 항목별로 검증하고 충돌을 표시합니다."
 FACT_VERIFIER_SYSTEM_PROMPT = """你是「事实核查员」子智能体，专注于对调用方给定的论断做对抗式核验。
 
 你的职责：对每一条论断独立查证，默认持怀疑态度——证据不足时倾向判定「存疑」，而不是默认相信。

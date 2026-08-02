@@ -48,7 +48,7 @@ async def list_kbs(dummy: str, runtime: ToolRuntime) -> str:  # Now has 2 params
     runtime_context = runtime.context
     uid = getattr(runtime_context, "uid", None)
     if not uid:
-        return "无法获取用户信息"
+        return "사용자 정보를 가져올 수 없습니다"
 
     # 打印 runtime—context 中的所有信息以进行调试
     logger.debug(f"Runtime context: {runtime_context.__dict__}")
@@ -61,7 +61,7 @@ async def list_kbs(dummy: str, runtime: ToolRuntime) -> str:  # Now has 2 params
         available_kbs = await resolve_visible_knowledge_bases_for_context(runtime_context)
     except Exception as e:
         logger.error(f"获取用户知识库列表失败: {e}")
-        return f"获取知识库列表失败: {str(e)}"
+        return f"지식베이스 목록을 가져오지 못했습니다: {str(e)}"
 
     all_kb_names = [kb["name"] for kb in available_kbs]
 
@@ -69,7 +69,7 @@ async def list_kbs(dummy: str, runtime: ToolRuntime) -> str:  # Now has 2 params
     logger.debug(f"用户 {uid} 当前对话启用的知识库列表: {enabled_kb_names}")
 
     if not available_kbs:
-        return "当前没有可访问的知识库"
+        return "현재 접근할 수 있는 지식베이스가 없습니다"
 
     # 格式化输出（包含名称和描述）
     kb_list = []
@@ -101,7 +101,7 @@ async def get_mindmap(kb_name: str, runtime: ToolRuntime) -> str:
         知识库的思维导图结构（文本格式）
     """
     if not kb_name:
-        return "请提供知识库名称"
+        return "지식베이스 이름을 입력하세요"
 
     # 获取所有检索器
     knowledge_base = _get_knowledge_base()
@@ -117,7 +117,7 @@ async def get_mindmap(kb_name: str, runtime: ToolRuntime) -> str:
             break
 
     if not target_kb_id:
-        return f"知识库 '{kb_name}' 不存在"
+        return f"지식베이스 '{kb_name}'이(가) 없습니다"
 
     try:
         from yuxi.repositories.knowledge_base_repository import KnowledgeBaseRepository
@@ -126,12 +126,12 @@ async def get_mindmap(kb_name: str, runtime: ToolRuntime) -> str:
         kb = await kb_repo.get_by_kb_id(target_kb_id)
 
         if kb is None:
-            return f"知识库 {target_info['name']} 不存在"
+            return f"지식베이스 {target_info['name']}이(가) 없습니다"
 
         mindmap_data = kb.mindmap
 
         if not mindmap_data:
-            return f"知识库 {target_info['name']} 还没有生成思维导图。"
+            return f"지식베이스 {target_info['name']}의 마인드맵이 아직 생성되지 않았습니다."
 
         # 将思维导图数据转换为文本格式
         def mindmap_to_text(node, level=0):
@@ -142,14 +142,14 @@ async def get_mindmap(kb_name: str, runtime: ToolRuntime) -> str:
                 text += mindmap_to_text(child, level + 1)
             return text
 
-        mindmap_text = f"知识库 {target_info['name']} 的思维导图结构：\n\n"
+        mindmap_text = f"지식베이스 {target_info['name']}의 마인드맵 구조:\n\n"
         mindmap_text += mindmap_to_text(mindmap_data)
 
         return mindmap_text
 
     except Exception as e:
         logger.error(f"获取思维导图失败: {e}")
-        return f"获取思维导图失败: {str(e)}"
+        return f"마인드맵을 가져오지 못했습니다: {str(e)}"
 
 
 QueryKBInput = SearchInputSchema
@@ -185,16 +185,16 @@ def _find_query_target(
     visible_kbs: list[dict[str, Any]],
 ) -> tuple[dict[str, Any] | None, str | None, str | None]:
     if not visible_kbs:
-        return None, None, "无法获取当前会话可访问的知识库"
+        return None, None, "현재 대화에서 접근 가능한 지식베이스를 가져올 수 없습니다"
 
     normalized_kb_id = str(kb_id or "").strip()
     visible_kb_ids = {str(kb.get("kb_id") or "").strip() for kb in visible_kbs}
     if normalized_kb_id not in visible_kb_ids:
-        return None, None, f"知识库资源 '{normalized_kb_id}' 不存在或当前会话未启用"
+        return None, None, f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없거나 현재 대화에서 활성화되지 않았습니다"
 
     target_info = retrievers.get(normalized_kb_id)
     if target_info is None:
-        return None, None, f"知识库资源 '{normalized_kb_id}' 不存在"
+        return None, None, f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없습니다"
     return target_info, normalized_kb_id, None
 
 
@@ -212,9 +212,9 @@ async def query_kb(kb_id: str, query_text: str, file_name: str | None = None, ru
     file_id 可继续用于 find_kb_document 或 open_kb_document。
     """
     if not kb_id:
-        return "请提供 kb_id"
+        return "kb_id를 입력하세요"
     if not query_text:
-        return "请提供查询内容"
+        return "검색 내용을 입력하세요"
 
     knowledge_base = _get_knowledge_base()
     retrievers = knowledge_base.get_retrievers()
@@ -242,7 +242,7 @@ async def query_kb(kb_id: str, query_text: str, file_name: str | None = None, ru
 
     except Exception as e:
         logger.error(f"检索失败: {e}")
-        return f"检索失败: {str(e)}"
+        return f"검색에 실패했습니다: {str(e)}"
 
 
 @tool(category="knowledge", tags=["知识库"], args_schema=OpenKBDocumentInput)
@@ -262,28 +262,28 @@ async def open_kb_document(
     normalized_kb_id = str(kb_id or "").strip()
     normalized_file_id = str(file_id or "").strip()
     if not normalized_kb_id:
-        return "请提供 kb_id"
+        return "kb_id를 입력하세요"
     if not normalized_file_id:
-        return "请提供 file_id"
+        return "file_id를 입력하세요"
 
     visible_kbs = await _resolve_visible_knowledge_bases_for_query(runtime)
     if not visible_kbs:
-        return "无法获取当前会话可访问的知识库"
+        return "현재 대화에서 접근 가능한 지식베이스를 가져올 수 없습니다"
 
     visible_kb_ids = {str(kb.get("kb_id") or "").strip() for kb in visible_kbs}
     if normalized_kb_id not in visible_kb_ids:
-        return f"知识库资源 '{normalized_kb_id}' 不存在或当前会话未启用"
+        return f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없거나 현재 대화에서 활성화되지 않았습니다"
 
     knowledge_base = _get_knowledge_base()
     retrievers = knowledge_base.get_retrievers()
     target_info = retrievers.get(normalized_kb_id)
     if target_info is None:
-        return f"知识库资源 '{normalized_kb_id}' 不存在"
+        return f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없습니다"
 
     metadata = target_info.get("metadata") if isinstance(target_info, dict) else None
     kb_type = str((metadata or {}).get("kb_type") or "").strip().lower()
     if kb_type == "dify":
-        return "Dify 知识库为外部只读检索源，当前不支持通过 Open 打开全文"
+        return "Dify 지식베이스는 외부 읽기 전용 검색 원본이므로 Open으로 전체 문서를 열 수 없습니다"
 
     try:
         start_offset = int(line) - 1 if line is not None else int(offset or 0)
@@ -297,7 +297,7 @@ async def open_kb_document(
 
     except Exception as e:
         logger.error(f"打开知识库文档失败: {e}")
-        return f"打开知识库文档失败: {str(e)}"
+        return f"지식베이스 문서를 열지 못했습니다: {str(e)}"
 
 
 @tool(category="knowledge", tags=["知识库"], args_schema=FindKBDocumentInput)
@@ -318,30 +318,30 @@ async def find_kb_document(
     normalized_kb_id = str(kb_id or "").strip()
     normalized_file_id = str(file_id or "").strip()
     if not normalized_kb_id:
-        return "请提供 kb_id"
+        return "kb_id를 입력하세요"
     if not normalized_file_id:
-        return "请提供 file_id"
+        return "file_id를 입력하세요"
     if not patterns:
-        return "请提供 patterns"
+        return "patterns를 입력하세요"
 
     visible_kbs = await _resolve_visible_knowledge_bases_for_query(runtime)
     if not visible_kbs:
-        return "无法获取当前会话可访问的知识库"
+        return "현재 대화에서 접근 가능한 지식베이스를 가져올 수 없습니다"
 
     visible_kb_ids = {str(kb.get("kb_id") or "").strip() for kb in visible_kbs}
     if normalized_kb_id not in visible_kb_ids:
-        return f"知识库资源 '{normalized_kb_id}' 不存在或当前会话未启用"
+        return f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없거나 현재 대화에서 활성화되지 않았습니다"
 
     knowledge_base = _get_knowledge_base()
     retrievers = knowledge_base.get_retrievers()
     target_info = retrievers.get(normalized_kb_id)
     if target_info is None:
-        return f"知识库资源 '{normalized_kb_id}' 不存在"
+        return f"지식베이스 리소스 '{normalized_kb_id}'이(가) 없습니다"
 
     metadata = target_info.get("metadata") if isinstance(target_info, dict) else None
     kb_type = str((metadata or {}).get("kb_type") or "").strip().lower()
     if kb_type == "dify":
-        return "Dify 知识库为外部只读检索源，当前不支持通过 Find 检索全文"
+        return "Dify 지식베이스는 외부 읽기 전용 검색 원본이므로 Find로 전체 문서를 검색할 수 없습니다"
 
     try:
         result = await knowledge_base.find_file_content(
@@ -356,7 +356,7 @@ async def find_kb_document(
         return FindOutputSchema(kb_id=normalized_kb_id, file_id=normalized_file_id, **result).model_dump()
     except Exception as e:
         logger.error(f"知识库文档内检索失败: {e}")
-        return f"知识库文档内检索失败: {str(e)}"
+        return f"지식베이스 문서 안의 검색에 실패했습니다: {str(e)}"
 
 
 # 单个知识库一次最多扫描的文件数（与仓储层 list_by_kb_id_after 的硬上限保持一致），
@@ -397,16 +397,16 @@ async def search_file(
         匹配的文件列表和分页信息
     """
     if not kb_name and not query:
-        return "请提供知识库名称或搜索关键词，不能同时为空"
+        return "지식베이스 이름 또는 검색어를 입력하세요. 둘 다 비워 둘 수 없습니다"
 
     visible_kbs = await _resolve_visible_knowledge_bases_for_query(runtime)
     if not visible_kbs:
-        return "无法获取当前会话可访问的知识库"
+        return "현재 대화에서 접근 가능한 지식베이스를 가져올 수 없습니다"
 
     if kb_name:
         target_kbs = [kb for kb in visible_kbs if kb.get("name") == kb_name]
         if not target_kbs:
-            return f"知识库 '{kb_name}' 不存在或当前会话未启用"
+            return f"지식베이스 '{kb_name}'이(가) 없거나 현재 대화에서 활성화되지 않았습니다"
     else:
         target_kbs = visible_kbs
 
