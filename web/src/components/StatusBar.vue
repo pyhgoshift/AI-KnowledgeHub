@@ -22,37 +22,37 @@
           <span class="user-greeting">{{ greeting }}</span>
         </div>
         <div class="header-actions">
-          <a-tooltip title="系统设置">
+          <a-tooltip title="시스템 설정">
             <button
               type="button"
               class="header-action-button"
-              aria-label="系统设置"
+              aria-label="시스템 설정"
               @click="openSettings"
             >
               <Settings class="icon" />
             </button>
           </a-tooltip>
-          <a-tooltip :title="themeStore.isDark ? '切换到浅色模式' : '切换到深色模式'">
+          <a-tooltip :title="themeStore.isDark ? '라이트 모드로 전환' : '다크 모드로 전환'">
             <button
               type="button"
               class="header-action-button"
-              aria-label="切换主题"
+              aria-label="테마 전환"
               @click="toggleTheme"
             >
               <Sun v-if="themeStore.isDark" class="icon" />
               <Moon v-else class="icon" />
             </button>
           </a-tooltip>
-          <a-tooltip title="任务中心">
+          <a-tooltip title="작업 센터">
             <button
               type="button"
               class="header-action-button task-center-button"
               :class="{ active: taskerStore.isDrawerOpen }"
-              aria-label="任务中心"
+              aria-label="작업 센터"
               @click="openTaskCenter"
             >
               <ClipboardList class="icon" />
-              <span class="task-center-label">任务中心</span>
+              <span class="task-center-label">작업 센터</span>
               <a-badge
                 :count="activeTaskCount"
                 :overflow-count="99"
@@ -93,7 +93,7 @@ const branding = computed(() => infoStore.branding)
 
 // 用户名计算属性
 const currentUser = computed(() => {
-  return userStore.username || '游客'
+  return userStore.username || '방문자'
 })
 
 // 问候语计算属性
@@ -102,15 +102,15 @@ const greeting = computed(() => {
   let greetingText
 
   if (hour >= 5 && hour < 12) {
-    greetingText = '早上好'
+    greetingText = '좋은 아침입니다'
   } else if (hour >= 12 && hour < 14) {
-    greetingText = '中午好'
+    greetingText = '좋은 점심입니다'
   } else if (hour >= 14 && hour < 18) {
-    greetingText = '下午好'
+    greetingText = '좋은 오후입니다'
   } else if (hour >= 18 && hour < 22) {
-    greetingText = '晚上好'
+    greetingText = '좋은 저녁입니다'
   } else {
-    greetingText = '夜深了'
+    greetingText = '늦은 시간입니다'
   }
 
   return `${greetingText}！${currentUser.value}`
@@ -133,7 +133,7 @@ const toggleTheme = () => {
 // 更新时间
 const updateTime = () => {
   const now = dayjs().tz('Asia/Shanghai')
-  currentTime.value = now.format('YYYY年MM月DD日 HH:mm:ss')
+  currentTime.value = now.format('YYYY년 MM월 DD일 HH:mm:ss')
 }
 
 // 定时器

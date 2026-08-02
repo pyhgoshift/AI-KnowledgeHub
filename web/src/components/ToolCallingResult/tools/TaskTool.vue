@@ -59,7 +59,7 @@ const parsedArgs = computed(() => {
 
 const subagentRun = computed(() => props.toolCall.subagent_run || null)
 const subagentDisplayName = computed(
-  () => subagentRun.value?.subagent_name || props.toolCall.display_label || '子智能体'
+  () => subagentRun.value?.subagent_name || props.toolCall.display_label || '하위 에이전트'
 )
 const description = computed(
   () => parsedArgs.value.description || subagentRun.value?.description || ''
@@ -87,9 +87,9 @@ const runStatus = computed(() => {
   return 'completed'
 })
 const runStatusLabel = computed(() => {
-  if (runStatus.value === 'completed') return '已完成'
-  if (runStatus.value === 'failed') return '失败'
-  if (runStatus.value === 'running') return '运行中'
+  if (runStatus.value === 'completed') return '완료'
+  if (runStatus.value === 'failed') return '실패'
+  if (runStatus.value === 'running') return '실행 중'
   return ''
 })
 const runStatusClass = computed(() => ({

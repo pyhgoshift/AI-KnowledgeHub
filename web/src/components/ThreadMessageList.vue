@@ -20,7 +20,7 @@
         />
       </template>
     </template>
-    <div v-if="conversations.length === 0" class="thread-message-list-empty">暂无消息</div>
+    <div v-if="conversations.length === 0" class="thread-message-list-empty">메시지가 없습니다</div>
   </div>
 </template>
 

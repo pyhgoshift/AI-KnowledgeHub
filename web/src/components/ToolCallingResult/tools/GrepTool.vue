@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div class="empty-state" v-else-if="isEmptyResult">未找到匹配结果</div>
+        <div class="empty-state" v-else-if="isEmptyResult">일치하는 결과를 찾지 못했습니다</div>
 
         <div class="raw-result" v-else>
           <pre>{{ rawResultText }}</pre>
@@ -113,10 +113,10 @@ const isEmptyResult = computed(() => {
 const matchCountLabel = computed(() => {
   if (isFileListResult.value) {
     const count = fileMatches.value.length
-    return count ? `共匹配 ${count} 个文件` : ''
+    return count ? `${count}개 파일에서 일치` : ''
   }
   if (lineMatches.value.length) {
-    return `共匹配 ${lineMatches.value.length} 行`
+    return `${lineMatches.value.length}개 줄에서 일치`
   }
   return ''
 })

@@ -1,13 +1,13 @@
 <template>
   <a-modal
     :open="props.modelValue"
-    title="检索配置"
+    title="검색 설정"
     width="800px"
     :confirm-loading="saving"
     @ok="handleSave"
     @cancel="handleCancel"
-    ok-text="保存"
-    cancel-text="取消"
+    ok-text="저장"
+    cancel-text="취소"
   >
     <SearchConfigPanel
       v-if="props.modelValue"

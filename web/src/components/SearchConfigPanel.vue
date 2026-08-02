@@ -2,17 +2,17 @@
   <div class="search-config-panel">
     <div v-if="loading" class="config-loading">
       <a-spin />
-      <p>加载配置参数中...</p>
+      <p>설정 매개변수를 불러오는 중...</p>
     </div>
 
-    <a-result v-else-if="error" status="error" title="配置加载失败" :sub-title="error">
+    <a-result v-else-if="error" status="error" title="설정을 불러오지 못했습니다" :sub-title="error">
       <template #extra>
-        <a-button type="primary" @click="loadQueryParams">重新加载</a-button>
+        <a-button type="primary" @click="loadQueryParams">다시 불러오기</a-button>
       </template>
     </a-result>
 
     <template v-else>
-      <a-empty v-if="visibleQueryParams.length === 0" description="暂无可配置参数" />
+      <a-empty v-if="visibleQueryParams.length === 0" description="설정할 수 있는 매개변수가 없습니다" />
       <a-form layout="vertical">
         <a-row :gutter="16">
           <a-col :span="12" v-for="param in visibleQueryParams" :key="param.key">
@@ -39,8 +39,8 @@
                 @update:value="(value) => updateMeta(param.key, value)"
                 style="width: 100%"
               >
-                <a-select-option value="true">启用</a-select-option>
-                <a-select-option value="false">关闭</a-select-option>
+                <a-select-option value="true">사용</a-select-option>
+                <a-select-option value="false">사용 안 함</a-select-option>
               </a-select>
               <a-input-number
                 v-else-if="param.type === 'number'"
@@ -142,7 +142,7 @@ const loadQueryParams = async () => {
     loadSavedConfig()
   } catch (err) {
     console.error('Failed to load query params:', err)
-    error.value = err.message || '加载查询参数失败'
+    error.value = err.message || '검색 매개변수를 불러오지 못했습니다'
   } finally {
     loading.value = false
   }
@@ -172,7 +172,7 @@ const loadSavedConfig = () => {
 
 const save = async () => {
   if (!props.kbId) {
-    message.error('无法保存配置：缺少知识库ID')
+    message.error('설정을 저장할 수 없습니다. 지식베이스 ID가 없습니다')
     return false
   }
 
@@ -183,15 +183,15 @@ const save = async () => {
     if (response.message === 'success') {
       localStorage.setItem(`search-config-${props.kbId}`, JSON.stringify(meta))
       Object.assign(store.meta, meta)
-      message.success('配置已保存')
+      message.success('설정을 저장했습니다')
       emit('save', { ...meta })
       return true
     } else {
-      throw new Error(response.message || '保存失败')
+      throw new Error(response.message || '저장하지 못했습니다')
     }
   } catch (err) {
     console.error('保存配置到知识库失败:', err)
-    message.error('保存配置失败：' + (err.message || '未知错误'))
+    message.error('설정을 저장하지 못했습니다: ' + (err.message || '알 수 없는 오류'))
     return false
   }
 }
@@ -203,7 +203,7 @@ const resetToDefaults = () => {
     }
   })
   meta.include_distances = true
-  message.success('已重置为默认配置')
+  message.success('기본 설정으로 재설정했습니다')
 }
 
 watch(

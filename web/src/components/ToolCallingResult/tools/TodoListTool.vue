@@ -33,7 +33,7 @@
           </div>
         </div>
         <div v-if="todoListData(resultContent).length === 0" class="no-results">
-          <p>暂无待办事项</p>
+          <p>할 일이 없습니다</p>
         </div>
       </div>
     </template>
@@ -76,15 +76,15 @@ const query = computed(() => {
     if (list && list.length > 0) {
       // 1. In Progress
       const inProgress = list.find((item) => item.status === 'in_progress')
-      if (inProgress) return `进行中: ${formatTodoName(inProgress.content)}`
+      if (inProgress) return `진행 중: ${formatTodoName(inProgress.content)}`
 
       // 2. Pending
       const pending = list.find((item) => item.status === 'pending')
-      if (pending) return `待处理: ${formatTodoName(pending.content)}`
+      if (pending) return `대기 중: ${formatTodoName(pending.content)}`
 
       // 3. Last item fallback
       const last = list[list.length - 1]
-      return `更新: ${formatTodoName(last.content)}`
+      return `업데이트: ${formatTodoName(last.content)}`
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :open="isOpen"
-    title="任务中心"
+    title="작업 센터"
     :width="680"
     :footer="null"
     :destroy-on-close="false"
@@ -12,7 +12,7 @@
       type="info"
       show-icon
       class="task-tip"
-      message="状态为「已完成」仅代表任务执行结束，其内部仍可能存在已捕获的问题，请留意日志。"
+      message="‘완료’는 작업 실행이 끝났다는 뜻입니다. 내부 문제는 로그에서 확인하세요."
     />
     <div class="task-center">
       <div class="task-toolbar">
@@ -20,7 +20,7 @@
           <a-segmented v-model:value="statusFilter" :options="taskFilterOptions" />
         </div>
         <div class="task-toolbar-actions">
-          <a-button type="text" @click="handleRefresh" :loading="loadingState"> 刷新 </a-button>
+          <a-button type="text" @click="handleRefresh" :loading="loadingState"> 새로 고침 </a-button>
         </div>
       </div>
 
@@ -29,7 +29,7 @@
         type="error"
         show-icon
         class="task-alert"
-        :message="lastErrorState.message || '加载任务信息失败'"
+        :message="lastErrorState.message || '작업 정보를 불러오지 못했습니다'"
       />
 
       <div v-if="hasTasks" class="task-list">
@@ -79,11 +79,11 @@
           <!-- 底部信息 -->
           <div class="task-card-footer">
             <div class="task-card-times">
-              <span v-if="task.started_at">开始 {{ formatTime(task.started_at, 'short') }}</span>
+              <span v-if="task.started_at">시작 {{ formatTime(task.started_at, 'short') }}</span>
               <span v-if="task.completed_at"
-                >· 完成 {{ formatTime(task.completed_at, 'short') }}</span
+                >· 완료 {{ formatTime(task.completed_at, 'short') }}</span
               >
-              <span v-if="!task.started_at">创建 {{ formatTime(task.created_at, 'short') }}</span>
+              <span v-if="!task.started_at">생성 {{ formatTime(task.created_at, 'short') }}</span>
             </div>
             <div class="task-card-actions">
               <a-button
@@ -93,7 +93,7 @@
                 v-if="canCancel(task)"
                 @click.stop="handleCancel(task.id)"
               >
-                取消
+                취소
               </a-button>
               <a-button
                 type="text"
@@ -102,7 +102,7 @@
                 v-if="isTaskCompleted(task)"
                 @click.stop="handleDelete(task.id, task.name)"
               >
-                删除
+                삭제
               </a-button>
             </div>
           </div>
@@ -150,7 +150,7 @@ const taskFilterOptions = computed(() => [
   {
     label: () =>
       h('span', { class: 'task-filter-option' }, [
-        '全部',
+        '전체',
         h('span', { class: 'filter-count' }, totalTaskCount.value)
       ]),
     value: 'all'
@@ -158,7 +158,7 @@ const taskFilterOptions = computed(() => [
   {
     label: () =>
       h('span', { class: 'task-filter-option' }, [
-        '进行中',
+        '진행 중',
         h('span', { class: 'filter-count' }, inProgressCount.value)
       ]),
     value: 'active'
@@ -166,7 +166,7 @@ const taskFilterOptions = computed(() => [
   {
     label: () =>
       h('span', { class: 'task-filter-option' }, [
-        '已完成',
+        '완료',
         h('span', { class: 'filter-count' }, completedCount.value)
       ]),
     value: 'success'
@@ -174,7 +174,7 @@ const taskFilterOptions = computed(() => [
   {
     label: () =>
       h('span', { class: 'task-filter-option' }, [
-        '失败',
+        '실패',
         h('span', { class: 'filter-count' }, failedTaskCount.value)
       ]),
     value: 'failed'
@@ -182,20 +182,20 @@ const taskFilterOptions = computed(() => [
 ])
 
 const STATUS_CONFIG = {
-  pending: { label: '等待中', terminal: false, cancelable: true, progress: 'active' },
-  queued: { label: '已排队', terminal: false, cancelable: true, progress: 'active' },
-  running: { label: '进行中', terminal: false, cancelable: true, progress: 'active' },
-  success: { label: '已完成', terminal: true, cancelable: false, progress: 'success' },
-  failed: { label: '失败', terminal: true, cancelable: false, progress: 'exception' },
-  cancelled: { label: '已取消', terminal: true, cancelable: false, progress: 'normal' }
+  pending: { label: '대기 중', terminal: false, cancelable: true, progress: 'active' },
+  queued: { label: '대기열', terminal: false, cancelable: true, progress: 'active' },
+  running: { label: '진행 중', terminal: false, cancelable: true, progress: 'active' },
+  success: { label: '완료', terminal: true, cancelable: false, progress: 'success' },
+  failed: { label: '실패', terminal: true, cancelable: false, progress: 'exception' },
+  cancelled: { label: '취소됨', terminal: true, cancelable: false, progress: 'normal' }
 }
 const TASK_TYPE_LABELS = {
-  knowledge_ingest: '知识库导入',
-  knowledge_parse: '文档解析',
-  knowledge_index: '文档入库',
-  knowledge_graph_index: '图谱构建',
-  dataset_generation: '评估集生成',
-  rag_evaluation: 'RAG 评估'
+  knowledge_ingest: '지식베이스 가져오기',
+  knowledge_parse: '문서 분석',
+  knowledge_index: '문서 색인',
+  knowledge_graph_index: '그래프 구축',
+  dataset_generation: '평가 데이터 생성',
+  rag_evaluation: 'RAG 평가'
 }
 
 const isActiveStatus = (status) => Boolean(STATUS_CONFIG[status]) && !STATUS_CONFIG[status].terminal
@@ -220,15 +220,15 @@ const hasTasks = computed(() => filteredTasks.value.length > 0)
 const emptyHint = computed(() => {
   switch (statusFilter.value) {
     case 'active':
-      return { title: '暂无进行中的任务', subtitle: '当前没有正在执行的后台任务。' }
+      return { title: '진행 중인 작업이 없습니다', subtitle: '현재 실행 중인 백그라운드 작업이 없습니다.' }
     case 'success':
-      return { title: '暂无已完成的任务', subtitle: '执行成功的后台任务会显示在这里。' }
+      return { title: '완료된 작업이 없습니다', subtitle: '성공한 백그라운드 작업이 여기에 표시됩니다.' }
     case 'failed':
-      return { title: '暂无失败的任务', subtitle: '失败或已取消的后台任务会显示在这里。' }
+      return { title: '실패한 작업이 없습니다', subtitle: '실패하거나 취소된 백그라운드 작업이 여기에 표시됩니다.' }
     default:
       return {
-        title: '暂无任务',
-        subtitle: '提交知识库导入等后台任务后，将在这里展示实时进度（仅展示最近的 100 个任务）。'
+        title: '작업이 없습니다',
+        subtitle: '지식베이스 가져오기 등의 백그라운드 작업을 시작하면 실시간 진행 상황이 여기에 표시됩니다(최근 100개만 표시).'
       }
   }
 })
@@ -242,7 +242,7 @@ function taskCardClasses(task) {
 }
 
 function taskTypeLabel(type) {
-  if (!type) return '后台任务'
+  if (!type) return '백그라운드 작업'
   return TASK_TYPE_LABELS[type] || type
 }
 
@@ -296,15 +296,15 @@ function handleDetail(taskId) {
     return
   }
   const rows = [
-    ['类型', taskTypeLabel(task.type)],
-    ['状态', statusLabel(task.status)],
-    ['进度', `${Math.round(task.progress || 0)}%`],
-    ['创建时间', formatTime(task.created_at)],
-    ['开始时间', task.started_at ? formatTime(task.started_at) : '-'],
-    ['完成时间', task.completed_at ? formatTime(task.completed_at) : '-'],
-    ['耗时', getTaskDuration(task) || '-'],
-    ['描述', task.message || '-'],
-    ['错误', task.error || '-']
+    ['유형', taskTypeLabel(task.type)],
+    ['상태', statusLabel(task.status)],
+    ['진행률', `${Math.round(task.progress || 0)}%`],
+    ['생성 시각', formatTime(task.created_at)],
+    ['시작 시각', task.started_at ? formatTime(task.started_at) : '-'],
+    ['완료 시각', task.completed_at ? formatTime(task.completed_at) : '-'],
+    ['소요 시간', getTaskDuration(task) || '-'],
+    ['설명', task.message || '-'],
+    ['오류', task.error || '-']
   ]
   const children = rows.map(([label, value]) =>
     h('div', { style: DETAIL_ROW_STYLE }, [
@@ -313,11 +313,11 @@ function handleDetail(taskId) {
     ])
   )
   if (hasContent(task.payload)) {
-    children.push(h('div', { style: DETAIL_TITLE_STYLE }, '参数'))
+    children.push(h('div', { style: DETAIL_TITLE_STYLE }, '매개변수'))
     children.push(h('pre', { style: DETAIL_JSON_STYLE }, prettyJson(task.payload)))
   }
   if (hasContent(task.result)) {
-    children.push(h('div', { style: DETAIL_TITLE_STYLE }, '结果'))
+    children.push(h('div', { style: DETAIL_TITLE_STYLE }, '결과'))
     children.push(h('pre', { style: DETAIL_JSON_STYLE }, prettyJson(task.result)))
   }
   Modal.info({
@@ -333,11 +333,11 @@ function handleCancel(taskId) {
 
 function handleDelete(taskId, taskName) {
   Modal.confirm({
-    title: '确认删除',
-    content: `确定要删除任务"${taskName}"吗？此操作不可恢复。`,
-    okText: '删除',
+    title: '삭제 확인',
+    content: `작업 "${taskName}"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`,
+    okText: '삭제',
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: '취소',
     onOk: () => {
       taskerStore.deleteTask(taskId)
     }
@@ -367,15 +367,15 @@ function getTaskDuration(task) {
     const seconds = diffSeconds % 60
 
     if (hours > 0) {
-      return `${hours}小时${minutes}分钟`
+      return `${hours}시간 ${minutes}분`
     }
     if (minutes > 0) {
-      return `${minutes}分钟${seconds}秒`
+      return `${minutes}분 ${seconds}초`
     }
     if (seconds > 0) {
-      return `${seconds}秒`
+      return `${seconds}초`
     }
-    return '小于1秒'
+    return '1초 미만'
   } catch {
     return null
   }

@@ -2,12 +2,12 @@
   <div class="user-config-settings">
     <div class="header-section">
       <div class="header-content">
-        <div class="section-title">用户配置</div>
+        <div class="section-title">사용자 설정</div>
       </div>
       <div class="header-actions">
         <a-button class="lucide-icon-btn" :loading="loading" @click="loadUserConfig">
           <template #icon><RefreshCw :size="16" :class="{ spin: loading }" /></template>
-          刷新
+          새로 고침
         </a-button>
       </div>
     </div>
@@ -16,10 +16,10 @@
         <div class="config-row">
           <div class="config-meta">
             <div class="config-title-line">
-              <span class="config-title">是否启用 Memory</span>
-              <span class="reserved-badge">预留开关</span>
+              <span class="config-title">메모리 기능 사용</span>
+              <span class="reserved-badge">예정된 기능</span>
             </div>
-            <p class="config-description">当前仅保存配置值，暂不接入智能体运行逻辑。</p>
+            <p class="config-description">현재는 설정값만 저장하며, 아직 에이전트 실행 로직에는 연결되지 않습니다.</p>
           </div>
           <a-switch :checked="draftEnableMemory" @change="handleMemoryChange" />
         </div>
@@ -50,7 +50,7 @@ const loadUserConfig = async () => {
     const res = await userConfigApi.get()
     applyResponse(res)
   } catch (error) {
-    message.error(error.message || '加载用户配置失败')
+    message.error(error.message || '사용자 설정을 불러오지 못했습니다')
   } finally {
     loading.value = false
   }
@@ -66,9 +66,9 @@ const saveUserConfig = async () => {
   try {
     const res = await userConfigApi.update({ enable_memory: draftEnableMemory.value })
     applyResponse(res)
-    message.success('用户配置已保存')
+    message.success('사용자 설정을 저장했습니다')
   } catch (error) {
-    message.error(error.message || '保存用户配置失败')
+    message.error(error.message || '사용자 설정을 저장하지 못했습니다')
   } finally {
     saving.value = false
   }

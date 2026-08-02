@@ -4,7 +4,7 @@
       <button
         type="button"
         class="item-main"
-        :title="`打开 ${file.name}`"
+        :title="`${file.name} 열기`"
         @click="openPreview(file)"
       >
         <FileTypeIcon :name="file.path" :size="20" class="item-icon" />
@@ -14,12 +14,12 @@
         </div>
       </button>
       <div class="item-actions">
-        <button class="item-action-btn" title="下载" @click.stop="downloadFile(file)">
+        <button class="item-action-btn" title="다운로드" @click.stop="downloadFile(file)">
           <Download :size="15" />
         </button>
         <button
           class="item-action-btn"
-          :title="isSaving(file.path) ? '保存中' : '保存到工作区'"
+          :title="isSaving(file.path) ? '저장 중' : '작업공간에 저장'"
           :disabled="isSaving(file.path)"
           @click.stop="saveToWorkspace(file)"
         >
@@ -85,10 +85,10 @@ const getFileMetaLabel = (path) => {
     String(path || '')
       .split('/')
       .pop() || ''
-  if (!filename.includes('.')) return '交付文件'
+  if (!filename.includes('.')) return '결과 파일'
 
   const extension = filename.split('.').pop()
-  return extension ? `交付文件 · ${extension.toUpperCase()}` : '交付文件'
+  return extension ? `결과 파일 · ${extension.toUpperCase()}` : '결과 파일'
 }
 
 const openPreview = (file) => {
@@ -113,7 +113,7 @@ const downloadFile = async (file) => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
   } catch (error) {
-    message.error(error?.message || '下载文件失败')
+    message.error(error?.message || '파일을 다운로드하지 못했습니다')
   }
 }
 
@@ -132,10 +132,10 @@ const saveToWorkspace = async (file) => {
   setSaving(file.path, true)
   try {
     const result = await threadApi.saveThreadArtifactToWorkspace(props.threadId, file.path)
-    message.success(`已保存到工作区：${result.saved_path}`)
+    message.success(`작업공간에 저장했습니다: ${result.saved_path}`)
     emit('saved', result)
   } catch (error) {
-    message.error(error?.message || '保存到工作区失败')
+    message.error(error?.message || '작업공간에 저장하지 못했습니다')
   } finally {
     setSaving(file.path, false)
   }

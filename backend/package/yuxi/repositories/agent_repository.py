@@ -12,10 +12,10 @@ from yuxi.utils.datetime_utils import utc_now_naive
 from yuxi.utils.share_config import SHARE_ACCESS_LEVELS, normalize_share_config
 
 DEFAULT_AGENT_SLUG = "default-chatbot"
-DEFAULT_AGENT_NAME = "智能助手"
+DEFAULT_AGENT_NAME = "AI 도우미"
 DEFAULT_AGENT_BACKEND_ID = "ChatbotAgent"
 SUB_AGENT_BACKEND_ID = "SubAgentBackend"
-DEFAULT_AGENT_DESCRIPTION = "基础的对话机器人，可以回答问题，可在配置中启用需要的工具。"
+DEFAULT_AGENT_DESCRIPTION = "질문에 답하고, 설정에서 필요한 도구를 활성화할 수 있는 기본 대화형 AI입니다."
 DEFAULT_SHARE_CONFIG = {"access_level": "global", "department_ids": [], "user_uids": []}
 
 GENERAL_PURPOSE_AGENT_SLUG = "general-purpose"
@@ -179,6 +179,11 @@ class AgentRepository:
         agent = await self.get_by_slug(DEFAULT_AGENT_SLUG)
         if agent:
             needs_update = False
+            # 기존 설치본의 중국어 기본 이름만 한글 이름으로 마이그레이션합니다.
+            # 사용자가 직접 변경한 이름은 그대로 유지합니다.
+            if agent.name == "智能助手":
+                agent.name = DEFAULT_AGENT_NAME
+                needs_update = True
             if agent.share_config != DEFAULT_SHARE_CONFIG:
                 agent.share_config = DEFAULT_SHARE_CONFIG.copy()
                 needs_update = True

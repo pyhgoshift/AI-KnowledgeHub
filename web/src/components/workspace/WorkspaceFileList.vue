@@ -11,19 +11,19 @@
     :root-label="rootLabel"
     :pagination="pagination"
     :selection="tableSelection"
-    empty-text="当前文件夹为空"
+    empty-text="현재 폴더가 비어 있습니다"
     @open-row="(entry) => $emit('select-entry', entry)"
     @breadcrumb-click="handleBreadcrumbClick"
     @page-change="(payload) => $emit('page-change', payload)"
   >
     <template #toolbar-actions>
       <span class="entry-count">{{ entryCountText }}</span>
-      <a-tooltip v-if="!readonly" title="多选">
+      <a-tooltip v-if="!readonly" title="여러 항목 선택">
         <a-button
           size="small"
           class="lucide-icon-btn"
           :type="effectiveSelectionMode ? 'primary' : 'default'"
-          aria-label="多选"
+          aria-label="여러 항목 선택"
           @click="toggleSelectionMode"
         >
           <ListChecks :size="14" />
@@ -37,7 +37,7 @@
         :loading="deletingPaths.length > 0"
         @click="$emit('delete-selected')"
       >
-        删除选中
+        선택 항목 삭제
       </a-button>
     </template>
 
@@ -62,7 +62,7 @@
           type="button"
           class="more-action"
           :disabled="isDeleting(row.path)"
-          aria-label="更多操作"
+          aria-label="추가 작업"
           @click.stop
         >
           <MoreHorizontal :size="16" />
@@ -72,13 +72,13 @@
             <a-menu-item v-if="!row.is_dir" key="download" @click="$emit('download-entry', row)">
               <span class="menu-item-content">
                 <Download :size="14" />
-                <span>下载</span>
+                <span>다운로드</span>
               </span>
             </a-menu-item>
             <a-menu-item v-if="!readonly" key="delete" danger @click="$emit('delete-entry', row)">
               <span class="menu-item-content">
                 <Trash2 :size="14" />
-                <span>删除</span>
+                <span>삭제</span>
               </span>
             </a-menu-item>
           </a-menu>
@@ -105,7 +105,7 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
   breadcrumbItems: { type: Array, default: null },
-  rootLabel: { type: String, default: '工作区' },
+  rootLabel: { type: String, default: '작업공간' },
   pagination: { type: Object, default: null }
 })
 
@@ -122,10 +122,10 @@ const emit = defineEmits([
 ])
 
 const columns = [
-  { title: '名称', dataIndex: 'name', key: 'name', ellipsis: true },
-  { title: '大小', dataIndex: 'size', key: 'size', width: 86 },
-  { title: '修改时间', dataIndex: 'modified_at', key: 'modified_at', width: 126 },
-  { title: '操作', key: 'action', dataIndex: 'path', width: 58, align: 'center' }
+  { title: '이름', dataIndex: 'name', key: 'name', ellipsis: true },
+  { title: '크기', dataIndex: 'size', key: 'size', width: 86 },
+  { title: '수정 일시', dataIndex: 'modified_at', key: 'modified_at', width: 126 },
+  { title: '작업', key: 'action', dataIndex: 'path', width: 58, align: 'center' }
 ]
 
 const deletingPathSet = computed(() => new Set(props.deletingPaths))
@@ -134,9 +134,9 @@ const normalizedCurrentPath = computed(() => (props.currentPath || '/').replace(
 const effectiveSelectionMode = computed(() => !props.readonly && props.selectionMode)
 const entryCountText = computed(() => {
   if (props.pagination?.total !== undefined) {
-    return `${props.pagination.total} 项`
+    return `${props.pagination.total}개`
   }
-  return `${props.entries.length} 项`
+  return `${props.entries.length}개`
 })
 
 const resolvedBreadcrumbItems = computed(() => {

@@ -18,12 +18,12 @@
     />
     <div v-else-if="loading" class="preview-state">
       <a-spin />
-      <span>正在加载预览...</span>
+      <span>미리보기를 불러오는 중...</span>
     </div>
     <div v-else class="preview-empty">
       <FileSearch :size="28" />
-      <h3>选择文件以预览</h3>
-      <p>支持 Markdown、TXT 编辑，其他格式保持只读预览。</p>
+      <h3>미리볼 파일을 선택하세요</h3>
+      <p>Markdown과 TXT는 편집할 수 있으며, 다른 형식은 읽기 전용으로 미리 봅니다.</p>
     </div>
   </aside>
 </template>

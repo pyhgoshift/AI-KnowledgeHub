@@ -1062,7 +1062,7 @@ const getOcrStatus = (engine) => {
   return current?.status || 'unknown'
 }
 
-const getOcrStatusLabel = (engine) => ocrStatusLabels[getOcrStatus(engine)] || '状态未知'
+const getOcrStatusLabel = (engine) => ocrStatusLabels[getOcrStatus(engine)] || '상태를 알 수 없음'
 
 const getOcrDescription = (engine) => {
   const option = ocrEngineOptions.find((item) => item.value === engine)
@@ -1082,7 +1082,7 @@ const getOcrDescription = (engine) => {
     checking: '서비스 상태를 확인하는 중입니다',
     unknown: option?.description || '서비스 상태를 알 수 없습니다'
   }
-  return fallbackMap[status] || option?.description || '服务状态未知'
+  return fallbackMap[status] || option?.description || '서비스 상태를 알 수 없음'
 }
 
 const isUnavailableOcrEngine = (engine) => ['unavailable', 'error'].includes(getOcrStatus(engine))
@@ -1098,7 +1098,7 @@ const unavailableOcrOptions = computed(() =>
 const selectedOcrEngineLabel = computed(() => {
   return (
     ocrEngineOptions.find((option) => option.value === processingParams.value.ocr_engine)?.label ||
-    '选择 OCR 引擎'
+    'OCR 엔진 선택'
   )
 })
 
@@ -1121,7 +1121,7 @@ const validateOcrService = () => {
 
   const engine = processingParams.value.ocr_engine
   if (isUnavailableOcrEngine(engine)) {
-    message.error(`OCR服务不可用: ${getOcrDescription(engine)}`)
+    message.error(`OCR 서비스를 사용할 수 없습니다: ${getOcrDescription(engine)}`)
     return false
   }
 
@@ -1134,7 +1134,7 @@ const handleCancel = () => {
 
 const beforeUpload = (file) => {
   if (!isSupportedExtension(file?.name)) {
-    message.error(`不支持的文件类型：${file?.name || '未知文件'}`)
+    message.error(`지원하지 않는 파일 형식입니다: ${file?.name || '알 수 없는 파일'}`)
     return Upload.LIST_IGNORE
   }
   return true

@@ -4,13 +4,13 @@
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-state">
         <a-spin size="small" />
-        <span>加载中...</span>
+        <span>불러오는 중...</span>
       </div>
 
       <!-- 生成中状态 -->
       <div v-else-if="generating" class="generating-state">
         <a-spin size="small" />
-        <span>AI 正在生成思维导图...</span>
+        <span>AI가 마인드맵을 생성하는 중...</span>
       </div>
 
       <!-- 空状态 -->
@@ -18,15 +18,15 @@
         <div class="empty-icon">
           <MapIcon :size="24" />
         </div>
-        <p class="empty-title">暂无思维导图</p>
-        <p class="empty-description">从当前知识库内容生成结构化导图。</p>
+        <p class="empty-title">마인드맵이 없습니다</p>
+        <p class="empty-description">현재 지식베이스 내용으로 구조화된 마인드맵을 만듭니다.</p>
         <button
           type="button"
           class="lucide-icon-btn mindmap-primary-action"
           @click="generateMindmap"
         >
           <Sparkles :size="14" />
-          <span>生成思维导图</span>
+          <span>마인드맵 생성</span>
         </button>
       </div>
 
@@ -39,10 +39,10 @@
               class="lucide-icon-btn mindmap-toolbar-btn"
               :disabled="generating"
               @click="refreshMindmap"
-              title="重新生成"
+              title="다시 생성"
             >
               <RefreshCw :size="14" :class="{ spin: generating }" />
-              <span class="toolbar-text">重新生成</span>
+              <span class="toolbar-text">다시 생성</span>
             </button>
             <button
               v-if="isIncremental && mindmapData"
@@ -50,10 +50,10 @@
               class="lucide-icon-btn mindmap-toolbar-btn mindmap-toolbar-btn--accent"
               :disabled="generating"
               @click="incrementalUpdate"
-              title="增量更新"
+              title="증분 업데이트"
             >
               <Plus :size="14" />
-              <span class="toolbar-text">增量更新</span>
+              <span class="toolbar-text">증분 업데이트</span>
               <span v-if="mindmapDiff?.added_files?.length" class="mindmap-badge">
                 {{ mindmapDiff.added_files.length }}
               </span>
@@ -62,7 +62,7 @@
               type="button"
               class="lucide-icon-btn mindmap-toolbar-btn"
               @click="fitView"
-              title="适应视图"
+              title="화면에 맞추기"
             >
               <Maximize2 :size="14" />
               <span class="toolbar-text">适应视图</span>

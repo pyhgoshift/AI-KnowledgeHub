@@ -9,8 +9,8 @@
       @cancel="handleIndexConfigCancel"
     >
       <template #footer>
-        <a-button key="back" @click="handleIndexConfigCancel">取消</a-button>
-        <a-button key="submit" type="primary" @click="handleIndexConfigConfirm">确定</a-button>
+        <a-button key="back" @click="handleIndexConfigCancel">취소</a-button>
+        <a-button key="submit" type="primary" @click="handleIndexConfigConfirm">확인</a-button>
       </template>
       <div class="index-params">
         <a-alert
@@ -18,7 +18,7 @@
           class="index-pending-alert"
           type="info"
           show-icon
-          :message="`将提交 ${pendingIndexTotalText} 个待入库文件，任务会在后台按批处理，可在任务中心查看进度。`"
+          :message="`색인 대기 파일 ${pendingIndexTotalText}개를 제출합니다. 작업은 백그라운드에서 일괄 처리되며, 작업 센터에서 진행 상황을 볼 수 있습니다.`"
         />
         <ChunkParamsConfig
           :temp-chunk-params="indexParams"
@@ -34,13 +34,13 @@
     <!-- 新建文件夹模态框 -->
     <a-modal
       v-model:open="createFolderModalVisible"
-      title="新建文件夹"
+      title="새 폴더"
       :confirm-loading="createFolderLoading"
       @ok="handleCreateFolder"
     >
       <a-input
         v-model:value="newFolderName"
-        placeholder="请输入文件夹名称"
+        placeholder="폴더 이름을 입력하세요"
         @pressEnter="handleCreateFolder"
       />
     </a-modal>
@@ -63,7 +63,7 @@
       @page-change="handleTablePageChange"
     >
       <template #breadcrumb-suffix>
-        <span v-if="isFilteredView" class="file-breadcrumb-filter">筛选结果</span>
+        <span v-if="isFilteredView" class="file-breadcrumb-filter">필터 결과</span>
       </template>
 
       <template #toolbar-actions>
@@ -74,13 +74,13 @@
                 type="text"
                 class="panel-action-btn"
                 :class="{ active: statusFilter !== 'all' }"
-                title="筛选状态"
+              title="상태 필터"
               >
                 <template #icon><Filter size="16" /></template>
               </a-button>
               <template #overlay>
                 <a-menu :selectedKeys="[statusFilter]" @click="handleStatusMenuClick">
-                  <a-menu-item key="all">全部状态</a-menu-item>
+                  <a-menu-item key="all">모든 상태</a-menu-item>
                   <a-menu-item v-for="opt in statusOptions" :key="opt.value">
                     {{ opt.label }}
                   </a-menu-item>
@@ -91,7 +91,7 @@
             <a-button
               type="text"
               @click="toggleSelectionMode"
-              title="多选"
+              title="여러 항목 선택"
               class="panel-action-btn"
               :class="{ active: isSelectionMode }"
             >
@@ -105,7 +105,7 @@
             :overlayStyle="{ minWidth: '220px' }"
             overlayClassName="panel-overflow-popover"
           >
-            <a-button type="text" class="panel-action-btn overflow-trigger" title="更多">
+            <a-button type="text" class="panel-action-btn overflow-trigger" title="더보기">
               <template #icon><MoreHorizontal size="16" /></template>
             </a-button>
             <template #overlay>
@@ -117,18 +117,18 @@
                     @click="handleRefresh"
                   >
                     <RotateCw size="16" :class="{ spin: refreshing }" />
-                    <span>刷新</span>
+                    <span>새로 고침</span>
                   </div>
 
                   <a-dropdown trigger="click" placement="bottomLeft">
                     <div class="overflow-action-item" :class="{ active: statusFilter !== 'all' }">
                       <Filter size="16" />
-                      <span>筛选</span>
+                      <span>필터</span>
                       <span class="overflow-action-hint">{{ currentStatusLabel }}</span>
                     </div>
                     <template #overlay>
                       <a-menu :selectedKeys="[statusFilter]" @click="handleStatusMenuClick">
-                        <a-menu-item key="all">全部状态</a-menu-item>
+                        <a-menu-item key="all">모든 상태</a-menu-item>
                         <a-menu-item v-for="opt in statusOptions" :key="opt.value">
                           {{ opt.label }}
                         </a-menu-item>
@@ -142,7 +142,7 @@
                     @click="toggleSelectionMode"
                   >
                     <CheckSquare size="16" />
-                    <span>多选</span>
+                    <span>여러 항목 선택</span>
                   </div>
                 </div>
               </div>
@@ -160,7 +160,7 @@
               @change="onSelectAllChange"
               style="margin-right: 8px"
             />
-            <span>{{ selectedRowKeys.length }} 项</span>
+            <span>{{ selectedRowKeys.length }}개 선택됨</span>
           </div>
           <div style="display: flex; gap: 2px">
             <a-button
@@ -170,7 +170,7 @@
               :disabled="!canBatchParse"
               :icon="h(FileText, { size: 16 })"
             >
-              批量解析
+              일괄 분석
             </a-button>
             <a-button
               type="link"
@@ -179,7 +179,7 @@
               :disabled="!canBatchIndex"
               :icon="h(Database, { size: 16 })"
             >
-              批量入库
+              일괄 색인
             </a-button>
             <a-button
               type="link"
@@ -189,7 +189,7 @@
               :disabled="!canBatchDelete"
               :icon="h(Trash2, { size: 16 })"
             >
-              批量删除
+              일괄 삭제
             </a-button>
           </div>
         </div>
@@ -266,11 +266,11 @@
                 <template v-if="row.is_folder">
                   <a-button type="text" block @click="showCreateFolderModal(row.file_id)">
                     <template #icon><component :is="h(FolderPlus)" size="14" /></template>
-                    新建子文件夹
+                    하위 폴더 만들기
                   </a-button>
                   <a-button type="text" block danger @click="handleDeleteFolder(row)">
                     <template #icon><component :is="h(Trash2)" size="14" /></template>
-                    删除文件夹
+                    폴더 삭제
                   </a-button>
                 </template>
                 <template v-else>
@@ -281,7 +281,7 @@
                     :disabled="lock || !canDownloadFile(row)"
                   >
                     <template #icon><component :is="h(Download)" size="14" /></template>
-                    下载文件
+                    파일 다운로드
                   </a-button>
 
                   <!-- Parse Action -->
@@ -293,7 +293,7 @@
                     :disabled="lock"
                   >
                     <template #icon><component :is="h(FileText)" size="14" /></template>
-                    {{ getFilePrimaryAction(row)?.label || '解析文件' }}
+                    {{ getFilePrimaryAction(row)?.label || '파일 분석' }}
                   </a-button>
 
                   <!-- Index Action -->
@@ -305,7 +305,7 @@
                     :disabled="lock"
                   >
                     <template #icon><component :is="h(Database)" size="14" /></template>
-                    {{ getFilePrimaryAction(row)?.label || '入库' }}
+                    {{ getFilePrimaryAction(row)?.label || '색인' }}
                   </a-button>
 
                   <!-- Reindex Action -->
@@ -317,7 +317,7 @@
                     :disabled="lock"
                   >
                     <template #icon><component :is="h(RotateCw)" size="14" /></template>
-                    重新入库
+                    다시 색인
                   </a-button>
 
                   <a-button
@@ -328,7 +328,7 @@
                     :disabled="!canDeleteFile(row, lock)"
                   >
                     <template #icon><component :is="h(Trash2)" size="14" /></template>
-                    删除文件
+                    파일 삭제
                   </a-button>
                 </template>
               </div>
@@ -439,7 +439,7 @@ const fileBreadcrumbItems = computed(() =>
   folderBreadcrumbs.value.map((item, index) => ({
     ...item,
     key: item.file_id || `root-${index}`,
-    name: item.filename || '全部文件'
+    name: item.filename || '모든 파일'
   }))
 )
 const isFilteredView = computed(() => Boolean(store.fileBrowser.recursive))
@@ -537,19 +537,19 @@ const toggleSelectionMode = () => {
 
 const handleCreateFolder = async () => {
   if (!newFolderName.value.trim()) {
-    message.warning('请输入文件夹名称')
+    message.warning('폴더 이름을 입력하세요')
     return
   }
 
   createFolderLoading.value = true
   try {
     await documentApi.createFolder(store.kbId, newFolderName.value, currentParentId.value)
-    message.success('创建成功')
+    message.success('만들었습니다')
     createFolderModalVisible.value = false
     handleRefresh()
   } catch (error) {
     console.error(error)
-    message.error('创建失败: ' + (error.message || '未知错误'))
+    message.error('만들지 못했습니다: ' + (error.message || '알 수 없는 오류'))
   } finally {
     createFolderLoading.value = false
   }
@@ -558,7 +558,7 @@ const handleCreateFolder = async () => {
 // 入库/重新入库参数配置相关
 const indexConfigModalVisible = ref(false)
 const indexConfigModalLoading = computed(() => store.state.chunkLoading)
-const indexConfigModalTitle = ref('入库参数配置')
+const indexConfigModalTitle = ref('색인 매개변수 설정')
 
 const createDefaultIndexParams = () => ({
   chunk_preset_id: '',
@@ -588,7 +588,7 @@ const tablePagination = computed(() => ({
   pageSize: store.fileBrowser.pageSize,
   total: store.fileBrowser.total,
   showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 项`,
+  showTotal: (total) => `총 ${total}개`,
   pageSizeOptions,
   hideOnSinglePage: true
 }))
@@ -607,7 +607,7 @@ const statusOptions = FILE_STATUS_FILTER_OPTIONS
 // 紧凑表格列定义
 const columnsCompact = [
   {
-    title: '文件名',
+    title: '파일 이름',
     dataIndex: 'filename',
     key: 'filename',
     ellipsis: true,
@@ -620,7 +620,7 @@ const columnsCompact = [
     sortDirections: ['ascend', 'descend']
   },
   {
-    title: '状态',
+    title: '상태',
     dataIndex: 'status',
     key: 'status',
     width: 104,
@@ -630,19 +630,19 @@ const columnsCompact = [
     sortDirections: ['ascend', 'descend']
   },
   {
-    title: '时间',
+    title: '시간',
     dataIndex: 'created_at',
     key: 'created_at',
     width: 180,
     sorter: (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0),
     sortDirections: ['ascend', 'descend']
   },
-  { title: '操作', key: 'action', dataIndex: 'file_id', width: 64, align: 'center' }
+  { title: '작업', key: 'action', dataIndex: 'file_id', width: 64, align: 'center' }
 ]
 
 // 空状态文本
 const emptyText = computed(() => {
-  return '暂无文件'
+  return '파일이 없습니다'
 })
 
 // 计算是否可以批量删除
@@ -719,14 +719,14 @@ const handleDeleteFile = (fileId) => {
 const handleDeleteFolder = (record) => {
   closePopover(record.file_id)
   Modal.confirm({
-    title: '删除文件夹',
-    content: `确定要删除文件夹 "${record.filename}" 及其包含的所有内容吗？`,
-    okText: '确认',
-    cancelText: '取消',
+    title: '폴더 삭제',
+    content: `폴더 "${record.filename}"와(과) 안의 모든 내용을 삭제할까요?`,
+    okText: '확인',
+    cancelText: '취소',
     onOk: async () => {
       try {
         await store.deleteFile(record.file_id)
-        message.success('删除成功')
+        message.success('삭제했습니다')
       } catch {
         // Error handled in store but we can add extra handling if needed
       }
@@ -745,7 +745,7 @@ const handleBatchParse = async () => {
   })
 
   if (validKeys.length === 0) {
-    message.warning('没有可解析的文件')
+    message.warning('분석할 파일이 없습니다')
     return
   }
 
@@ -760,7 +760,7 @@ const handleBatchIndex = async () => {
   })
 
   if (validKeys.length === 0) {
-    message.warning('没有可入库的文件')
+    message.warning('색인할 파일이 없습니다')
     return
   }
 
@@ -768,19 +768,19 @@ const handleBatchIndex = async () => {
   isBatchIndexOperation.value = true
   isPendingIndexOperation.value = false
   pendingIndexTotal.value = 0
-  indexConfigModalTitle.value = '批量入库参数配置'
+  indexConfigModalTitle.value = '일괄 색인 매개변수 설정'
   indexConfigModalVisible.value = true
 }
 
 const startPendingIndex = (count = 0) => {
   if (lock.value) {
-    message.warning('当前有文件处理中，请稍后再试')
+    message.warning('처리 중인 파일이 있습니다. 잠시 후 다시 시도하세요')
     return false
   }
 
   const total = Number(count || 0)
   if (total <= 0) {
-    message.info('没有待入库文档')
+    message.info('색인 대기 문서가 없습니다')
     return false
   }
 
@@ -788,7 +788,7 @@ const startPendingIndex = (count = 0) => {
   isBatchIndexOperation.value = false
   isPendingIndexOperation.value = true
   pendingIndexTotal.value = total
-  indexConfigModalTitle.value = '待入库文件参数配置'
+  indexConfigModalTitle.value = '색인 대기 파일 매개변수 설정'
   resetIndexParams()
   indexConfigModalVisible.value = true
   return true
@@ -796,7 +796,7 @@ const startPendingIndex = (count = 0) => {
 
 const openFileDetail = (record) => {
   if (!canOpenFileDetail(record)) {
-    message.error('文件未处理完成，请稍后再试')
+    message.error('파일 처리가 끝나지 않았습니다. 잠시 후 다시 시도하세요')
     return
   }
   store.openFileDetail(record.file_id)
@@ -807,7 +807,7 @@ const handleDownloadFile = async (record) => {
   const kbId = store.kbId
   if (!kbId) {
     console.error('无法获取数据库ID，数据库ID:', store.kbId, '记录:', record)
-    message.error('无法获取数据库ID，请刷新页面后重试')
+    message.error('지식베이스 ID를 가져올 수 없습니다. 페이지를 새로 고친 뒤 다시 시도하세요')
     return
   }
 
@@ -857,7 +857,7 @@ const handleDownloadFile = async (record) => {
     window.URL.revokeObjectURL(url)
   } catch (error) {
     console.error('下载文件时出错:', error)
-    const errorMessage = error.message || '下载失败，请稍后重试'
+    const errorMessage = error.message || '다운로드하지 못했습니다. 잠시 후 다시 시도하세요'
     message.error(errorMessage)
   }
 }
@@ -909,7 +909,7 @@ const handleIndexFile = async (record) => {
   isBatchIndexOperation.value = false
   isPendingIndexOperation.value = false
   pendingIndexTotal.value = 0
-  indexConfigModalTitle.value = '入库参数配置'
+  indexConfigModalTitle.value = '색인 매개변수 설정'
 
   const processingParams = await loadRecordProcessingParams(record)
   resetIndexParams(processingParams)
@@ -923,7 +923,7 @@ const handleReindexFile = async (record) => {
   isBatchIndexOperation.value = false
   isPendingIndexOperation.value = false
   pendingIndexTotal.value = 0
-  indexConfigModalTitle.value = '重新入库参数配置'
+  indexConfigModalTitle.value = '다시 색인 매개변수 설정'
 
   const processingParams = await loadRecordProcessingParams(record)
   resetIndexParams(processingParams)
@@ -956,7 +956,7 @@ const handleIndexConfigConfirm = async () => {
     }
   } catch (error) {
     console.error('入库失败:', error)
-    const errorMessage = error.message || '入库失败，请稍后重试'
+    const errorMessage = error.message || '색인하지 못했습니다. 잠시 후 다시 시도하세요'
     message.error(errorMessage)
   }
 }
@@ -988,10 +988,10 @@ const formatFileTableTime = (value) => {
 
   const oneYearAgo = parseToShanghai(Date.now()).subtract(1, 'year')
   if (parsed.isAfter(oneYearAgo)) {
-    return parsed.format('MM月DD日 HH:mm:ss')
+    return parsed.format('MM월 DD일 HH:mm:ss')
   }
 
-  return parsed.format('YYYY年MM月DD日')
+  return parsed.format('YYYY년 MM월 DD일')
 }
 
 // 导入工具函数

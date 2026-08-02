@@ -35,7 +35,7 @@
           <a-menu-divider />
           <a-menu-item key="docs" @click="openDocs">
             <template #icon><BookOpen :size="16" /></template>
-            <span class="menu-text">文档中心</span>
+            <span class="menu-text">문서 센터</span>
           </a-menu-item>
           <a-menu-item key="theme" @click="toggleTheme">
             <template #icon>
@@ -43,17 +43,17 @@
               <Moon v-else :size="16" />
             </template>
             <span class="menu-text">{{
-              themeStore.isDark ? '切换到浅色模式' : '切换到深色模式'
+              themeStore.isDark ? '라이트 모드로 전환' : '다크 모드로 전환'
             }}</span>
           </a-menu-item>
           <a-menu-divider />
           <a-menu-item v-if="userStore.isSuperAdmin" key="debug" @click="showDebug = true">
             <template #icon><Terminal :size="16" /></template>
-            <span class="menu-text">调试面板（非生产环境）</span>
+            <span class="menu-text">디버그 패널(개발 환경)</span>
           </a-menu-item>
           <a-menu-item key="setting" @click="goToSetting">
             <template #icon><Settings :size="16" /></template>
-            <span class="menu-text">设置</span>
+            <span class="menu-text">설정</span>
           </a-menu-item>
           <a-menu-item key="logout" @click="logout">
             <template #icon><LogOut :size="16" /></template>
@@ -108,13 +108,13 @@ defineProps({
 const userRoleText = computed(() => {
   switch (userStore.userRole) {
     case 'superadmin':
-      return '超级管理员'
+      return '최고 관리자'
     case 'admin':
-      return '管理员'
+      return '관리자'
     case 'user':
-      return '普通用户'
+      return '일반 사용자'
     default:
-      return '未知角色'
+      return '알 수 없는 역할'
   }
 })
 

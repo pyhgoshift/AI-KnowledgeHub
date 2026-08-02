@@ -77,8 +77,8 @@ async def _build_middlewares(context):
 
 
 class ChatbotAgent(BaseAgent):
-    name = "智能助手"
-    description = "基础的对话机器人，可以回答问题，可在配置中启用需要的工具。"
+    name = "AI 도우미"
+    description = "질문에 답하고 필요한 도구를 사용할 수 있는 기본 대화형 AI입니다."
     capabilities = ["file_upload", "files"]  # 支持文件上传功能
     context_schema = ChatBotContext
 

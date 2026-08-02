@@ -14,15 +14,15 @@
     <template #result>
       <div class="ocr-result">
         <div class="result-row" v-if="resultData?.parsed_path">
-          <span class="label">结果文件</span>
+          <span class="label">결과 파일</span>
           <span class="value code">{{ resultData.parsed_path }}</span>
         </div>
         <div class="result-row" v-if="Number.isFinite(resultData?.char_count)">
-          <span class="label">字符数</span>
+          <span class="label">글자 수</span>
           <span class="value">{{ resultData.char_count }}</span>
         </div>
         <pre v-if="resultData?.preview" class="preview">{{ resultData.preview }}</pre>
-        <div v-if="resultData?.truncated" class="hint">预览已截断，完整内容请读取结果文件。</div>
+        <div v-if="resultData?.truncated" class="hint">미리보기가 잘렸습니다. 전체 내용은 결과 파일에서 확인하세요.</div>
       </div>
     </template>
   </BaseToolCall>
