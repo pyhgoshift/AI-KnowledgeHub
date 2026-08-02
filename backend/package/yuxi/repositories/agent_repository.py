@@ -226,6 +226,18 @@ class AgentRepository:
     async def ensure_web_search_subagent(self, *, created_by: str | None = None) -> Agent:
         agent = await self.get_by_slug(WEB_SEARCH_AGENT_SLUG)
         if agent:
+            needs_update = False
+            if agent.name != WEB_SEARCH_AGENT_NAME:
+                agent.name = WEB_SEARCH_AGENT_NAME
+                needs_update = True
+            if agent.description != WEB_SEARCH_AGENT_DESCRIPTION:
+                agent.description = WEB_SEARCH_AGENT_DESCRIPTION
+                needs_update = True
+            if needs_update:
+                agent.updated_by = created_by
+                agent.updated_at = utc_now_naive()
+                await self.db.commit()
+                await self.db.refresh(agent)
             return agent
 
         agent = Agent(
@@ -274,6 +286,18 @@ class AgentRepository:
         """落库一个内置 Agent；已存在则原样返回，避免覆盖管理员后续修改。"""
         agent = await self.get_by_slug(slug)
         if agent:
+            needs_update = False
+            if agent.name != name:
+                agent.name = name
+                needs_update = True
+            if agent.description != description:
+                agent.description = description
+                needs_update = True
+            if needs_update:
+                agent.updated_by = created_by
+                agent.updated_at = utc_now_naive()
+                await self.db.commit()
+                await self.db.refresh(agent)
             return agent
 
         agent = Agent(
