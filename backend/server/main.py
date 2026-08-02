@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 import sys
 
 # ==============================================================================
@@ -19,6 +20,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from server.routers import router
 from server.utils.lifespan import lifespan
@@ -75,6 +77,30 @@ def _build_cors_options(origins: list[str] | None = None) -> dict[str, object]:
 app = FastAPI(lifespan=lifespan)
 # 所有业务接口统一挂载到 /api，具体分组在 server.routers 中集中注册。
 app.include_router(router, prefix="/api")
+
+
+_CHINESE_TEXT_RE = re.compile(r"[\u4e00-\u9fff]")
+
+
+def _localize_http_detail(detail: object) -> object:
+    """Avoid exposing untranslated Chinese backend errors in the Korean UI.
+
+    API routes still preserve structured validation details. Only plain text error
+    details that contain Chinese characters are replaced at the response boundary.
+    """
+
+    if isinstance(detail, str) and _CHINESE_TEXT_RE.search(detail):
+        return "요청을 처리할 수 없습니다. 입력 내용을 확인한 뒤 다시 시도하세요."
+    return detail
+
+
+@app.exception_handler(StarletteHTTPException)
+async def korean_http_exception_handler(_: Request, exc: StarletteHTTPException) -> JSONResponse:
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": _localize_http_detail(exc.detail)},
+        headers=exc.headers,
+    )
 
 # CORS 设置
 app.add_middleware(
