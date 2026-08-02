@@ -142,7 +142,7 @@
                 :min="1"
                 :max="3"
                 style="width: 100%"
-                placeholder="默认 1"
+                placeholder="기본값 1"
               />
             </a-form-item>
           </a-col>

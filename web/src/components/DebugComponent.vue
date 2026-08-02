@@ -420,7 +420,7 @@ const printUserInfo = () => {
   if (!checkSuperAdminPermission()) return
   console.log('=== 用户信息 ===')
   const userInfo = {
-    token: userStore.token ? '*** (已隐藏)' : null,
+    token: userStore.token ? '*** (숨김)' : null,
     userId: userStore.userId,
     username: userStore.username,
     uid: userStore.uid,
